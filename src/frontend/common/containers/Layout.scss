@@ -1,0 +1,27 @@
+body {
+    padding-top: 50px;
+    font-size: 13px;
+}
+
+/*
+ * Main content
+ */
+
+.main {
+    padding: 20px;
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}
+
+/*
+ * Components
+ */
+
+.glyphicon {
+    cursor: pointer;
+    padding: 0px 10px;
+}

@@ -1,0 +1,8 @@
+# ignore list
+    .git
+    .gitignore
+    .dockerignore
+    .gitlab-ci.yml
+    bin
+    build
+    test
