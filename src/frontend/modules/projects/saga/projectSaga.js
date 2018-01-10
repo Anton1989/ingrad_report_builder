@@ -4,23 +4,23 @@ import config from '../../../config';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 /* subscribe on actions */
-function* sagaEmployees() {
-	yield takeEvery(GET_PROJECTS_REQUEST, fetchEmployees);
+function* sagaProjects() {
+	yield takeEvery(GET_PROJECTS_REQUEST, fetchProjects);
 }
 
 /* middlewares */
-function* fetchEmployees(/* action */) {
+function* fetchProjects(/* action */) {
 	try {
-		const employees = yield call(getEmployees);
-		yield put({type: GET_PROJECTS_SUCCESS, employees: employees.data});
+		const projects = yield call(getProjects);
+		yield put({type: GET_PROJECTS_SUCCESS, projects: projects.data});
 	} catch (e) {
 		yield put({type: GET_PROJECTS_ERROR, message: e.message});
 	}
 }
 
 /* queries */
-function getEmployees() {
-	return fetch(config.employeeURL, {
+function getProjects() {
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getProjectsUrl, {
 		method: 'get'
 	})
 	.then(response => {
@@ -32,4 +32,4 @@ function getEmployees() {
 	})
 	.then(response => response.json())
 }
-export default sagaEmployees;
+export default sagaProjects;

@@ -5,6 +5,7 @@ import Link from 'react-router/lib/Link';
 import styles from './LeftMenu.scss';
 
 export default class LeftMenu extends React.Component {
+
     constructor(...props) {
         super(...props);
 
@@ -15,12 +16,14 @@ export default class LeftMenu extends React.Component {
         this.onExtend = this.onExtend.bind(this);
         this.generateMenu = this.generateMenu.bind(this);
     }
+
     onExtend(anchor) {
         if (this.state.extendedMenus.find(item => item == anchor))
             this.setState({ extendedMenus: this.state.extendedMenus.filter(item => anchor != item) });
         else
             this.setState({ extendedMenus: this.state.extendedMenus.concat([anchor]) });
     }
+
     generateMenu(menu, isActive) {
         return menu.map(item => {
             let onExtend = null;
@@ -30,6 +33,8 @@ export default class LeftMenu extends React.Component {
                 onExtend = item.submenu.length > 0 ? () => this.onExtend.call(this, item.anchor) : onExtend;
                 submenu = this.generateMenu(item.submenu, isActive);
             }
+
+            console.log(item, isActive(item.url, item.strict))
             const active = item.url ? isActive(item.url, item.strict) ? 'active' : '' : '';
 
             return <li key={item.anchor} className={active}>
@@ -38,12 +43,14 @@ export default class LeftMenu extends React.Component {
             </li>
         })
     }
+
     generateBackButton(name) {
         return <li><div className='btn-back'>
-            <Link className='btn btn-default' to={process.env.CORE_URL+'dashboard'}><img src={process.env.CORE_URL+'images/back.png'} /></Link>
+            <Link className='btn btn-default' to={process.env.CORE_URL + 'dashboard'}><img src={process.env.CORE_URL + 'images/back.png'} /></Link>
             <div className='btn-note'>{name}</div>
         </div></li>
     }
+
     render() {
         console.log('RENDER <LeftMenu>');
         const { menu, isActive } = this.props;

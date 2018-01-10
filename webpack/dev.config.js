@@ -5,6 +5,7 @@ var path = require('path');
 var webpack = require('webpack');
 var host = process.env.SERVER;
 var port = Number(process.env.SERVER_PORT);
+var api_port = Number(process.env.API_PORT);
 
 // https://github.com/halt-hammerzeit/webpack-isomorphic-tools
 var WebpackIsomorphicToolsPlugin = require('webpack-isomorphic-tools/plugin');
@@ -127,6 +128,8 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.IgnorePlugin(/webpack-stats\.json$/),
         new webpack.DefinePlugin({
+            ENV_HOST: JSON.stringify(host),
+            ENV_PORT: JSON.stringify(api_port),
             ENV_IS_SERVER: false,
             ENV_DEVELOPMENT: true
         }),

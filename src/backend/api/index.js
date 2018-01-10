@@ -1,29 +1,30 @@
 import cors from 'cors';
+import ProjectsController from './controllers/projectsController';
+import bodyParser from 'body-parser';
 
 export default class ApiConfig {
-    
-    constructor(express){
-        this._log = logger.getLogger('network/NetworkConfig');
+
+    constructor(express) {
         console.log('Start init api configuration');
-        this._appConfig = appConfig;
         this._network = express;
+        // this._config = config;
         this._initNetworksConfig();
         this._initEndpoints();
         console.log('End init network configuration');
     }
 
-    _initNetworksConfig(){
+    _initNetworksConfig() {
         //Init CORS filter and body parser for express.
         this._network.use(cors());
         this._network.use(bodyParser.json());
-        this._network.use(bodyParser.urlencoded({extended: false}));
+        this._network.use(bodyParser.urlencoded({ extended: false }));
     }
 
-    _initEndpoints(){
+    _initEndpoints() {
         //Init class controllers with methods
-        let transactionsController = new TransactionsController(this.getExpress(), this._logger, this._dbConfig, this._defaultParams, this._appConfig);
+        let projectsController = new ProjectsController(this._network);
 
         //Init endpoints for express.
-        this._network.use('/v1/price/product/status', priceProdStatusController.getRouter());
+        this._network.use('/v1/projects', projectsController.getRouter());
     }
 }

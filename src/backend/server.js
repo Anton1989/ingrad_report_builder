@@ -22,7 +22,6 @@ app.use(ServerRenderingMiddleware);
 
 let api = new ApiConfig(app);
 
-
 app.listen(ENV_PORT, ENV_HOST, function(error) {
     if (error) {
         console.error('APP ERROR:', error);

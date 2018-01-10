@@ -1,15 +1,10 @@
 const config = {
     initialState: {
-        department: {
+        projects: {
             data: [],
             errors: null,
             fetching: false
-        },
-        employee: {
-            data: [],
-            errors: null,
-            fetching: false
-        },
+        }
     }
 }
 export default config;
