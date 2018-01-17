@@ -19,6 +19,8 @@
       "env": {
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 1989,
+        "MONGO_HOST": "127.0.0.1",
+        "MONGO_DB": "ingrad",
         "NODE_ENV": "production"
       }
     },
@@ -45,6 +47,8 @@
     "build": {
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
+        "SERVER": "127.0.0.1",
+        "SERVER_PORT": 1989,
         "NODE_ENV": "production"
       }
     }

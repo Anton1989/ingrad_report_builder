@@ -4,22 +4,21 @@ import styles from './ReinforcedConcreteWorks.scss';
 //Utiles
 // import { getFloorNumbers } from '../../../utiles/match';
 
+const TYPES = {
+    mach: 'Маш.помещ.',
+    tech: 'Тех.этаж',
+    general: 'Этаж',
+    underground: 'Подвал'
+}
+
 export default class ReinforcedConcreteWorks extends React.Component {
 
-    TYPES = {
-        mach: 'Маш.помещ.',
-        tech: 'Тех.этаж',
-        general: 'Этаж',
-        underground: 'Подвал'
-    }
-
     generateRows(project) {
-        console.log(this.TYPES)
         // let floors = getFloorNumbers(sections);
         return project.floors.map(floor => {
             
             return <tr key={floor._id}>
-                <td>№ {floor.number} {this.TYPES[floor.type]}</td>
+                <td>№ {floor.number} {TYPES[floor.type]}</td>
                 {project.sections.map(section => {
                     let td = null;
                     if (section.floors.findIndex(floorSection => floorSection == floor._id) === -1) {

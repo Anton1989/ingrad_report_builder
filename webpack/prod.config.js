@@ -12,6 +12,9 @@ var projectRootPath = path.resolve(__dirname, '../');
 var assetsPath = path.join(projectRootPath, 'src/backend/static/bundle');
 var webpackIsomorphicToolsPlugin = new WebpackIsomorphicToolsPlugin(require('./webpack-isomorphic-tools'));
 
+var host = process.env.SERVER;
+var port = Number(process.env.SERVER_PORT);
+
 module.exports = {
   devtool: 'source-map',
   context: path.resolve(__dirname, '..'),
@@ -63,6 +66,8 @@ module.exports = {
       'process.env': {
         NODE_ENV: "'production'"
       },
+      ENV_HOST: JSON.stringify(host),
+      ENV_PORT: JSON.stringify(port),
       ENV_IS_SERVER: false,
       ENV_DEVELOPMENT: false
     }),
