@@ -15,7 +15,7 @@
   },
   "betterScripts": {
     "start-prod": {
-      "command": "babel-node --presets es2015 src/backend/index.js",
+      "command": "pm2 start ./pm2_config.json",
       "env": {
         "SERVER": "138.68.182.94",
         "SERVER_PORT": 1989,
