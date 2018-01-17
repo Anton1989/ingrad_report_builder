@@ -1,5 +1,8 @@
 import { Router } from 'express';
 import Response from '../models/responseDto';
+import Projects from '../models/Projects';
+import Floors from '../models/Floors';
+import Sections from '../models/Sections';
 
 export default class ProjectsController {
 
@@ -23,8 +26,24 @@ export default class ProjectsController {
         return this._router;
     }
 
-    all(req, res) {
-        return this._resp.formattedSuccessResponse(res, [], 200);
+    async all(req, res) {
+        let floors = await Sections.find({}).exec();
+        await Projects.update({}, {sections: floors.map(floor => floor._id)});
+        try {
+            const projects = await Projects.find({}).populate([{
+                path: 'floors',
+                populate: {
+                    path: 'sections'
+                },
+                options: { sort: { number: -1 } }
+            }, {
+                path: 'sections'
+            }]).exec();
+            return this._resp.formattedSuccessResponse(res, projects, 200);
+        } catch (error) {
+            return this._resp.formattedErrorResponse(res, req, error.message, 500);
+        }
+
     }
 
     getById(req, res) {

@@ -27,6 +27,8 @@
       "env": {
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8008,
+        "MONGO_HOST": "127.0.0.1",
+        "MONGO_DB": "ingrad",
         "NODE_ENV": "development"
       }
     },
@@ -93,6 +95,7 @@
     "express": "^4.15.2",
     "isomorphic-fetch": "2.2.1",
     "moment": "^2.20.1",
+    "mongoose": "^4.13.9",
     "piping": "^1.0.0-rc.4",
     "prop-types": "15.5.8",
     "react": "^15.5.4",

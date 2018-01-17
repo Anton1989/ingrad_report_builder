@@ -52,7 +52,7 @@ function renderPage(appHtml, store) {
     const jsBundle = assets.javascript.main;
     
     const cssBundle = assets.styles.main;
-    const cssTag = cssBundle ? `<link rel="stylesheet" href="${cssBundle}">` : null;
+    const cssTag = cssBundle ? `<link rel="stylesheet" href="${cssBundle}">` : '';
     return `<!DOCTYPE html>
         <html>
         <head>

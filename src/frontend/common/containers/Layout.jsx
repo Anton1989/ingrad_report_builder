@@ -16,8 +16,8 @@ class Layout extends React.Component {
 		let menu = [
 			{
 				anchor: 'Проекты',
-				url: '/',
-				strict: true,
+				url: '/projects',
+				strict: false,
 				submenu: []
 			},
 			{

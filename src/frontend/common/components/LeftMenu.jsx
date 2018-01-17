@@ -34,8 +34,7 @@ export default class LeftMenu extends React.Component {
                 submenu = this.generateMenu(item.submenu, isActive);
             }
 
-            console.log(item, isActive(item.url, item.strict))
-            const active = item.url ? isActive(item.url, item.strict) ? 'active' : '' : '';
+            const active = item.url ? isActive(item.url, item.strict) ? styles.active : '' : '';
 
             return <li key={item.anchor} className={active}>
                 <Link onClick={onExtend} to={item.url ? item.url : null}>{item.anchor}</Link>

@@ -1,0 +1,42 @@
+.detailPage {
+
+    .titleJob {
+        font-size: 18px;
+        background-color: #428bca;
+        color: #fff;
+        padding: 5px 15px;
+    }
+
+    .titleSubJob {
+        font-size: 18px;
+        background: #ebebeb;
+        padding: 5px 10px;
+    }
+
+    .plans {
+        float: right;
+
+        .row {
+            background: #fff;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-right: 10px;
+            padding: 4px 10px;
+            border: 1px solid #fff;
+        }
+
+        .current {
+            background-color: #f0ad4e;
+        }
+
+        .plan {
+            background-color: #5bc0de;
+        }
+
+        .miss {
+            background-color: #d9534f;
+        }
+    }
+}
