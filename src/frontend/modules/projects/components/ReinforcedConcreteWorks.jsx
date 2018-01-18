@@ -18,7 +18,8 @@ export default class ReinforcedConcreteWorks extends React.Component {
         return project.floors.map(floor => {
             
             return <tr key={floor._id}>
-                <td>№ {floor.number} {TYPES[floor.type]}</td>
+                <td className={styles.rightAlign}>№{floor.number}</td>
+                <td className={styles.rightAlign}>{TYPES[floor.type]}</td>
                 {project.sections.map(section => {
                     let td = null;
                     if (section.floors.findIndex(floorSection => floorSection == floor._id) === -1) {
@@ -41,7 +42,8 @@ export default class ReinforcedConcreteWorks extends React.Component {
             <table className={'table table-bordered'}>
                 <thead>
                     <tr>
-                        <th rowSpan='2' className={styles.thName}>Этаж/Название</th>
+                        <th rowSpan='2' className={styles.thName}>Этаж</th>
+                        <th rowSpan='2' className={styles.thName}>Название</th>
                         <th colSpan={project.sections.length}>Секции</th>
                         <th rowSpan='2' className={styles.thName}></th>
                     </tr>
@@ -51,6 +53,7 @@ export default class ReinforcedConcreteWorks extends React.Component {
                 </thead>
                 <tbody>
                     <tr>
+                        <td></td>
                         <td></td>
                         {project.sections.map(section => <td key={'summ'+section._id} className={styles.summ}>{Math.floor(Math.random() * 101)}</td>)}
                         <td className={styles.summ}>&#8721;</td>

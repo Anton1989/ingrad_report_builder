@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 //Components
+import Statistic from './Statistic.jsx';
 import styles from './Header.scss';
 //Utiles
 import { calculateFloors } from '../../../utiles/match';
@@ -25,34 +26,17 @@ export default class Header extends React.Component {
                 <p className={styles.developer}>{project.subject} | {project.toType} <br />
                     {project.counterparty}</p>
             </div>
-            <div className={'col-xs-4 col-sm-4 col-md-4 col-lg-3 ' + styles.plans}>
-                <span>Факт</span>
-                <div className='progress'>
-                    <div className='progress-bar progress-bar-warning' role='progressbar' style={{ width: '29%' }}>
-                        <span>29% Факт</span>
-                    </div>
+            <div className={'col-xs-4 col-sm-4 col-md-4 col-lg-4 ' + styles.plans}>
+                <div className='row'>
+                    <Statistic current={36} plan={44} fail={-8} />
                 </div>
-
-                <span>План</span>
-                <div className='progress'>
-                    <div className='progress-bar progress-bar-info' role='progressbar' style={{ width: '37%' }}>
-                        <span>37% План</span>
-                    </div>
-                </div>
-
-                <span>Отклонение</span>
-                <div className='progress'>
-                    <div className='progress-bar progress-bar-danger' role='progressbar' style={{ width: '8%' }}>
-                        <span>8% Отклонение</span>
-                    </div>
+                <div className={styles.statusWraper + ' row'}>
+                    Статус: <span className={styles.status}>2</span>
                 </div>
             </div>
-            <div className={'col-xs-4 col-sm-4 col-md-4 col-lg-4 col-sm-offset-2 col-lg-offset-2 col-md-offset-0 ' + styles.area}>
+            <div className={'col-xs-4 col-sm-4 col-md-4 col-lg-4 col-sm-offset-2 col-lg-offset-1 col-md-offset-0 ' + styles.area}>
                 <div className='row'>
-                    <div className='col-xs-12 col-sm-6'>
-                        Статус: <span className={styles.status}>2</span>
-                    </div>
-                    <div className='col-xs-12 col-sm-6'>
+                    <div className='col-xs-12 col-sm-6 col-lg-offset-6'>
                         <p>
                             Sзастр, м2: {project.buildingArea}<br />
                             Sкв, м2: {project.generalArea}

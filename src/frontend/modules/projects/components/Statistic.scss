@@ -1,0 +1,36 @@
+.plans {
+    float: right;
+    background: #fff;
+    padding: 2px 0px;
+
+    .row {
+        display: inline-block;
+        text-align: center;
+        background: #fff;
+        color: #fff;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-right: 10px;
+        padding: 2px 15px;
+        min-width: 105px;
+    }
+    .row:last-child {
+        margin-right: 0px;
+    }
+
+    .current {
+        background-color: #EEECE1;
+        color: #949284;
+    }
+
+    .plan {
+        background-color: #dbeef4;
+        color: #31859c;
+    }
+
+    .miss {
+        background-color: #ffcdcd;
+        color: #cb0300;
+    }
+}

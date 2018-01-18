@@ -6,6 +6,7 @@ import Loading from '../../../common/components/Loading.jsx';
 import layoutCss from './../../../common/containers/Layout.scss';
 import styles from './Details.scss';
 import Header from './Header.jsx';
+import Statistic from './Statistic.jsx';
 import ReinforcedConcreteWorks from './ReinforcedConcreteWorks.jsx';
 import Link from 'react-router/lib/Link';
 
@@ -38,32 +39,10 @@ export default class Details extends React.Component {
             {project && <Header project={project} />}
 
             <h2 className={styles.titleJob}>
-                1. Общестроительные работы 
-                <span className={styles.plans}>
-                    <span className={styles.row + ' ' + styles.current}>
-                        Факт: <span className={styles.value}>36%</span>
-                    </span>
-                    <span className={styles.row + ' ' + styles.plan}>
-                        План: <span className={styles.value}>44%</span>
-                    </span>
-                    <span className={styles.row + ' ' + styles.miss}>
-                        Откл: <span className={styles.value}>-8%</span>
-                    </span>
-                </span>
+                1. Общестроительные работы <Statistic current={36} plan={44} fail={-8} className={styles.statistic} />
             </h2>
             <h3 className={styles.titleSubJob}>
-                <span className={styles.menuNumber}>1.1.</span> Ж/б конструкции
-                <span className={styles.plans}>
-                    <span className={styles.row + ' ' + styles.current}>
-                        Факт: <span className={styles.value}>59%</span>
-                    </span>
-                    <span className={styles.row + ' ' + styles.plan}>
-                        План: <span className={styles.value}>80%</span>
-                    </span>
-                    <span className={styles.row + ' ' + styles.miss}>
-                        Откл: <span className={styles.value}>-21%</span>
-                    </span>
-                </span>
+                <span className={styles.menuNumber}>1.1.</span> Ж/б конструкции <Statistic current={59} plan={80} fail={-21} className={styles.statistic} />
             </h3>
             {project && <ReinforcedConcreteWorks project={project} />}
         </div>
