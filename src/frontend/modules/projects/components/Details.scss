@@ -1,34 +1,48 @@
 .detailPage {
 
     .titleJob {
-        font-size: 18px;
-        background-color: #428bca;
+        font-size: 12px;
+        background-color: #3c308b;
         color: #fff;
-        padding: 5px 15px;
+        padding: 2px 0 2px 15px;
     }
 
     .titleSubJob {
-        font-size: 18px;
-        background: #ebebeb;
-        padding: 5px 10px;
+        font-size: 12px;
+        color: #3c308b;
+        padding: 2px 0 2px 0;
+
+        .menuNumber {
+            background-color: #3c308b;
+            padding: 5px 10px;
+            color: #fff;
+            font-weight: bold;
+            margin-right: 10px;
+        }
     }
 
     .plans {
         float: right;
+        background: #fff;
+        padding: 2px 0px;
+        margin-top: -2px;
 
         .row {
             background: #fff;
             color: #fff;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
             margin-right: 10px;
-            padding: 4px 10px;
-            border: 1px solid #fff;
+            padding: 2px 15px;
+        }
+        .row:last-child {
+            margin-right: 0px;
         }
 
         .current {
-            background-color: #f0ad4e;
+            background-color: #fff9dd;
+            color: #b9b184;
         }
 
         .plan {

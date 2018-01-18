@@ -52,7 +52,7 @@ export default class Details extends React.Component {
                 </span>
             </h2>
             <h3 className={styles.titleSubJob}>
-                1.1. Ж/б конструкции
+                <span className={styles.menuNumber}>1.1.</span> Ж/б конструкции
                 <span className={styles.plans}>
                     <span className={styles.row + ' ' + styles.current}>
                         Факт: <span className={styles.value}>59%</span>
