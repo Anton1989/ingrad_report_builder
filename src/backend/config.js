@@ -4,6 +4,11 @@ const config = {
             data: [],
             errors: null,
             fetching: false
+        },
+        places: {
+            data: [],
+            errors: null,
+            fetching: false
         }
     }
 }

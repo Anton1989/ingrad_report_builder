@@ -2,7 +2,7 @@ import React from 'react';
 import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 //Actions
-import { getProjects, save, dismissError } from '../actions/projectActions';
+import { getProjects, dismissError } from '../actions/projectActions';
 //Components
 import List from '../components/List.jsx';
 
@@ -27,7 +27,6 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
     return {
         getProjects: bindActionCreators(getProjects, dispatch),
-        save: bindActionCreators(save, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)
     }
 }

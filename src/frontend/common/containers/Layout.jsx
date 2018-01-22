@@ -21,6 +21,12 @@ class Layout extends React.Component {
 				submenu: []
 			},
 			{
+				anchor: 'Карта',
+				url: '/map',
+				strict: false,
+				submenu: []
+			},
+			{
 				anchor: 'Конструктор',
 				url: '/builder',
 				strict: false,

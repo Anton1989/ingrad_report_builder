@@ -31,6 +31,7 @@
         "ENV_HOST": true,
         "ENV_PORT": true,
         "socket": true,
+        "google": true,
         "webpackIsomorphicTools": true
     }
   }

@@ -1,5 +1,6 @@
 import cors from 'cors';
 import ProjectsController from './controllers/projectsController';
+import PlacesController from './controllers/placesController';
 import bodyParser from 'body-parser';
 
 export default class ApiConfig {
@@ -23,8 +24,10 @@ export default class ApiConfig {
     _initEndpoints() {
         //Init class controllers with methods
         let projectsController = new ProjectsController(this._network);
+        let placesController = new PlacesController(this._network);
 
         //Init endpoints for express.
         this._network.use('/v1/projects', projectsController.getRouter());
+        this._network.use('/v1/places', placesController.getRouter());
     }
 }
