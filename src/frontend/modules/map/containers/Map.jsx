@@ -37,9 +37,13 @@ class Map extends React.Component {
         return defaultCoordinates;
     }
 
+    openPlace(id, type) {
+        browserHistory.push('/map/' + type + '/' + id);
+    }
+
     render() {
         const { places, params, activeTypes } = this.props;
-        console.log('RENDER <Map>',params.placeId);
+        console.log('RENDER <Map>');
 
         let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, params.type, params.placeId);
 
@@ -52,9 +56,10 @@ class Map extends React.Component {
                     return <Marker
                         key={place._id}
                         defaultIcon={{ url: place.logo, scaledSize: new google.maps.Size(30, 30) }}
-                        position={{ ...place.coordinates }} />
-                    }
+                        position={{ ...place.coordinates }}
+                        onClick={() => { this.openPlace(place._id, place.location) }} />
                 }
+            }
             )}
         </GoogleMap>));
 
