@@ -16,7 +16,9 @@ export default (/* data */) => {
                 <Route path=':projectId' component={ProjectDetails} />
             </Route>
             <Route path='map' component={MapContainer}>
-                <Route path=':placeId' />
+                <Route path=':type' component={ProjectDetails}>
+                    <Route path=':placeId' />
+                </Route>
             </Route>
         </Route>
     )

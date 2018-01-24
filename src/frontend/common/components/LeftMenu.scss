@@ -38,3 +38,14 @@ ul.navSidebar > .active > a:focus {
     color: #fff;
     background-color: #428bca;
 }
+.navSidebar.submenu {
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.navSidebar.submenu > li > a {
+    padding-left: 32px;
+}
+.submenu .navSidebar.submenu > li > a {
+    padding-left: 42px;
+}

@@ -29,7 +29,6 @@ export default class LeftMenu extends React.Component {
             let onExtend = null;
             let submenu = null;
             if (item.submenu.length > 0) {
-                item.url = item.submenu.length > 0 ? null : item.url;
                 onExtend = item.submenu.length > 0 ? () => this.onExtend.call(this, item.anchor) : onExtend;
                 submenu = this.generateMenu(item.submenu, isActive);
             }
@@ -38,7 +37,7 @@ export default class LeftMenu extends React.Component {
 
             return <li key={item.anchor} className={active}>
                 <Link onClick={onExtend} to={item.url ? item.url : null}>{item.anchor}</Link>
-                {submenu ? <ul className={styles.navSidebar + ' nav submenu nav-sidebar'}>{submenu}</ul> : null}
+                {submenu ? <ul className={styles.navSidebar + ' ' + styles.submenu + ' nav submenu nav-sidebar'}>{submenu}</ul> : null}
             </li>
         })
     }

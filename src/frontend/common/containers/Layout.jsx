@@ -5,13 +5,54 @@ import Navbar from '../components/Navigation.jsx';
 import LeftMenu from '../components/LeftMenu.jsx';
 import styles from './Layout.scss';
 
+const markersTypes = [
+	{
+		id: 'inner_msc',
+		anchor: 'Москва',
+		url: '/map/inner_msc',
+		strict: true,
+		submenu: []
+	},
+	{
+		id: 'out_msc',
+		anchor: 'Московская область',
+		url: '/map/out_msc',
+		strict: true,
+		submenu: []
+	},
+	{
+		id: 'office',
+		anchor: 'Офис',
+		url: '/map/office',
+		strict: true,
+		submenu: []
+	}
+];
+
 class Layout extends React.Component {
+
 	constructor(...props) {
 		super(...props)
 	}
+
+	generateMapSubMenu(places) {
+		return markersTypes.map(type => {
+			let locationType = { ...type };
+			locationType.submenu = places.filter(place => place.location == type.id).map(place => {
+				return {
+					anchor: place.name,
+					url: type.url + '/' + place._id,
+					strict: false,
+					submenu: []
+				};
+			});
+			return locationType;
+		})
+	}
+
 	render() {
+		const { isActive, places } = this.props;
 		console.log('RENDER <Layout>');
-		const { isActive } = this.props;
 
 		let menu = [
 			{
@@ -23,8 +64,8 @@ class Layout extends React.Component {
 			{
 				anchor: 'Карта',
 				url: '/map',
-				strict: false,
-				submenu: []
+				strict: true,
+				submenu: places.data.length > 0 ? this.generateMapSubMenu(places.data) : []
 			},
 			{
 				anchor: 'Конструктор',
@@ -35,21 +76,21 @@ class Layout extends React.Component {
 		];
 
 		return <div className='container-fluid'>
-            <Navbar />
+			<Navbar />
 			<LeftMenu menu={menu} isActive={isActive} />
 			<div className='row'>
 				<div className={styles.main + ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2'}>
 					{this.props.children}
 				</div>
 			</div>
-        </div>
+		</div>
 	}
 }
 
-function mapStateToProps (state, routerProps) {
+function mapStateToProps(state, routerProps) {
 	return {
 		isActive: routerProps.router.isActive,
-		user: state.user
+		places: state.places
 	}
 }
 

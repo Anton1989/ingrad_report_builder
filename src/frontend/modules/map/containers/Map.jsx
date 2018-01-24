@@ -15,8 +15,8 @@ class Map extends React.Component {
     }
 
     render() {
-        const { places } = this.props;
-        console.log('RENDER <Map>');
+        const { places, params } = this.props;
+        console.log('RENDER <Map>', params);
 
         let Maps = withScriptjs(withGoogleMap(() => <GoogleMap
             defaultZoom={10}
