@@ -2,7 +2,7 @@ import React from 'react';
 import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 import browserHistory from 'react-router/lib/browserHistory';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon } from 'react-google-maps';
 //Actions
 import { getPlaces, dismissError } from '../actions/placesActions';
 //Components
@@ -14,7 +14,16 @@ const defaultCoordinates = {
         lng: 37.633343
     },
     zoom: 10
-}
+};
+
+const COLORS = {
+    PLAN: '999999',
+    PD: 'FFFF66',
+    RD: 'FFCC33',
+    VVOD: '6600CC',
+    EUK: '660066',
+    WEB: '00CCCC',
+};
 
 class Map extends React.Component {
 
@@ -28,7 +37,7 @@ class Map extends React.Component {
                 let place = places.find(place => place._id == placeId);
                 return {
                     coordinates: place.coordinates,
-                    zoom: 12
+                    zoom: 16
                 }
             } else {
                 browserHistory.push('/map');
@@ -37,15 +46,11 @@ class Map extends React.Component {
         return defaultCoordinates;
     }
 
-    openPlace(id, type) {
-        browserHistory.push('/map/' + type + '/' + id);
-    }
-
     render() {
-        const { places, params, activeTypes } = this.props;
+        const { places, type, activeTypes, placeId, openPlace } = this.props;
         console.log('RENDER <Map>');
 
-        let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, params.type, params.placeId);
+        let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, type, placeId);
 
         let Maps = withScriptjs(withGoogleMap(() => <GoogleMap
             defaultZoom={defaultCoordinates.zoom}
@@ -53,11 +58,31 @@ class Map extends React.Component {
         >
             {places.data && places.data.map(place => {
                 if (activeTypes.indexOf(place.location) !== -1) {
-                    return <Marker
-                        key={place._id}
-                        defaultIcon={{ url: place.logo, scaledSize: new google.maps.Size(30, 30) }}
-                        position={{ ...place.coordinates }}
-                        onClick={() => { this.openPlace(place._id, place.location) }} />
+                    let placeHtml = null;
+                    if (placeId && place.houses.length > 0) {
+                        placeHtml = place.houses.map(house => {
+                            // console.log(house)
+                            return <Polygon
+                                key={place._id+house.name}
+                                paths={house.coordinates}
+                                options={{
+                                    strokeColor: '#' + COLORS[house.status],
+                                    strokeOpacity: 0.8,
+                                    strokeWeight: 2,
+                                    fillColor: '#' + COLORS[house.status],
+                                    fillOpacity: 0.35
+                                }}
+                            />
+                        });
+                    } else {
+                        placeHtml = <Marker
+                            key={place._id}
+                            defaultIcon={{ url: place.logo, scaledSize: new google.maps.Size(30, 30) }}
+                            position={{ ...place.coordinates }}
+                            onClick={() => { openPlace(place.location, place._id) }} />;
+                    }
+                    
+                    return placeHtml;
                 }
             }
             )}
@@ -70,7 +95,7 @@ class Map extends React.Component {
                 containerElement={<div style={{ height: '90vh' }} />}
                 mapElement={<div style={{ height: '100%' }} />}
             />
-            {params.placeId && places.data.length > 0 && <PlaceDetails place={places.data.find(place => place._id == params.placeId)} />}
+            {placeId && places.data.length > 0 && <PlaceDetails place={places.data.find(place => place._id == placeId)} />}
         </div>;
     }
 }

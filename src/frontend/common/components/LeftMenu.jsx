@@ -24,15 +24,15 @@ export default class LeftMenu extends React.Component {
             this.setState({ extendedMenus: this.state.extendedMenus.concat([anchor]) });
     }
 
-    generateMenu(menu, isActive) {
-        const { setMapType } = this.props;
+    generateMenu(menu, isActive, parent) {
+        const { setMapType, setPlace } = this.props;
 
         return menu.map(item => {
             let submenu = null;
             if (item.submenu.length > 0) {
-                submenu = this.generateMenu(item.submenu, isActive);
+                submenu = this.generateMenu(item.submenu, isActive, item);
             }
-            
+
             let li = null;
             if (item.isMapCategory) {
                 let checkbox = 'glyphicon-unchecked';
@@ -40,8 +40,12 @@ export default class LeftMenu extends React.Component {
                     checkbox = 'glyphicon-check';
                 }
                 li = <li key={item.anchor}>
-                    <a className={styles.expandedMenu} onClick={() => {setMapType(item.id)}}><span className={'glyphicon ' + checkbox}></span> {item.anchor}</a>
+                    <a className={styles.expandedMenu} onClick={() => { setMapType(item.id) }}><span className={'glyphicon ' + checkbox}></span> {item.anchor}</a>
                     {submenu ? <ul className={styles.navSidebar + ' ' + styles.submenu + ' nav submenu nav-sidebar'}>{submenu}</ul> : null}
+                </li>;
+            } else if (item.isPlace) {
+                li = <li key={item.anchor}>
+                    <a className={styles.expandedMenu} onClick={() => { setPlace(parent.id, item.id) }}>{item.anchor}</a>
                 </li>;
             } else {
                 const active = item.url ? isActive(item.url, item.strict) ? styles.active : '' : '';
@@ -76,5 +80,6 @@ export default class LeftMenu extends React.Component {
 LeftMenu.propTypes = {
     menu: PropTypes.array.isRequired,
     isActive: PropTypes.func.isRequired,
-    setMapType: PropTypes.func
+    setMapType: PropTypes.func,
+    setPlace: PropTypes.func
 }

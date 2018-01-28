@@ -30,9 +30,13 @@ export default class PlaceDetails extends React.Component {
                 <h1>{place.name}</h1>
                 {Object.keys(place).map(field => {
                     if (labels[field]) {
+                        let name = <span className={styles.value}>{place[field]}</span>;
+                        if (field == 'site' || field == 'camera' || field == 'photo') {
+                            name = <span className={styles.value}><a href={place[field]} target='_blank'>{place[field]}</a></span>;
+                        }
                         return <p key={field}>
                             <span className={styles.label}>{labels[field]}</span>
-                            <span className={styles.value}>{place[field]}</span>
+                            {name}
                         </p>;
                     }
                 })}

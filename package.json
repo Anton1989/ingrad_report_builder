@@ -97,6 +97,7 @@
     "clean-webpack-plugin": "^0.1.17",
     "cors": "^2.8.4",
     "express": "^4.15.2",
+    "google-map-react": "^0.29.0",
     "isomorphic-fetch": "2.2.1",
     "moment": "^2.20.1",
     "mongoose": "^4.13.9",
