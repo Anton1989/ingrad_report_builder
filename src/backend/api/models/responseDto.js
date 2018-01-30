@@ -3,7 +3,6 @@ import moment from 'moment';
 export default class Response {
 
     formattedSuccessResponse(res, data, status) {
-        console.log("Response: " + JSON.stringify(data));
         res.contentType('application/json');
         let result = {data: data, timestamp: moment.utc().format('x')};
         return res.status(status).json(result);

@@ -21,18 +21,13 @@ const COLORS = {
     PLAN: '999999',
     PD: 'FFFF66',
     RD: 'FFCC33',
+    SMR: '000000',
     VVOD: '6600CC',
     EUK: '660066',
     WEB: '00CCCC',
 };
 
 class Map extends React.Component {
-
-    constructor(...props) {
-        super(...props);
-
-        // this.handleMapLoaded = this.handleMapLoaded.bind(this);
-    }
 
     componentDidMount() {
         if (this.props.places.data.length == 0) this.props.getPlaces();
@@ -53,16 +48,6 @@ class Map extends React.Component {
         return defaultCoordinates;
     }
 
-    // handlePolygonClick(event, place) {
-    //     var contentString = '<b>' + place.name + '</b><br>' +
-    //         'Clicked location: <br>' + event.latLng.lat() + ',' + event.latLng.lng() +
-    //         '<br>';
-    //     this.info.setContent(contentString);
-    //     this.info.setPosition(event.latLng);
-    //     console.log(this.info, this.gmap)
-    //     this.info.open(this.gmap);
-    // }
-
     render() {
         const { places, type, activeTypes, placeId, openPlace } = this.props;
         console.log('RENDER <Map>');
@@ -75,17 +60,17 @@ class Map extends React.Component {
                     infoWindow: null,
                 }),
                 {
-                    onToggleOpen: ({ infoWindow }) => (event, house) => {
-                        console.log(event, house, infoWindow);
+                    onToggleOpen: () => (event, house) => {
                         return ({
-                            infoWindow: <InfoWindow
-                                position={{ lat: event.latLng.lat(), lng: event.latLng.lng() }}
-                            >
-                                <p>
-                                    <b>{house.name}</b><br/>
-                                    Статус <b>{house.status}</b><br/>
-                                </p>
-                            </InfoWindow>,
+                            infoWindow: {
+                                position: { lat: event.latLng.lat(), lng: event.latLng.lng() },
+                                house
+                            }
+                        })
+                    },
+                    onToggleClose: () => () => {
+                        return ({
+                            infoWindow: null
                         })
                     }
                 }
@@ -126,7 +111,15 @@ class Map extends React.Component {
                         return placeHtml;
                     }
                 })}
-                {props.infoWindow}
+                {props.infoWindow && <InfoWindow
+                    onCloseClick={props.onToggleClose}
+                    position={props.infoWindow.position}
+                >
+                    <p>
+                        <b>{props.infoWindow.house.name}</b><br/>
+                        Статус <b>{props.infoWindow.house.status}</b><br/>
+                    </p>
+                </InfoWindow>}
             </GoogleMap>
         });
         return <div>
