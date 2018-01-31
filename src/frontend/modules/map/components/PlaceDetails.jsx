@@ -26,7 +26,7 @@ export default class PlaceDetails extends React.Component {
         return <div className={'col-sm-4 col-md-3 sidebar ' + styles.details}>
             <a className={styles.close} onClick={this.close} ><span className={'glyphicon glyphicon-remove'}></span></a>
             <div className={'row'}>
-                <div style={{backgroundImage: 'url("' + place.image + '")'}} className={styles.image}></div>
+                {place.image && <div style={{backgroundImage: 'url("' + place.image + '")'}} className={styles.image}></div>}
                 <h1>{place.name}</h1>
                 {Object.keys(place).map(field => {
                     if (labels[field]) {
