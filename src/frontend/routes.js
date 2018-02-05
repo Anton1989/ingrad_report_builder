@@ -7,6 +7,7 @@ import Layout from './common/containers/Layout.jsx';
 import ProjectsList from './modules/projects/containers/ProjectsList.jsx';
 import ProjectDetails from './modules/projects/containers/ProjectDetails.jsx';
 import MapContainer from './modules/map/containers/Map.jsx';
+import PlaceAdd from './modules/map/containers/PlaceAdd.jsx';
 
 export default (/* data */) => {
     return (
@@ -16,9 +17,7 @@ export default (/* data */) => {
                 <Route path=':projectId' component={ProjectDetails} />
             </Route>
             <Route path='map' component={MapContainer}>
-                <Route path=':type' component={ProjectDetails}>
-                    <Route path=':placeId' />
-                </Route>
+                <Route path='add' component={PlaceAdd} />
             </Route>
         </Route>
     )

@@ -8,6 +8,7 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, InfoWindow } f
 import { getPlaces, dismissError } from '../actions/placesActions';
 //Components
 import PlaceDetails from '../components/PlaceDetails.jsx';
+import styles from './Map.scss';
 
 const defaultCoordinates = {
     coordinates: {
@@ -122,14 +123,15 @@ class Map extends React.Component {
                 </InfoWindow>}
             </GoogleMap>
         });
-        return <div>
+        return <div className={styles.maps}>
             <Maps
                 googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCK5pMR00_zxULM5AVzW5BNfiBpt6svVtk&signed_in=true'
                 loadingElement={<div style={{ height: '80%' }} />}
-                containerElement={<div style={{ height: '90vh' }} />}
+                containerElement={<div className={styles.containerElement} />}
                 mapElement={<div style={{ height: '100%' }} />}
             />
             {placeId && places.data.length > 0 && <PlaceDetails place={places.data.find(place => place._id == placeId)} />}
+            {this.props.children}
         </div>;
     }
 }

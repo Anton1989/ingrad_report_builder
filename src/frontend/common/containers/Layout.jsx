@@ -32,6 +32,14 @@ const markersTypes = [
 		isMapCategory: true,
 		strict: true,
 		submenu: []
+	},
+	{
+		id: 'add',
+		anchor: 'Добавить',
+		url: '/map/add',
+		active: true,
+		strict: true,
+		submenu: []
 	}
 ];
 
@@ -103,6 +111,8 @@ class Layout extends React.Component {
 
 		const isMapPage = isActive('/map', false); 
 
+		console.log(isMapPage)
+		
 		let menu = [
 			{
 				anchor: 'Проекты',
