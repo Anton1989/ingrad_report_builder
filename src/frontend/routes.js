@@ -16,7 +16,8 @@ export default (/* data */) => {
                 <IndexRoute component={ProjectsList} />
                 <Route path=':projectId' component={ProjectDetails} />
             </Route>
-            <Route path='map' component={MapContainer}>
+            <Route path='map'>
+                <IndexRoute component={MapContainer} />
                 <Route path='add' component={PlaceAdd} />
             </Route>
         </Route>
