@@ -29,6 +29,17 @@
         padding-top: 25px;
     }
 
+    .house {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+        padding-bottom: 10px;
+        padding-top: 10px;
+    }
+
+    .house > div {
+        margin-bottom: 5px;
+    }
+
     .errors {
         color: red;
     }

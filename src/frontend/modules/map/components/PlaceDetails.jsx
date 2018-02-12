@@ -27,9 +27,9 @@ export default class PlaceDetails extends React.Component {
             <a className={styles.close} onClick={this.close} ><span className={'glyphicon glyphicon-remove'}></span></a>
             <div className='row'>
                 {place.image && <div style={{backgroundImage: 'url("' + place.image + '")'}} className={styles.image}></div>}
-                <h1>{place.name}</h1>
+                <h1>{place.name} <Link to={'/map/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link></h1>
                 {Object.keys(place).map(field => {
-                    if (labels[field]) {
+                    if (labels[field] && place[field] != '') {
                         let name = <span className={styles.value}>{place[field]}</span>;
                         if (field == 'site' || field == 'camera' || field == 'photo') {
                             name = <span className={styles.value}><a href={place[field]} target='_blank'>{place[field]}</a></span>;

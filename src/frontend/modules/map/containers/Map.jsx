@@ -3,12 +3,12 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 import browserHistory from 'react-router/lib/browserHistory';
 import { compose, withStateHandlers } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, InfoWindow } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Polyline, InfoWindow } from 'react-google-maps';
 //Actions
 import { getPlaces, dismissError } from '../actions/placesActions';
 //Components
 import PlaceDetails from '../components/PlaceDetails.jsx';
-import styles from './Map.scss';
+import styles from '../components/Map.scss';
 
 const defaultCoordinates = {
     coordinates: {
@@ -18,20 +18,10 @@ const defaultCoordinates = {
     zoom: 10
 };
 
-const COLORS = {
-    PLAN: '999999',
-    PD: 'FFFF66',
-    RD: 'FFCC33',
-    SMR: '000000',
-    VVOD: '6600CC',
-    EUK: '660066',
-    WEB: '00CCCC',
-};
-
 class Map extends React.Component {
 
     componentDidMount() {
-        if (this.props.places.data.length == 0) this.props.getPlaces();
+        this.props.getPlaces();
     }
 
     getDefaultCoordinates(places, activeTypes, type, placeId) {
@@ -88,19 +78,31 @@ class Map extends React.Component {
                         let placeHtml = null;
                         if (placeId && place.houses.length > 0 && placeId == place._id) {
                             placeHtml = place.houses.map(house => {
-                                // console.log(house)
-                                return <Polygon
-                                    key={place._id + house.name}
-                                    paths={house.coordinates}
-                                    onClick={(event) => { props.onToggleOpen(event, house) }}
-                                    options={{
-                                        strokeColor: '#' + COLORS[house.status],
-                                        strokeOpacity: 0.8,
-                                        strokeWeight: 2,
-                                        fillColor: '#' + COLORS[house.status],
-                                        fillOpacity: 0.35
-                                    }}
-                                />
+                                if (house.type == 'house' || house.type == 'camera') {
+                                    return <Polygon
+                                        key={house.name}
+                                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                        options={{
+                                            strokeColor: house.color,
+                                            strokeOpacity: 0.8,
+                                            strokeWeight: 2,
+                                            fillColor: house.color,
+                                            fillOpacity: 0.35
+                                        }}
+                                    />
+                                } else { //tube
+                                    return <Polyline
+                                        key={house.name}
+                                        path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                        options={{
+                                            strokeColor: house.color,
+                                            strokeOpacity: 0.8,
+                                            strokeWeight: 3,
+                                            fillColor: house.color,
+                                            fillOpacity: 0.35
+                                        }}
+                                    />
+                                }
                             });
                         } else {
                             placeHtml = <Marker

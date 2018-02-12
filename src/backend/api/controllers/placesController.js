@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import fs from 'fs';
 import Response from '../models/responseDto';
 import Places from '../models/Places';
 
@@ -38,7 +39,47 @@ export default class PlacesController {
         return this._resp.formattedSuccessResponse(res, {}, 200);
     }
 
-    add(req, res) {
-        return this._resp.formattedSuccessResponse(res, {}, 200);
+    async add(req, res) {
+        let data = JSON.parse(req.body.data);
+        let images = req.files;
+
+        let place = new Places(data);
+        let placeEntity = null;
+        try {
+            placeEntity = await place.save(data);
+
+            if (images.logo && images.logo.length > 0) {
+                placeEntity.logo = await this._saveFile(placeEntity._id, images.logo[0]);
+            }
+            if (images.image && images.image.length > 0) {
+                placeEntity.image = await this._saveFile(placeEntity._id, images.image[0]);
+            }
+            placeEntity.save();
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send(error);
+        }
+        console.log('BODY ', req.body)
+        console.log('files ', req.files)
+        return this._resp.formattedSuccessResponse(res, placeEntity, 200);
+    }
+
+    _saveFile(id, logo) {
+        return new Promise(function (resolve, reject) {
+            let extension = logo.mimetype.split('/')[1];
+            let newFile = `${logo.fieldname}.${extension}`;
+            let newFolder = `/images/${id}/`;
+            let newPath = `./src/backend/static${newFolder}${newFile}`;
+
+            if (!fs.existsSync(`./src/backend/static${newFolder}`)){
+                fs.mkdirSync(`./src/backend/static${newFolder}`);
+            }
+
+            let oldpath = logo.path;
+            fs.rename(oldpath, newPath, function (error) {
+                if (error) reject(error);
+                else resolve(newFolder + newFile);
+            });
+        });
     }
 }
