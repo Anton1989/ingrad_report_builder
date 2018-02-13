@@ -45,24 +45,22 @@ export default class Form extends React.Component {
 
         this.onDropLogo = this.onDropLogo.bind(this);
         this.onDropImage = this.onDropImage.bind(this);
-        this.updateInputText = this.updateInputText.bind(this);
-        this.add = this.add.bind(this);
-        this.addHouse = this.addHouse.bind(this);
-        this.removeHouse = this.removeHouse.bind(this);
-        this.addPoint = this.addPoint.bind(this);
-        this.removePoint = this.removePoint.bind(this);
-        this.updateInputTextPoint = this.updateInputTextPoint.bind(this);
+        this.onUpdateInputText = this.onUpdateInputText.bind(this);
+        this.onSave = this.onSave.bind(this);
+        this.onAddHouse = this.onAddHouse.bind(this);
+        this.onRemoveHouse = this.onRemoveHouse.bind(this);
+        this.onAddPoint = this.onAddPoint.bind(this);
+        this.onRemovePoint = this.onRemovePoint.bind(this);
+        this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
         this.timeout = null;
     }
 
     componentWillMount() {
         if (this.props.place) {
             let place = { ...this.props.place };
-            for (var key in place) {
-                if (place[key] == '' || !place[key]) {
-                    delete place[key];
-                }
-            }
+            place = this.cleanObj(place);
+            place.houses = place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house)));
+
             let obj = Object.assign({}, this.state, place);
             this.props.setPolygons(obj.houses);
             this.setState({ ...obj });
@@ -105,7 +103,7 @@ export default class Form extends React.Component {
         });
     }
 
-    updateInputText(e) {
+    onUpdateInputText(e) {
         let variable = {};
         if (e.target.id == 'coordinates-lat') {
             variable.coordinates = {
@@ -148,7 +146,7 @@ export default class Form extends React.Component {
         this.setState(variable);
     }
 
-    updateInputTextPoint(e, house_index, point_index) {
+    onUpdateInputTextPoint(e, house_index, point_index) {
         let houses = [...this.state.houses];
         houses[house_index].coordinates[point_index][e.target.id] = parseFloat(e.target.value);
 
@@ -165,7 +163,17 @@ export default class Form extends React.Component {
         this.setState({ houses });
     }
 
-    add() {
+    onSave() {
+        if (this.validate()) {
+            if (this.props.place) {
+                this.update();
+            } else {
+                this.add();
+            }
+        }
+    }
+
+    validate() {
         let errors = [];
         if (!this.state.name) {
             errors.push('Название не может быть пустым');
@@ -174,14 +182,24 @@ export default class Form extends React.Component {
             errors.push('Лого не может быть пустым');
         }
         if (!this.state.coordinates.lat || !this.state.coordinates.lng) {
-            errors.push('Координаты не может быть пустым');
+            errors.push('Координаты не можгут быть пустыми');
         }
-        if (errors.length > 0) {
-            return this.setState({ errors });
-        } else {
-            this.setState({ errors });
-        }
+        
+        this.setState({ errors });
+        return errors.length == 0;
+    }
 
+    update() {
+        let data = { ...this.state };
+        delete data.errors;
+        data = this.prepareHouses(data);
+
+        console.log(data);
+        this.props.updatePlace(data);
+        browserHistory.push('/map');
+    }
+
+    add() {
         let data = { ...this.state };
         delete data.errors;
         data = this.prepareHouses(data);
@@ -212,14 +230,14 @@ export default class Form extends React.Component {
         });
     }
 
-    addHouse() {
+    onAddHouse() {
         let houses = [...this.state.houses];
         houses.push({ ...defaultHouse });
 
         this.setState({ houses });
     }
 
-    removeHouse(house_index) {
+    onRemoveHouse(house_index) {
         let houses = [...this.state.houses];
 
         houses.splice(house_index, 1);
@@ -227,7 +245,7 @@ export default class Form extends React.Component {
         this.props.setPolygons(houses);
     }
 
-    addPoint(house_index) {
+    onAddPoint(house_index) {
         let houses = [...this.state.houses];
         houses[house_index].coordinates.push({
             lat: '',
@@ -236,7 +254,7 @@ export default class Form extends React.Component {
         this.setState({ houses });
     }
 
-    removePoint(house_index) {
+    onRemovePoint(house_index) {
         let houses = [...this.state.houses];
         let coordinates = [...houses[house_index].coordinates];
 
@@ -264,91 +282,45 @@ export default class Form extends React.Component {
                         <div className='col-sm-12 col-md-12'>
                             <div className='form-group'>
                                 <label htmlFor='name'>Название*</label>
-                                <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='description'>Описание</label>
-                                <input type='text' className='form-control' id='description' placeholder='Описание' value={this.state.description} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='description' placeholder='Описание' value={this.state.description} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='step'>Шаг строительства</label>
-                                <input type='text' className='form-control' id='step' placeholder='Шаг строительства' value={this.state.step} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='step' placeholder='Шаг строительства' value={this.state.step} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='site'>Коммерческий сайт</label>
-                                <input type='text' className='form-control' id='site' placeholder='http://site.ru' value={this.state.site} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='site' placeholder='http://site.ru' value={this.state.site} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='camera'>Камера</label>
-                                <input type='text' className='form-control' id='camera' placeholder='Ссылка на трансляцию' value={this.state.camera} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='camera' placeholder='Ссылка на трансляцию' value={this.state.camera} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='photo'>Фото галлерея</label>
-                                <input type='text' className='form-control' id='photo' placeholder='Ссылка на фото галлерею' value={this.state.photo} onChange={e => this.updateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='photo'>Дома</label>
-                                {this.state.houses.map((house, i) => {
-                                    return <div className={'form-group row ' + styles.house} key={'house_' + i}>
-                                        <div className='col-xs-12'>
-                                            <button type='button' className='btn btn-danger' onClick={() => { this.removeHouse(i) }}>Удалить дом</button>
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='color' placeholder='Цвет (#000000)' value={house.color} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        {house.type == 'camera' && <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='camera' placeholder='Камера' value={house.camera} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>}
-                                        <div className='col-xs-12'>
-                                            <select id='type' className='form-control' value={(house.type && house.type != '') ? house.type : 'house'} onChange={e => this.updateInputTextHouse(e, i)}>
-                                                <option value='house'>Тип: Дом</option>
-                                                <option value='tube'>Тип: Коммуникации</option>
-                                                <option value='camera'>Тип: Камера</option>
-                                            </select>
-                                        </div>
-                                        {house.coordinates.map((latLong, j) => {
-                                            return <div className='form-group' key={'house_' + i + '_' + j}>
-                                                <div className='col-xs-6'>
-                                                    <input type='text' className='form-control' id='lat' placeholder='Широта' value={latLong.lat} onChange={e => this.updateInputTextPoint(e, i, j)} />
-                                                </div>
-                                                <div className='col-xs-6'>
-                                                    <input type='text' className='form-control' id='lng' placeholder='Долгота' value={latLong.lng} onChange={e => this.updateInputTextPoint(e, i, j)} />
-                                                </div>
-                                            </div>
-                                        })}
-                                        <div className='col-xs-12'>
-                                            <button type='button' className='btn btn-info' onClick={() => { this.addPoint(i); }}><span className='glyphicon glyphicon-plus-sign'></span></button>
-                                            &nbsp;
-                                            <button type='button' className='btn btn-danger' onClick={() => { this.removePoint(i); }}><span className='glyphicon glyphicon-minus-sign'></span></button>
-                                        </div>
-                                    </div>
-                                })}
-                                <br />
-                                <button type='button' className='btn btn-info' onClick={this.addHouse}>Добавить дом</button>
+                                <input type='text' className='form-control' id='photo' placeholder='Ссылка на фото галлерею' value={this.state.photo} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='address'>Адрес*</label>
-                                <input type='text' className='form-control' id='address' placeholder='Адрес' value={this.state.address} onChange={e => this.updateInputText(e)} />
+                                <input type='text' className='form-control' id='address' placeholder='Адрес' value={this.state.address} onChange={e => this.onUpdateInputText(e)} />
                             </div>
                             <div className='form-group row'>
                                 <div className='col-xs-6'>
                                     <label htmlFor='coordinates-lat'>Координаты*</label>
-                                    <input type='text' className='form-control' id='coordinates-lat' placeholder='Широта' value={this.state.coordinates.lat} onChange={e => this.updateInputText(e)} />
+                                    <input type='text' className='form-control' id='coordinates-lat' placeholder='Широта' value={this.state.coordinates.lat} onChange={e => this.onUpdateInputText(e)} />
                                 </div>
                                 <div className='col-xs-6'>
                                     <label htmlFor='coordinates-lat'>&nbsp;</label>
-                                    <input type='text' className='form-control' id='coordinates-lng' placeholder='Долгота' value={this.state.coordinates.lng} onChange={e => this.updateInputText(e)} />
+                                    <input type='text' className='form-control' id='coordinates-lng' placeholder='Долгота' value={this.state.coordinates.lng} onChange={e => this.onUpdateInputText(e)} />
                                 </div>
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='location'>Локация</label>
-                                <select id='location' className='form-control' value={this.state.location} onChange={e => this.updateInputText(e)}>
+                                <select id='location' className='form-control' value={this.state.location} onChange={e => this.onUpdateInputText(e)}>
                                     <option value='inner_msc'>Москва</option>
                                     <option value='out_msc'>Московская обл</option>
                                     <option value='office'>Офисы</option>
@@ -396,10 +368,56 @@ export default class Form extends React.Component {
                                     }}
                                 </Dropzone>
                             </div>
+                            <div className='form-group'>
+                                <label htmlFor='photo'>Объекты</label>
+                                {this.state.houses.map((house, i) => {
+                                    return <div className={'form-group row ' + styles.house} key={'house_' + i}>
+                                        <div className='col-xs-12'>
+                                            <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить дом</button>
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <input type='text' className='form-control' id='color' placeholder='Цвет (#000000)' value={house.color} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        </div>
+                                        {house.type == 'camera' && <div className='col-xs-12'>
+                                            <input type='text' className='form-control' id='camera' placeholder='Камера' value={house.camera} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        </div>}
+                                        <div className='col-xs-12'>
+                                            <select id='type' className='form-control' value={(house.type && house.type != '') ? house.type : 'house'} onChange={e => this.updateInputTextHouse(e, i)}>
+                                                <option value='house'>Тип: Дом</option>
+                                                <option value='tube'>Тип: Коммуникации</option>
+                                                <option value='camera'>Тип: Камера</option>
+                                            </select>
+                                        </div>
+                                        {house.coordinates.map((latLong, j) => {
+                                            return <div className='form-group' key={'house_' + i + '_' + j}>
+                                                <div className='col-xs-6'>
+                                                    <input type='text' className='form-control' id='lat' placeholder='Широта' value={latLong.lat} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
+                                                </div>
+                                                <div className='col-xs-6'>
+                                                    <input type='text' className='form-control' id='lng' placeholder='Долгота' value={latLong.lng} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
+                                                </div>
+                                            </div>
+                                        })}
+                                        <div className='col-xs-12'>
+                                            <button type='button' className='btn btn-info' onClick={() => { this.onAddPoint(i); }}><span className='glyphicon glyphicon-plus-sign'></span></button>
+                                            &nbsp;
+                                            <button type='button' className='btn btn-danger' onClick={() => { this.onRemovePoint(i); }}><span className='glyphicon glyphicon-minus-sign'></span></button>
+                                        </div>
+                                    </div>
+                                })}
+                                <br />
+                                <button type='button' className='btn btn-info' onClick={this.onAddHouse}>Добавить дом</button>
+                            </div>
                             <ul className={styles.errors}>
                                 {this.state.errors.map(error => <li>{error}</li>)}
                             </ul>
-                            <Link className='btn btn-default' to='/map'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.add}>Сохранить</button>
+                            <Link className='btn btn-default' to='/map'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
                         </div>
                     </form>
                 </div>

@@ -82,6 +82,7 @@ class Map extends React.Component {
                                     return <Polygon
                                         key={house.name}
                                         paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                        onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
                                             strokeColor: house.color,
                                             strokeOpacity: 0.8,
@@ -94,6 +95,7 @@ class Map extends React.Component {
                                     return <Polyline
                                         key={house.name}
                                         path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                        onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
                                             strokeColor: house.color,
                                             strokeOpacity: 0.8,
@@ -120,7 +122,9 @@ class Map extends React.Component {
                 >
                     <p>
                         <b>{props.infoWindow.house.name}</b><br/>
-                        Статус <b>{props.infoWindow.house.status}</b><br/>
+                        {props.infoWindow.house.type == 'camera' && <iframe src={props.infoWindow.house.camera} height="200" width="300"></iframe>}
+                        {props.infoWindow.house.type != 'camera' && <span>Статус <b>{props.infoWindow.house.status}</b></span>}
+                        <br/>
                     </p>
                 </InfoWindow>}
             </GoogleMap>

@@ -35,8 +35,34 @@ export default class PlacesController {
 
     }
 
-    update(req, res) {
-        return this._resp.formattedSuccessResponse(res, {}, 200);
+    async update(req, res) {
+        let data = JSON.parse(req.body.data);
+        let images = req.files;
+
+        let id = data._id;
+        delete data._id;
+        delete data.logo;
+        delete data.image;
+
+        let placeEntity = null;
+        try {
+            placeEntity = await Places.findByIdAndUpdate(id, { $set: data}, { new: true });
+
+            // if (images.logo && images.logo.length > 0) {
+            //     placeEntity.logo = await this._saveFile(placeEntity._id, images.logo[0]);
+            // }
+            // if (images.image && images.image.length > 0) {
+            //     placeEntity.image = await this._saveFile(placeEntity._id, images.image[0]);
+            // }
+            placeEntity.save();
+        } catch (error) {
+            console.error(error);
+            return res.status(500).send(error);
+        }
+        console.log('BODY ', req.body)
+        console.log('files ', req.files)
+
+        return this._resp.formattedSuccessResponse(res, placeEntity, 200);
     }
 
     async add(req, res) {
@@ -59,8 +85,6 @@ export default class PlacesController {
             console.error(error);
             return res.status(500).send(error);
         }
-        console.log('BODY ', req.body)
-        console.log('files ', req.files)
         return this._resp.formattedSuccessResponse(res, placeEntity, 200);
     }
 

@@ -1,4 +1,4 @@
-import { GET_PLACES_REQUEST, ADD_PLACES_REQUEST, GET_PLACES_ERROR } from '../constants';
+import { GET_PLACES_REQUEST, ADD_PLACES_REQUEST, UPD_PLACES_REQUEST, GET_PLACES_ERROR } from '../constants';
 
 export function getPlaces() {
 	return (dispatch) => {
@@ -12,6 +12,15 @@ export function addPlace(data) {
 	return (dispatch) => {
 		dispatch({
 			type: ADD_PLACES_REQUEST,
+			data
+		});
+	}
+}
+
+export function updatePlace(data) {
+	return (dispatch) => {
+		dispatch({
+			type: UPD_PLACES_REQUEST,
 			data
 		});
 	}
