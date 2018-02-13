@@ -1,6 +1,7 @@
 node_modules
 src/backend/static/bundle
 src/backend/static/css
+src/backend/static/images
 webpack-assets.json
 webpack-stats.json
 npm-debug.log
