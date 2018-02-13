@@ -121,8 +121,8 @@ class Map extends React.Component {
                     position={props.infoWindow.position}
                 >
                     <p>
-                        <b>{props.infoWindow.house.name}</b><br/>
-                        {props.infoWindow.house.type == 'camera' && <iframe src={props.infoWindow.house.camera} height="200" width="300"></iframe>}
+                        <span>Название <b>{props.infoWindow.house.name}</b></span><br/>
+                        {props.infoWindow.house.type == 'camera' && <iframe src={props.infoWindow.house.camera} height='200' width='300'></iframe>}
                         {props.infoWindow.house.type != 'camera' && <span>Статус <b>{props.infoWindow.house.status}</b></span>}
                         <br/>
                     </p>

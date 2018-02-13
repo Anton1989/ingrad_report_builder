@@ -53,10 +53,15 @@ function getPlaces() {
 
 function putPlace(data) {
 	var formData = new FormData();
-	formData.append('image', data.image);
-	formData.append('logo', data.logo);
-	delete data.image;
-	delete data.logo;
+	if (data.image && typeof data.image === 'object') {
+		formData.append('image', data.image);
+		delete data.image;
+	}
+	if (data.logo && typeof data.logo === 'object') {
+		formData.append('logo', data.logo);
+		delete data.logo;
+	}
+	
 	formData.append('data', JSON.stringify(data));
 	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + data._id, {
 		method: 'PUT',
@@ -74,8 +79,12 @@ function putPlace(data) {
 
 function postPlace(data) {
 	var formData = new FormData();
-	formData.append('image', data.image);
-	formData.append('logo', data.logo);
+	if (data.image) {
+		formData.append('image', data.image);
+	}
+	if (data.logo) {
+		formData.append('logo', data.logo);
+	}
 	delete data.image;
 	delete data.logo;
 	formData.append('data', JSON.stringify(data));

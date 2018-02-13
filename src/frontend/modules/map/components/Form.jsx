@@ -11,12 +11,7 @@ const defaultHouse = {
     status: '',
     color: '#000000',
     type: 'house',
-    coordinates: [
-        {
-            lat: '',
-            lng: ''
-        }
-    ]
+    coordinates: null
 };
 
 export default class Form extends React.Component {
@@ -52,6 +47,7 @@ export default class Form extends React.Component {
         this.onAddPoint = this.onAddPoint.bind(this);
         this.onRemovePoint = this.onRemovePoint.bind(this);
         this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
+        this.onRemoveImage = this.onRemoveImage.bind(this);
         this.timeout = null;
     }
 
@@ -89,6 +85,12 @@ export default class Form extends React.Component {
             }
         }
         return object;
+    }
+
+    onRemoveImage(e) {
+        let upd = {};
+        upd[e.target.id] = null;
+        this.setState(upd);
     }
 
     onDropLogo(files) {
@@ -184,7 +186,7 @@ export default class Form extends React.Component {
         if (!this.state.coordinates.lat || !this.state.coordinates.lng) {
             errors.push('Координаты не можгут быть пустыми');
         }
-        
+
         this.setState({ errors });
         return errors.length == 0;
     }
@@ -232,7 +234,14 @@ export default class Form extends React.Component {
 
     onAddHouse() {
         let houses = [...this.state.houses];
-        houses.push({ ...defaultHouse });
+        let newHouse = { ...defaultHouse };
+        newHouse.coordinates = [
+            {
+                lat: '',
+                lng: ''
+            }
+        ]
+        houses.push(newHouse);
 
         this.setState({ houses });
     }
@@ -271,12 +280,38 @@ export default class Form extends React.Component {
 
         let title = 'Добавить новый проект';
         if (place) {
-            title = 'Редактирование проекта';
+            title = 'Редактирование';
+        }
+
+        let image = null;
+        if (this.state.image && typeof this.state.image === 'object') {
+            image = <li>
+                {this.state.image.name} - {this.state.image.size} bytes&nbsp;
+                <span id='image' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+            </li>;
+        } else if (this.state.image) {
+            image = <li>
+                <a href={this.state.image} target='_blank'>{this.state.image}</a>&nbsp;
+                <span id='image' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+            </li>;
+        }
+
+        let logo = null;
+        if (this.state.logo && typeof this.state.logo === 'object') {
+            logo = <li>
+                {this.state.logo.name} - {this.state.logo.size} bytes&nbsp;
+                <span id='logo' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+            </li>;
+        } else if (this.state.logo) {
+            logo = <li>
+                <a href={this.state.logo} target='_blank'>{this.state.logo}</a>&nbsp;
+                <span id='logo' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+            </li>;
         }
 
         return <div className={'col-sm-4 col-md-3 sidebar ' + styles.add}>
             <div className='row'>
-                <h1>{title}</h1>
+                <h1>{title} <span title='Сохранить' onClick={this.onSave} className={'glyphicon glyphicon-floppy-save ' + styles.btn}></span></h1>
                 <div className={styles.scrolWrapper}>
                     <form>
                         <div className='col-sm-12 col-md-12'>
@@ -328,6 +363,9 @@ export default class Form extends React.Component {
                             </div>
                             <div className='form-group'>
                                 <label>Лого*</label>
+                                <ul>
+                                    {logo}
+                                </ul>
                                 <Dropzone
                                     accept='image/png'
                                     className={styles.dropzone}
@@ -349,6 +387,9 @@ export default class Form extends React.Component {
                             </div>
                             <div className='form-group'>
                                 <label>Фото объекта</label>
+                                <ul>
+                                    {image}
+                                </ul>
                                 <Dropzone
                                     accept='image/png'
                                     className={styles.dropzone}

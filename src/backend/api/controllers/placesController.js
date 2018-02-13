@@ -41,19 +41,24 @@ export default class PlacesController {
 
         let id = data._id;
         delete data._id;
-        delete data.logo;
-        delete data.image;
+
+        console.log('BODY ', data)
+        console.log('files ', images)
 
         let placeEntity = null;
         try {
-            placeEntity = await Places.findByIdAndUpdate(id, { $set: data}, { new: true });
+            placeEntity = await Places.findByIdAndUpdate(id, { $set: data }, { new: true });
 
-            // if (images.logo && images.logo.length > 0) {
-            //     placeEntity.logo = await this._saveFile(placeEntity._id, images.logo[0]);
-            // }
-            // if (images.image && images.image.length > 0) {
-            //     placeEntity.image = await this._saveFile(placeEntity._id, images.image[0]);
-            // }
+            if (images.logo && images.logo.length > 0) {
+                let logo = images.logo[0];
+                this._deleteFile(placeEntity._id, logo);
+                placeEntity.logo = await this._saveFile(placeEntity._id, logo);
+            }
+            if (images.image && images.image.length > 0) {
+                let image = images.image[0];
+                this._deleteFile(placeEntity._id, image);
+                placeEntity.image = await this._saveFile(placeEntity._id, image);
+            }
             placeEntity.save();
         } catch (error) {
             console.error(error);
@@ -88,6 +93,15 @@ export default class PlacesController {
         return this._resp.formattedSuccessResponse(res, placeEntity, 200);
     }
 
+    _deleteFile(id, object) {
+        let extension = object.mimetype.split('/')[1];
+        let file = `${object.fieldname}.${extension}`;
+        let path = `./src/backend/static/images/${id}/${file}`;
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+    }
+
     _saveFile(id, logo) {
         return new Promise(function (resolve, reject) {
             let extension = logo.mimetype.split('/')[1];
@@ -95,7 +109,7 @@ export default class PlacesController {
             let newFolder = `/images/${id}/`;
             let newPath = `./src/backend/static${newFolder}${newFile}`;
 
-            if (!fs.existsSync(`./src/backend/static${newFolder}`)){
+            if (!fs.existsSync(`./src/backend/static${newFolder}`)) {
                 fs.mkdirSync(`./src/backend/static${newFolder}`);
             }
 
