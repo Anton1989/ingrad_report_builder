@@ -1,28 +1,27 @@
 import React from 'react';
 import reactCSS from 'reactcss';
+import PropTypes from 'prop-types';
 import { SketchPicker } from 'react-color';
 
-class SketchExample extends React.Component {
+export default class SketchExample extends React.Component {
   state = {
-    displayColorPicker: false,
-    color: {
-      r: '241',
-      g: '112',
-      b: '19',
-      a: '1',
-    },
+    displayColorPicker: false
   };
 
+  // componentWillReceiveProps(newProps) {
+  //   this.props.onSetColor(newProps.color);
+  // }
+
   handleClick = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+    this.setState({ displayColorPicker: !this.state.displayColorPicker });
   };
 
   handleClose = () => {
-    this.setState({ displayColorPicker: false })
+    this.setState({ displayColorPicker: false });
   };
 
   handleChange = (color) => {
-    this.setState({ color: color.rgb })
+    this.props.onSetColor(this.props.index, color.hex);
   };
 
   render() {
@@ -33,7 +32,7 @@ class SketchExample extends React.Component {
           width: '36px',
           height: '14px',
           borderRadius: '2px',
-          background: `rgba(${ this.state.color.r }, ${ this.state.color.g }, ${ this.state.color.b }, ${ this.state.color.a })`,
+          background: `${ this.props.color }`,
         },
         swatch: {
           padding: '5px',
@@ -60,11 +59,11 @@ class SketchExample extends React.Component {
     return (
       <div>
         <div style={ styles.swatch } onClick={ this.handleClick }>
-          <div style={ styles.color } />
+          Цвет: <div style={ styles.color } />
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>
           <div style={ styles.cover } onClick={ this.handleClose }/>
-          <SketchPicker color={ this.state.color } onChange={ this.handleChange } />
+          <SketchPicker color={ this.props.color } onChange={ this.handleChange } />
         </div> : null }
 
       </div>
@@ -72,4 +71,8 @@ class SketchExample extends React.Component {
   }
 }
 
-export default SketchExample
+SketchExample.propTypes = {
+  onSetColor: PropTypes.func.isRequired,
+  index: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired
+}

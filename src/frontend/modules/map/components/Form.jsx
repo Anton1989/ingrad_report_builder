@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Link from 'react-router/lib/Link';
 import Dropzone from 'react-dropzone';
 import browserHistory from 'react-router/lib/browserHistory';
+import SketchExample from './SketchExample.jsx';
 // Styles
 import styles from './Form.scss';
 
@@ -48,6 +49,7 @@ export default class Form extends React.Component {
         this.onRemovePoint = this.onRemovePoint.bind(this);
         this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
         this.onRemoveImage = this.onRemoveImage.bind(this);
+        this.onSetColor = this.onSetColor.bind(this);
         this.timeout = null;
     }
 
@@ -148,6 +150,14 @@ export default class Form extends React.Component {
         this.setState(variable);
     }
 
+    onSetColor(house_index, color) {
+        let houses = [...this.state.houses];
+        houses[house_index]['color'] = color;
+
+        this.props.setPolygons(houses);
+        this.setState({ houses });
+    }
+    
     onUpdateInputTextPoint(e, house_index, point_index) {
         let houses = [...this.state.houses];
         houses[house_index].coordinates[point_index][e.target.id] = parseFloat(e.target.value);
@@ -420,7 +430,7 @@ export default class Form extends React.Component {
                                             <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
                                         </div>
                                         <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='color' placeholder='Цвет (#000000)' value={house.color} onChange={e => this.updateInputTextHouse(e, i)} />
+                                            <SketchExample onSetColor={this.onSetColor} color={house.color} index={i} />
                                         </div>
                                         <div className='col-xs-12'>
                                             <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />

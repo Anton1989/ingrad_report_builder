@@ -21,7 +21,9 @@ const defaultCoordinates = {
 class Map extends React.Component {
 
     componentDidMount() {
-        this.props.getPlaces();
+        if (this.props.places.data.length == 0) {
+            this.props.getPlaces();
+        }
     }
 
     getDefaultCoordinates(places, activeTypes, type, placeId) {
