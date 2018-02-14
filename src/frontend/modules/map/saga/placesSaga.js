@@ -1,4 +1,4 @@
-import { ADD_PLACES_REQUEST, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
+import { ADD_PLACES_REQUEST, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
 import fetch from 'isomorphic-fetch';
 import config from '../../../config';
 import { call, put, takeEvery } from 'redux-saga/effects';
@@ -30,7 +30,7 @@ function* addPlace(action) {
 function* updPlace(action) {
 	try {
 		const place = yield call(putPlace, action.data);
-		yield put({ type: UPD_PLACES_REQUEST, place: place.data });
+		yield put({ type: UPD_PLACES_SUCCESS, place: place.data });
 	} catch (e) {
 		yield put({ type: GET_PLACES_ERROR, message: e.message });
 	}
