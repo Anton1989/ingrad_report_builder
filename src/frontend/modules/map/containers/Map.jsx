@@ -86,9 +86,9 @@ class Map extends React.Component {
                                         paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                                         onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
-                                            strokeColor: house.color,
+                                            strokeColor: house.strokColor,
                                             strokeOpacity: 0.8,
-                                            strokeWeight: 2,
+                                            strokeWeight: house.width,
                                             fillColor: house.color,
                                             fillOpacity: 0.35
                                         }}
@@ -99,9 +99,9 @@ class Map extends React.Component {
                                         path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                                         onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
-                                            strokeColor: house.color,
+                                            strokeColor: house.strokColor,
                                             strokeOpacity: 0.8,
-                                            strokeWeight: 3,
+                                            strokeWeight: house.width,
                                             fillColor: house.color,
                                             fillOpacity: 0.35
                                         }}

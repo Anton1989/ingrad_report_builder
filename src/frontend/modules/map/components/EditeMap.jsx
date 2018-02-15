@@ -55,9 +55,9 @@ const Maps = compose(
                     key={house.name}
                     paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                     options={{
-                        strokeColor: house.color,
+                        strokeColor: house.strokColor,
                         strokeOpacity: 0.8,
-                        strokeWeight: 2,
+                        strokeWeight: house.width,
                         fillColor: house.color,
                         fillOpacity: 0.35
                     }}
@@ -67,9 +67,9 @@ const Maps = compose(
                     key={house.name}
                     path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                     options={{
-                        strokeColor: house.color,
+                        strokeColor: house.strokColor,
                         strokeOpacity: 0.8,
-                        strokeWeight: 3,
+                        strokeWeight: house.width,
                         fillColor: house.color,
                         fillOpacity: 0.35
                     }}

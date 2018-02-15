@@ -21,10 +21,15 @@ export default class SketchExample extends React.Component {
   };
 
   handleChange = (color) => {
-    this.props.onSetColor(this.props.index, color.hex);
+    this.props.onSetColor(this.props.index, color.hex, this.props.field);
   };
 
   render() {
+
+    const labels = {
+      color: 'Цвет фона',
+      strokColor: 'Цвет обводки'
+    };
 
     const styles = reactCSS({
       'default': {
@@ -59,7 +64,7 @@ export default class SketchExample extends React.Component {
     return (
       <div>
         <div style={ styles.swatch } onClick={ this.handleClick }>
-          Цвет: <div style={ styles.color } />
+          {labels[this.props.field]}: <div style={ styles.color } />
         </div>
         { this.state.displayColorPicker ? <div style={ styles.popover }>
           <div style={ styles.cover } onClick={ this.handleClose }/>

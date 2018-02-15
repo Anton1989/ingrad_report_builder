@@ -10,6 +10,8 @@ import styles from './Form.scss';
 const defaultHouse = {
     name: '',
     status: '',
+    width: 2,
+    strokColor: '#000000',
     color: '#000000',
     type: 'house',
     coordinates: null
@@ -150,9 +152,9 @@ export default class Form extends React.Component {
         this.setState(variable);
     }
 
-    onSetColor(house_index, color) {
+    onSetColor(house_index, color, field) {
         let houses = [...this.state.houses];
-        houses[house_index]['color'] = color;
+        houses[house_index][field] = color;
 
         this.props.setPolygons(houses);
         this.setState({ houses });
@@ -430,7 +432,13 @@ export default class Form extends React.Component {
                                             <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
                                         </div>
                                         <div className='col-xs-12'>
-                                            <SketchExample onSetColor={this.onSetColor} color={house.color} index={i} />
+                                            <input type='number' className='form-control' id='width' placeholder='Ширина обводки' value={house.width} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <SketchExample onSetColor={this.onSetColor} color={house.strokColor} field='strokColor' index={i} />
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <SketchExample onSetColor={this.onSetColor} color={house.color} field='color' index={i} />
                                         </div>
                                         <div className='col-xs-12'>
                                             <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />
