@@ -52,6 +52,7 @@ export default class Form extends React.Component {
         this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
         this.onRemoveImage = this.onRemoveImage.bind(this);
         this.onSetColor = this.onSetColor.bind(this);
+        this.updateCoordinatesByString = this.updateCoordinatesByString.bind(this);
         this.timeout = null;
     }
 
@@ -59,7 +60,7 @@ export default class Form extends React.Component {
         if (this.props.place) {
             let place = { ...this.props.place };
             place = this.cleanObj(place);
-            place.houses = place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house)));
+            place.houses = place.houses ? place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house))) : [];
 
             let obj = Object.assign({}, this.state, place);
             this.props.setPolygons(obj.houses);
@@ -74,7 +75,7 @@ export default class Form extends React.Component {
         if (newProps.place && !this.props.place) {
             let place = { ...newProps.place };
             place = this.cleanObj(place);
-            place.houses = place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house)));
+            place.houses = place.houses ? place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house))) : [];
 
             let obj = Object.assign({}, this.state, place);
             this.props.setPolygons(obj.houses);
@@ -159,6 +160,26 @@ export default class Form extends React.Component {
         this.props.setPolygons(houses);
         this.setState({ houses });
     }
+
+    updateCoordinatesByString(e, house_index) {
+        //55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673
+        let houses = [...this.state.houses];
+        let coords = this.refs.coorStr.value;
+        let coordA = coords.split('; ');
+        coordA.forEach(coord => {
+            let coordLL = coord.split(', ');
+            if (coordLL[0] && coordLL[1] && coordLL[0] != '' && coordLL[1] != '') {
+                houses[house_index].coordinates.push({
+                    lat: parseFloat(coordLL[0].replace(',', '.')), 
+                    lng: parseFloat(coordLL[1].replace(',', '.'))
+                });
+            }
+        });
+
+        houses = this.trimHouses(houses, false);
+        this.props.setPolygons(houses);
+        this.setState({ houses });
+    }
     
     onUpdateInputTextPoint(e, house_index, point_index) {
         let houses = [...this.state.houses];
@@ -224,13 +245,13 @@ export default class Form extends React.Component {
 
     prepareHouses(data) {
         let state = { ...data };
-        state.houses = this.trimHouses(state.houses);
+        state.houses = this.trimHouses(state.houses, true);
         return state;
     }
 
-    trimHouses(houses) {
+    trimHouses(houses, name_mand = true) {
         return houses.filter(house => {
-            if (house.name && house.coordinates.length > 0 && house.coordinates[0].lat && house.coordinates[0].lng) {
+            if ((house.name || name_mand === false) && house.coordinates.length > 0) {
                 house.coordinates = house.coordinates.filter(coordinate => {
                     if (coordinate.lat && coordinate.lng &&
                         coordinate.lat != '' && coordinate.lng != '') {
@@ -452,6 +473,10 @@ export default class Form extends React.Component {
                                                 <option value='tube'>Тип: Коммуникации</option>
                                                 <option value='camera'>Тип: Камера</option>
                                             </select>
+                                        </div>
+                                        <div className='col-xs-12'>
+                                            <input type='text' ref='coorStr' className='form-control' id='status' placeholder='Добавить координаты строкой' />
+                                            <button type='button' className='btn btn-info' onClick={e => this.updateCoordinatesByString(e, i)}><span className='glyphicon glyphicon-plus-sign'></span></button>
                                         </div>
                                         {house.coordinates.map((latLong, j) => {
                                             return <div className='form-group' key={'house_' + i + '_' + j}>

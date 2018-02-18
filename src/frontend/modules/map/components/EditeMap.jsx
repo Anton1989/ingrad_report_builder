@@ -37,7 +37,6 @@ const Maps = compose(
     withScriptjs,
     withGoogleMap
 )((props) => {
-    console.log(props.zoom);
     return <GoogleMap
         zoom={props.zoom}
         defaultCenter={defaultCoordinates.coordinates}
