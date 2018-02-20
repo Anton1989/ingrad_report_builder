@@ -3,16 +3,13 @@ import PropTypes from 'prop-types';
 import Link from 'react-router/lib/Link';
 import Dropzone from 'react-dropzone';
 import browserHistory from 'react-router/lib/browserHistory';
-import SketchExample from './SketchExample.jsx';
 // Styles
 import styles from './Form.scss';
 
 const defaultHouse = {
     name: '',
     status: '',
-    width: 2,
-    strokColor: '#000000',
-    color: '#000000',
+    style: null,
     type: 'house',
     coordinates: null
 };
@@ -51,7 +48,6 @@ export default class Form extends React.Component {
         this.onRemovePoint = this.onRemovePoint.bind(this);
         this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
         this.onRemoveImage = this.onRemoveImage.bind(this);
-        this.onSetColor = this.onSetColor.bind(this);
         this.updateCoordinatesByString = this.updateCoordinatesByString.bind(this);
         this.timeout = null;
     }
@@ -71,6 +67,9 @@ export default class Form extends React.Component {
     componentWillReceiveProps(newProps) {
         if (newProps.marker) {
             this.setState({ coordinates: newProps.marker });
+        }
+        if (newProps.mapStyles.length > 0 && this.props.mapStyles.length == 0) {
+            defaultHouse.style = newProps.mapStyles[0];
         }
         if (newProps.place && !this.props.place) {
             let place = { ...newProps.place };
@@ -153,14 +152,6 @@ export default class Form extends React.Component {
         this.setState(variable);
     }
 
-    onSetColor(house_index, color, field) {
-        let houses = [...this.state.houses];
-        houses[house_index][field] = color;
-
-        this.props.setPolygons(houses);
-        this.setState({ houses });
-    }
-
     updateCoordinatesByString(e, house_index) {
         //55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673
         let houses = [...this.state.houses];
@@ -178,6 +169,7 @@ export default class Form extends React.Component {
 
         houses = this.trimHouses(houses, false);
         this.props.setPolygons(houses);
+        this.refs.coorStr.value = '';
         this.setState({ houses });
     }
     
@@ -308,7 +300,7 @@ export default class Form extends React.Component {
     }
 
     render() {
-        const { place } = this.props;
+        const { place, mapStyles } = this.props;
         console.log('RENDER <Form>');
 
         let title = 'Добавить новый проект';
@@ -453,13 +445,11 @@ export default class Form extends React.Component {
                                             <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
                                         </div>
                                         <div className='col-xs-12'>
-                                            <input type='number' className='form-control' id='width' placeholder='Ширина обводки' value={house.width} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <SketchExample onSetColor={this.onSetColor} color={house.strokColor} field='strokColor' index={i} />
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <SketchExample onSetColor={this.onSetColor} color={house.color} field='color' index={i} />
+                                            <select id='style' className='form-control' value={house.style ? house.style : mapStyles.length > 0 ? mapStyles[0]._id : ''} onChange={e => this.updateInputTextHouse(e, i)}>
+                                                {mapStyles.length > 0 && mapStyles.map(style => {
+                                                    return <option value={style._id}>Стиль: {style.name}</option>;
+                                                })}
+                                            </select>
                                         </div>
                                         <div className='col-xs-12'>
                                             <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />

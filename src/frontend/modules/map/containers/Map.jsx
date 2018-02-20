@@ -6,6 +6,7 @@ import { compose, withStateHandlers } from 'recompose';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Polyline, InfoWindow } from 'react-google-maps';
 //Actions
 import { getPlaces, dismissError } from '../actions/placesActions';
+import { getStyles } from '../../styles/actions/stylesActions';
 //Components
 import PlaceDetails from '../components/PlaceDetails.jsx';
 import styles from '../components/Map.scss';
@@ -23,6 +24,9 @@ class Map extends React.Component {
     componentDidMount() {
         if (this.props.places.data.length == 0) {
             this.props.getPlaces();
+        }
+        if (this.props.mapStyles.data.length == 0) {
+            this.props.getStyles();
         }
     }
 
@@ -42,7 +46,7 @@ class Map extends React.Component {
     }
 
     render() {
-        const { places, type, activeTypes, placeId, openPlace } = this.props;
+        const { places, type, activeTypes, placeId, openPlace, mapStyles } = this.props;
         console.log('RENDER <Map>');
 
         let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, type, placeId);
@@ -78,18 +82,19 @@ class Map extends React.Component {
                 {places.data && places.data.map(place => {
                     if (activeTypes.indexOf(place.location) !== -1) {
                         let placeHtml = null;
-                        if (placeId && place.houses.length > 0 && placeId == place._id) {
+                        if (placeId && place.houses.length > 0 && props.mapStyles.length > 0 && placeId == place._id) {
                             placeHtml = place.houses.map(house => {
+                                let style = props.mapStyles.find(style => style._id == house.style);
                                 if (house.type == 'house' || house.type == 'camera') {
                                     return <Polygon
                                         key={house.name}
                                         paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                                         onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
-                                            strokeColor: house.strokColor,
+                                            strokeColor: style.strokColor,
                                             strokeOpacity: 0.8,
-                                            strokeWeight: house.width,
-                                            fillColor: house.color,
+                                            strokeWeight: style.width,
+                                            fillColor: style.color,
                                             fillOpacity: 0.35
                                         }}
                                     />
@@ -99,10 +104,10 @@ class Map extends React.Component {
                                         path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                                         onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
-                                            strokeColor: house.strokColor,
+                                            strokeColor: style.strokColor,
                                             strokeOpacity: 0.8,
-                                            strokeWeight: house.width,
-                                            fillColor: house.color,
+                                            strokeWeight: style.width,
+                                            fillColor: style.color,
                                             fillOpacity: 0.35
                                         }}
                                     />
@@ -137,6 +142,7 @@ class Map extends React.Component {
                 loadingElement={<div style={{ height: '80%' }} />}
                 containerElement={<div className={styles.containerElement} />}
                 mapElement={<div style={{ height: '100%' }} />}
+                mapStyles={mapStyles.data}
             />
             {placeId && places.data.length > 0 && <PlaceDetails place={places.data.find(place => place._id == placeId)} />}
             {this.props.children}
@@ -145,11 +151,13 @@ class Map extends React.Component {
 }
 function mapStateToProps(state) {
     return {
+        mapStyles: state.styles,
         places: state.places
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
+        getStyles: bindActionCreators(getStyles, dispatch),
         getPlaces: bindActionCreators(getPlaces, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)
     }

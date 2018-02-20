@@ -48,16 +48,17 @@ const Maps = compose(
             defaultDraggable={true}
             onDragEnd={(e) => { props.onDragEnd(e, props) }}
         />}
-        {props.houses && props.houses.length > 0 && props.houses.map(house => {
+        {props.houses && props.houses.length > 0 && props.mapStyles.length > 0 && props.houses.map(house => {
+            let style = props.mapStyles.find(style => style._id == house.style);
             if (house.type == 'house' || house.type == 'camera') {
                 return <Polygon
                     key={house.name}
                     paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                     options={{
-                        strokeColor: house.strokColor,
+                        strokeColor: style.strokColor,
                         strokeOpacity: 0.8,
-                        strokeWeight: house.width,
-                        fillColor: house.color,
+                        strokeWeight: style.width,
+                        fillColor: style.color,
                         fillOpacity: 0.35
                     }}
                 />
@@ -66,10 +67,10 @@ const Maps = compose(
                     key={house.name}
                     path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                     options={{
-                        strokeColor: house.strokColor,
+                        strokeColor: style.strokColor,
                         strokeOpacity: 0.8,
-                        strokeWeight: house.width,
-                        fillColor: house.color,
+                        strokeWeight: style.width,
+                        fillColor: style.color,
                         fillOpacity: 0.35
                     }}
                 />
@@ -81,7 +82,7 @@ const Maps = compose(
 export default class EditeMap extends React.Component {
 
     render() {
-        const { marker, houses, setMarker } = this.props;
+        const { marker, houses, setMarker, mapStyles } = this.props;
         console.log('RENDER <PlaceDetails>');
 
         return <div className={styles.maps}>
@@ -92,6 +93,7 @@ export default class EditeMap extends React.Component {
                 mapElement={<div style={{ height: '100%' }} />}
                 coordinates={marker}
                 houses={houses}
+                mapStyles={mapStyles}
                 setMarker={setMarker}
             />
         </div>

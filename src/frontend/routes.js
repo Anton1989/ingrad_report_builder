@@ -5,6 +5,7 @@ import Route from 'react-router/lib/Route';
 import Layout from './common/containers/Layout.jsx';
 //containers
 import ProjectsList from './modules/projects/containers/ProjectsList.jsx';
+import Styles from './modules/styles/containers/Styles.jsx';
 import ProjectDetails from './modules/projects/containers/ProjectDetails.jsx';
 import MapContainer from './modules/map/containers/Map.jsx';
 import PlaceAdd from './modules/map/containers/PlaceAdd.jsx';
@@ -21,6 +22,7 @@ export default (/* data */) => {
                 <Route path='add' component={PlaceAdd} />
                 <Route path='edit/:placeId' component={PlaceAdd} />
             </Route>
+            <Route path='styles' component={Styles} />
         </Route>
     )
 }

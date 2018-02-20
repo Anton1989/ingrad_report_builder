@@ -1,7 +1,8 @@
 const config = {
     apiConfig: {
         getProjectsUrl: '/v1/projects',
-        getPlacesUrl: '/v1/places'
+        getPlacesUrl: '/v1/places',
+        getStylesUrl: '/v1/styles'
     },
     defaultVars: {
         menu: [

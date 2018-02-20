@@ -1,6 +1,7 @@
 import cors from 'cors';
 import ProjectsController from './controllers/projectsController';
 import PlacesController from './controllers/placesController';
+import StylesController from './controllers/stylesController';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 
@@ -28,6 +29,7 @@ export default class ApiConfig {
         //Init class controllers with methods
         let projectsController = new ProjectsController(this._network);
         let placesController = new PlacesController(this._network);
+        let stylesController = new StylesController(this._network);
 
         //Init endpoints for express.
         var cpUpload = upload.fields([
@@ -35,6 +37,7 @@ export default class ApiConfig {
             { name: 'logo', maxCount: 1 }
         ]);
         this._network.use('/v1/projects', projectsController.getRouter());
+        this._network.use('/v1/styles', stylesController.getRouter());
         this._network.use('/v1/places', cpUpload, placesController.getRouter());
     }
 }

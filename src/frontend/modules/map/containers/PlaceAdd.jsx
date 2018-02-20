@@ -3,6 +3,7 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 //Actions
 import { getPlaces, addPlace, updatePlace, dismissError } from '../actions/placesActions';
+import { getStyles } from '../../styles/actions/stylesActions';
 //Components
 import Form from '../components/Form.jsx';
 import EditeMap from '../components/EditeMap.jsx';
@@ -28,6 +29,9 @@ class PlaceAdd extends React.Component {
             let place = this.props.places.data.find(place => place._id == this.props.params.placeId);
             this.setState({ marker: place.coordinates });
         }
+        if (this.props.styles.data.length == 0) {
+            this.props.getStyles();
+        }
     }
 
     componentWillReceiveProps(newProps) {
@@ -46,7 +50,7 @@ class PlaceAdd extends React.Component {
     }
 
     render() {
-        const { places, addPlace, updatePlace, params } = this.props;
+        const { places, styles, addPlace, updatePlace, params } = this.props;
         console.log('RENDER <PlaceAdd>');
 
         let place = null;
@@ -56,18 +60,20 @@ class PlaceAdd extends React.Component {
         }
 
         return <div>
-            <Form place={place} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
-            <EditeMap marker={this.state.marker} setMarker={this.setMarker} houses={this.state.houses} />
+            <Form place={place} mapStyles={styles.data} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
+            <EditeMap marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
         </div>;
     }
 }
 function mapStateToProps(state) {
     return {
-        places: state.places
+        places: state.places,
+        styles: state.styles
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
+        getStyles: bindActionCreators(getStyles, dispatch),
         addPlace: bindActionCreators(addPlace, dispatch),
         updatePlace: bindActionCreators(updatePlace, dispatch),
         getPlaces: bindActionCreators(getPlaces, dispatch),

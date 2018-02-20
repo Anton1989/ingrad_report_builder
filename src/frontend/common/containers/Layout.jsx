@@ -125,6 +125,12 @@ class Layout extends React.Component {
 				url: '/map',
 				strict: true,
 				submenu: (places.data.length > 0 && isMapPage) ? this.generateMapSubMenu(places.data) : []
+			},
+			{
+				anchor: 'Стили',
+				url: '/styles',
+				strict: true,
+				submenu: []
 			}
 		];
 

@@ -27,7 +27,9 @@ export default class PlacesController {
 
     async all(req, res) {
         try {
-            const places = await Places.find({}).exec();
+            const places = await Places.find({}).populate([{
+                path: 'styles'
+            }]).exec();
             return this._resp.formattedSuccessResponse(res, places, 200);
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
@@ -64,8 +66,6 @@ export default class PlacesController {
             console.error(error);
             return res.status(500).send(error);
         }
-        console.log('BODY ', req.body)
-        console.log('files ', req.files)
 
         return this._resp.formattedSuccessResponse(res, placeEntity, 200);
     }

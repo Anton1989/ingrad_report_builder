@@ -4,9 +4,7 @@ import Coordinate from './Coordinate';
 export default new Schema({
     name: String,
     status: String,
-    width: Number,
-    strokColor: String,
-    color: String,
+    style: { type: Schema.Types.ObjectId, ref: 'styles' },
     camera: String,
     type: String,
     coordinates: [Coordinate]
