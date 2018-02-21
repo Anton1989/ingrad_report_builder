@@ -17,23 +17,23 @@ const Maps = compose(
         zoom: 10,
         map: undefined
     }), {
-        onMapMounted: () => ref => ({
-            map: ref
+            onMapMounted: () => ref => ({
+                map: ref
+            }),
+            onZoomChanged: ({ map }) => () => ({
+                zoom: map.getZoom()
+            }),
+            onDragEnd: () => (e, props) => {
+                console.log('props.setMarker', {
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng()
+                })
+                props.setMarker({
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng()
+                });
+            }
         }),
-        onZoomChanged: ({ map }) => () => ({
-            zoom: map.getZoom()
-        }),
-        onDragEnd: () => (e, props) => {
-            console.log('props.setMarker', {
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng()
-            })
-            props.setMarker({
-                lat: e.latLng.lat(),
-                lng: e.latLng.lng()
-            });
-        }
-    }),
     withScriptjs,
     withGoogleMap
 )((props) => {
@@ -50,29 +50,48 @@ const Maps = compose(
         />}
         {props.houses && props.houses.length > 0 && props.mapStyles.length > 0 && props.houses.map(house => {
             let style = props.mapStyles.find(style => style._id == house.style);
-            if (house.type == 'house' || house.type == 'camera') {
-                return <Polygon
-                    key={house.name}
-                    paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
-                    options={{
-                        strokeColor: style.strokColor,
-                        strokeOpacity: 0.8,
-                        strokeWeight: style.width,
-                        fillColor: style.color,
-                        fillOpacity: 0.35
-                    }}
+            let options = {
+                strokeColor: style.strokColor,
+                strokeOpacity: style.strokeOpacity,
+                strokeWeight: style.width,
+                fillColor: style.color,
+                fillOpacity: style.fillOpacity
+            };
+            let stroke = null;
+            if (style.lineStyle == 'dashed') {
+                let optionsStroke = { ...options };
+                optionsStroke.icons = [{
+                    icon: {
+                        path: 'M 0,-1 0,1',
+                        strokeOpacity: style.strokeOpacity,
+                        scale: 4
+                    },
+                    offset: '0',
+                    repeat: '20px'
+                }];
+                let path = house.coordinates.filter(cd => cd.lat != '' && cd.lng != '');
+                path.push(path[0]);
+                stroke = <Polyline
+                    key={'stroke_' + house.name}
+                    path={path}
+                    options={optionsStroke}
                 />
+                options.strokeOpacity = 0;
+            }
+            if (house.type == 'house' || house.type == 'camera') {
+                return [
+                    <Polygon
+                        key={house.name}
+                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                        options={options}
+                    />,
+                    stroke
+                ]
             } else { //tube
                 return <Polyline
                     key={house.name}
                     path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
-                    options={{
-                        strokeColor: style.strokColor,
-                        strokeOpacity: 0.8,
-                        strokeWeight: style.width,
-                        fillColor: style.color,
-                        fillOpacity: 0.35
-                    }}
+                    options={options}
                 />
             }
         })}

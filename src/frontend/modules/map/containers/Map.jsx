@@ -85,19 +85,50 @@ class Map extends React.Component {
                         if (placeId && place.houses.length > 0 && props.mapStyles.length > 0 && placeId == place._id) {
                             placeHtml = place.houses.map(house => {
                                 let style = props.mapStyles.find(style => style._id == house.style);
-                                if (house.type == 'house' || house.type == 'camera') {
-                                    return <Polygon
-                                        key={house.name}
-                                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
-                                        onClick={(event) => { props.onToggleOpen(event, house) }}
-                                        options={{
-                                            strokeColor: style.strokColor,
-                                            strokeOpacity: 0.8,
-                                            strokeWeight: style.width,
-                                            fillColor: style.color,
-                                            fillOpacity: 0.35
-                                        }}
+                                let options = {
+                                    strokeColor: style.strokColor,
+                                    strokeOpacity: style.strokeOpacity,
+                                    strokeWeight: style.width,
+                                    fillColor: style.color,
+                                    fillOpacity: style.fillOpacity
+                                };
+                                let stroke = null;
+                                if (style.lineStyle == 'dashed') {
+                                    let optionsStroke = { ...options };
+                                    optionsStroke.icons = [{
+                                        icon: {
+                                            path: 'M 0,-1 0,1',
+                                            strokeOpacity: style.strokeOpacity,
+                                            scale: 4
+                                        },
+                                        offset: '0',
+                                        repeat: '20px'
+                                    }];
+                                    let path = house.coordinates.filter(cd => cd.lat != '' && cd.lng != '');
+                                    path.push(path[0]);
+                                    stroke = <Polyline
+                                        key={'stroke_' + house.name}
+                                        path={path}
+                                        options={optionsStroke}
                                     />
+                                    options.strokeOpacity = 0;
+                                }
+                                if (house.type == 'house' || house.type == 'camera') {
+                                    return [
+                                        <Polygon
+                                            key={house.name}
+                                            paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                            onClick={(event) => { props.onToggleOpen(event, house) }}
+                                            options={{
+                                                strokeColor: style.strokColor,
+                                                strokeOpacity: style.strokeOpacity,
+                                                strokeWeight: style.width,
+                                                fillColor: style.color,
+                                                fillOpacity: style.fillOpacity
+                                            }}
+                                        />,
+                                        stroke
+                                    ];
                                 } else { //tube
                                     return <Polyline
                                         key={house.name}
@@ -105,10 +136,10 @@ class Map extends React.Component {
                                         onClick={(event) => { props.onToggleOpen(event, house) }}
                                         options={{
                                             strokeColor: style.strokColor,
-                                            strokeOpacity: 0.8,
+                                            strokeOpacity: style.strokeOpacity,
                                             strokeWeight: style.width,
                                             fillColor: style.color,
-                                            fillOpacity: 0.35
+                                            fillOpacity: style.fillOpacity
                                         }}
                                     />
                                 }
@@ -128,10 +159,10 @@ class Map extends React.Component {
                     position={props.infoWindow.position}
                 >
                     <p>
-                        <span>Название <b>{props.infoWindow.house.name}</b></span><br/>
+                        <span>Название <b>{props.infoWindow.house.name}</b></span><br />
                         {props.infoWindow.house.type == 'camera' && <iframe src={props.infoWindow.house.camera} height='200' width='300'></iframe>}
                         {props.infoWindow.house.type != 'camera' && <span>Статус <b>{props.infoWindow.house.status}</b></span>}
-                        <br/>
+                        <br />
                     </p>
                 </InfoWindow>}
             </GoogleMap>

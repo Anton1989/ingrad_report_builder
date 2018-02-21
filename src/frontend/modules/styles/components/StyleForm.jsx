@@ -11,7 +11,10 @@ const DEFAULT_STYLE = {
     name: '',
     width: 2,
     strokColor: '#000000',
-    color: '#000000'
+    color: '#000000',
+    fillOpacity: 0.8,
+    strokeOpacity: 0.8,
+    lineStyle: 'solide'
 }
 
 export default class StyleForm extends React.Component {
@@ -32,11 +35,19 @@ export default class StyleForm extends React.Component {
     }
 
     componentWillMount() {
-        this.setState({ styles: [...this.props.mapStyles.data] });
+        this.setState({
+            styles: this.props.mapStyles.data.map(style => {
+                return Object.assign({}, { ...DEFAULT_STYLE }, style);
+            })
+        });
     }
 
     componentWillReceiveProps(newProps) {
-        this.setState({ styles: [...newProps.mapStyles.data] });
+        this.setState({
+            styles: newProps.mapStyles.data.map(style => {
+                return Object.assign({}, { ...DEFAULT_STYLE }, style);
+            })
+        });
     }
 
     handleAlertDismiss() {
@@ -86,18 +97,35 @@ export default class StyleForm extends React.Component {
                 return <div key={'style_' + i}>
                     <div className='form-group'>
                         <label htmlFor='name'>Имя стиля</label>
-                        <input key={i + '_name'} type='text' className='form-control' id='name' placeholder='Имя стиля' value={mapStyle.name} onChange={e => this.updateInputText(e, i)} />
+                        <input type='text' className='form-control' id='name' placeholder='Имя стиля' value={mapStyle.name} onChange={e => this.updateInputText(e, i)} />
                     </div>
                     <div className='form-group'>
                         <label htmlFor='width'>Ширина обводки</label>
-                        <input key={i + '_width'} type='number' className='form-control' id='width' placeholder='Ширина обводки' value={mapStyle.width} onChange={e => this.updateInputText(e, i)} />
+                        <input type='number' className='form-control' id='width' placeholder='Ширина обводки' value={mapStyle.width} onChange={e => this.updateInputText(e, i)} />
+                    </div>
+                    
+                    <div className='form-group'>
+                        <label htmlFor='lineStyle'>Стиль обводки</label>
+                        <select id='lineStyle' className='form-control' value={mapStyle.lineStyle} onChange={e => this.updateInputText(e, i)}>
+                            <option value='solide'>Сплошная линия</option>
+                            <option value='dashed'>Пунктирная линия</option>
+                        </select>
                     </div>
                     <div className='form-group'>
                         <SketchExample onSetColor={this.onSetColor} color={mapStyle.strokColor} index={i} field='strokColor' />
                     </div>
                     <div className='form-group'>
+                        <label htmlFor='strokeOpacity'>Прозрачность обводки</label>
+                        <input type='number' className='form-control' id='strokeOpacity' placeholder='Прозрачность обводки' value={mapStyle.strokeOpacity} onChange={e => this.updateInputText(e, i)} />
+                    </div>
+                    <div className='form-group'>
                         <SketchExample onSetColor={this.onSetColor} color={mapStyle.color} index={i} field='color' />
                     </div>
+                    <div className='form-group'>
+                        <label htmlFor='fillOpacity'>Прозрачность фона</label>
+                        <input type='number' className='form-control' id='fillOpacity' placeholder='Прозрачность фона' value={mapStyle.fillOpacity} onChange={e => this.updateInputText(e, i)} />
+                    </div>
+                    <hr />
                 </div>
             })}
             <div className='row'>
