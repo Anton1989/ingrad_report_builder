@@ -169,7 +169,7 @@ class Map extends React.Component {
         });
         return <div className={styles.maps}>
             <Maps
-                googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCK5pMR00_zxULM5AVzW5BNfiBpt6svVtk&signed_in=true'
+                googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyD1LROGB0tFWgOxT-vFa7a2f-dpJTLEXgs&signed_in=true'
                 loadingElement={<div style={{ height: '80%' }} />}
                 containerElement={<div className={styles.containerElement} />}
                 mapElement={<div style={{ height: '100%' }} />}

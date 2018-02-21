@@ -115,12 +115,6 @@ class Layout extends React.Component {
 		
 		let menu = [
 			{
-				anchor: 'Проекты',
-				url: '/projects',
-				strict: false,
-				submenu: []
-			},
-			{
 				anchor: 'Карта',
 				url: '/map',
 				strict: true,
