@@ -20,7 +20,7 @@
         "SERVER": "138.68.182.94",
         "SERVER_PORT": 1990,
         "MONGO_HOST": "127.0.0.1",
-        "MONGO_DB": "ingrad",
+        "MONGO_DB": "ingrad2",
         "NODE_ENV": "production"
       }
     },
