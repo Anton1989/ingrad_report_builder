@@ -141,6 +141,10 @@ class Layout extends React.Component {
 			}));
 
 		const showMenu = !isMapPage || (!this.state.place && !this.props.params.placeId);
+		let classMain = ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0';
+		if (showMenu) {
+			classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
+		}
 		return <div className='container-fluid'>
 			<Navbar
 				menu={menu}
@@ -152,7 +156,7 @@ class Layout extends React.Component {
 				setMapType={this.handleSetMapType}
 				setPlace={this.handleSetPlace} />}
 			<div className='row'>
-				<div className={styles.main + ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0'}>
+				<div className={styles.main + classMain}>
 					{childrenWithProps}
 				</div>
 			</div>
