@@ -11,7 +11,7 @@ const defaultHouse = {
     status: '',
     style: null,
     type: 'house',
-    coordinates: null
+    coordinates: []
 };
 
 export default class Form extends React.Component {
