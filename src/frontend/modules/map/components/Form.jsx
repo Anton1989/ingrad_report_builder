@@ -159,6 +159,9 @@ export default class Form extends React.Component {
         //55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673
         let houses = [...this.state.houses];
         let coords = this.refs.coorStr.value;
+        if (coords == '') {
+            return false;
+        }
         let coordA = coords.split('; ');
         coordA.forEach(coord => {
             let coordLL = coord.split(', ');
