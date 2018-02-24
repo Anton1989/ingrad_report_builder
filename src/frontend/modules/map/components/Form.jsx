@@ -56,6 +56,7 @@ export default class Form extends React.Component {
         if (this.props.place) {
             let place = { ...this.props.place };
             place = this.cleanObj(place);
+            console.log('#3',place)
             place.houses = place.houses ? place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house))) : [];
 
             let obj = Object.assign({}, this.state, place);
@@ -77,6 +78,7 @@ export default class Form extends React.Component {
         if (newProps.place && !this.props.place) {
             let place = { ...newProps.place };
             place = this.cleanObj(place);
+            console.log('#4',place)
             place.houses = place.houses ? place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house))) : [];
 
             let obj = Object.assign({}, this.state, place);
@@ -440,6 +442,8 @@ export default class Form extends React.Component {
                             <div className='form-group'>
                                 <label htmlFor='photo'>Объекты</label>
                                 {this.state.houses.map((house, i) => {
+                                    console.log('#1',house)
+                                    console.log('#2',mapStyles)
                                     return <div className={'form-group row ' + styles.house} key={'house_' + i}>
                                         <div className='col-xs-12'>
                                             <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить дом</button>
