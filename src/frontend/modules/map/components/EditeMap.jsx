@@ -50,6 +50,9 @@ const Maps = compose(
         />}
         {props.houses && props.houses.length > 0 && props.mapStyles.length > 0 && props.houses.map(house => {
             let style = props.mapStyles.find(style => style._id == house.style);
+            if (!style) {
+                style = props.mapStyles[0];
+            }
             let options = {
                 strokeColor: style.strokColor,
                 strokeOpacity: style.strokeOpacity,

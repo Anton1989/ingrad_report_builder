@@ -85,6 +85,9 @@ class Map extends React.Component {
                         if (placeId && place.houses.length > 0 && props.mapStyles.length > 0 && placeId == place._id) {
                             placeHtml = place.houses.map(house => {
                                 let style = props.mapStyles.find(style => style._id == house.style);
+                                if (!style) {
+                                    style = props.mapStyles[0];
+                                }
                                 let options = {
                                     strokeColor: style.strokColor,
                                     strokeOpacity: style.strokeOpacity,

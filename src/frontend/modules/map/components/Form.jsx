@@ -62,6 +62,9 @@ export default class Form extends React.Component {
             this.props.setPolygons(obj.houses);
             this.setState({ ...obj });
         }
+        if (this.props.mapStyles.length > 0 && this.props.mapStyles.length == 0) {
+            defaultHouse.style = this.props.mapStyles[0];
+        }
     }
 
     componentWillReceiveProps(newProps) {
