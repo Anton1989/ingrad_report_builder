@@ -7,6 +7,11 @@
     background-color: #fff;
     box-shadow: 0px 0px 5px #000;
 
+    &.hiddenForm {
+        left: auto;
+        right: calc(100% - 40px)
+    }
+
     .btn {
         cursor: pointer;
     }
@@ -21,6 +26,7 @@
         .btn {
             cursor: pointer;
             float: right;
+            margin-left: 10px;
         }
     }
 

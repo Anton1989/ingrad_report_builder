@@ -15,19 +15,40 @@ const labels = {
 
 export default class PlaceDetails extends React.Component {
 
+    constructor() {
+        super();
+
+        this.state = {
+            hidden: false
+        }
+
+        this.onHide = this.onHide.bind(this);
+    }
+
     close() {
         browserHistory.push('/map');
+    }
+
+    onHide() {
+        this.setState({hidden: !this.state.hidden});
     }
 
     render() {
         const { place } = this.props;
         console.log('RENDER <PlaceDetails>');
+
+        let hiddenClass = this.state.hidden ? styles.hiddenForm : '';
+        let hiddenBtn = this.state.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-left';
         
-        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.details}>
+        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.details + ' ' + hiddenClass}>
             <a className={styles.close} onClick={this.close} ><span className={'glyphicon glyphicon-remove'}></span></a>
             <div className='row'>
                 {place.image && <div style={{backgroundImage: 'url("' + place.image + '")'}} className={styles.image}></div>}
-                <h1>{place.name} <Link to={'/map/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link></h1>
+                <h1>
+                    {place.name}
+                    <span className={'glyphicon ' + hiddenBtn + ' ' + styles.btn} onClick={this.onHide}></span>
+                    <Link to={'/map/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link>
+                </h1>
                 {Object.keys(place).map(field => {
                     if (labels[field] && place[field] != '') {
                         let name = <span className={styles.value}>{place[field]}</span>;

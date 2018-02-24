@@ -7,6 +7,11 @@
     background-color: #fff;
     box-shadow: 0px 0px 5px #000;
 
+    &.hiddenForm {
+        left: auto;
+        right: calc(100% - 40px)
+    }
+
     .close {
         position: absolute;
         right: 20px;
@@ -45,6 +50,8 @@
         span {
             color: #ffffff;
             margin-left: 5px;
+            float: right;
+            margin-left: 10px;
         }
     }
 

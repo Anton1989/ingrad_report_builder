@@ -35,6 +35,7 @@ export default class Form extends React.Component {
             location: 'inner_msc',
             logo: null,
             image: null,
+            hidden: false,
             errors: []
         }
 
@@ -42,6 +43,7 @@ export default class Form extends React.Component {
         this.onDropImage = this.onDropImage.bind(this);
         this.onUpdateInputText = this.onUpdateInputText.bind(this);
         this.onSave = this.onSave.bind(this);
+        this.onHide = this.onHide.bind(this);
         this.onAddHouse = this.onAddHouse.bind(this);
         this.onRemoveHouse = this.onRemoveHouse.bind(this);
         this.onAddPoint = this.onAddPoint.bind(this);
@@ -196,6 +198,10 @@ export default class Form extends React.Component {
         this.setState({ houses });
     }
 
+    onHide() {
+        this.setState({hidden: !this.state.hidden});
+    }
+
     onSave() {
         if (this.validate()) {
             if (this.props.place) {
@@ -339,10 +345,16 @@ export default class Form extends React.Component {
                 <span id='logo' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
             </li>;
         }
+        let hiddenClass = this.state.hidden ? styles.hiddenForm : '';
+        let hiddenBtn = this.state.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-left';
 
-        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.add}>
+        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.add + ' ' + hiddenClass}>
             <div className='row'>
-                <h1>{title} <span title='Сохранить' onClick={this.onSave} className={'glyphicon glyphicon-floppy-save ' + styles.btn}></span></h1>
+                <h1>
+                    {title} 
+                    <span className={'glyphicon ' + hiddenBtn + ' ' + styles.btn} onClick={this.onHide}></span>
+                    <span title='Сохранить' onClick={this.onSave} className={'glyphicon glyphicon-floppy-save ' + styles.btn}></span>
+                </h1>
                 <div className={styles.scrolWrapper}>
                     <form>
                         <div className='col-sm-12 col-md-12'>

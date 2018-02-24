@@ -110,8 +110,6 @@ class Layout extends React.Component {
 		console.log('RENDER <Layout>');
 
 		const isMapPage = isActive('/map', false); 
-
-		console.log(isMapPage)
 		
 		let menu = [
 			{
@@ -142,15 +140,19 @@ class Layout extends React.Component {
 				type: isMapPage ? this.state.type : null
 			}));
 
+		const showMenu = !isMapPage || (!this.state.place && !this.props.params.placeId);
 		return <div className='container-fluid'>
-			<Navbar />
-			<LeftMenu
+			<Navbar
+				menu={menu}
+				setMapType={this.handleSetMapType}
+				setPlace={this.handleSetPlace} />
+			{showMenu && <LeftMenu
 				menu={menu}
 				isActive={isActive}
 				setMapType={this.handleSetMapType}
-				setPlace={this.handleSetPlace} />
+				setPlace={this.handleSetPlace} />}
 			<div className='row'>
-				<div className={styles.main + ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2'}>
+				<div className={styles.main + ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0'}>
 					{childrenWithProps}
 				</div>
 			</div>
