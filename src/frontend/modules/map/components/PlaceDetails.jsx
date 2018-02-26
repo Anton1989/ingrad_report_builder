@@ -40,7 +40,7 @@ export default class PlaceDetails extends React.Component {
         let hiddenClass = this.state.hidden ? styles.hiddenForm : '';
         let hiddenBtn = this.state.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-left';
         
-        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.details + ' ' + hiddenClass}>
+        return <div className={'col-sm-12 col-md-3 sidebar ' + styles.details + ' ' + hiddenClass}>
             <a className={styles.close} onClick={this.close} ><span className={'glyphicon glyphicon-remove'}></span></a>
             <div className='row'>
                 {place.image && <div style={{backgroundImage: 'url("' + place.image + '")'}} className={styles.image}></div>}

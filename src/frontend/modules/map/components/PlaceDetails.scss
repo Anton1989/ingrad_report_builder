@@ -78,3 +78,10 @@
         display: inline-block;
     }
 }
+
+@media (max-width: 991px) {
+    .details {
+        position: relative;
+        top: 0px;
+    }
+}

@@ -75,9 +75,26 @@ class Map extends React.Component {
             withScriptjs,
             withGoogleMap
         )(props => {
+            let options = {
+                mapTypeControl: true,
+                mapTypeControlOptions: {
+                    style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
+                    position: google.maps.ControlPosition.TOP_CENTER
+                },
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
+                scaleControl: true,
+                streetViewControl: true,
+                streetViewControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                }
+            }
             return <GoogleMap
                 defaultZoom={defaultCoordinates.zoom}
                 defaultCenter={defaultCoordinates.coordinates}
+                defaultOptions={options}
             >
                 {places.data && places.data.map(place => {
                     if (activeTypes.indexOf(place.location) !== -1) {
@@ -170,7 +187,8 @@ class Map extends React.Component {
                 </InfoWindow>}
             </GoogleMap>
         });
-        return <div className={styles.maps}>
+        let detailStyle = placeId && places.data.length > 0 ? styles.detail : '';
+        return <div className={styles.maps + ' ' + detailStyle}>
             <Maps
                 googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCK5pMR00_zxULM5AVzW5BNfiBpt6svVtk&signed_in=true'
                 loadingElement={<div style={{ height: '80%' }} />}

@@ -31,7 +31,7 @@ export default class Navigation extends React.Component {
     render() {
         console.log('RENDER <Navbar>');
 
-        return <Navbar inverse collapseOnSelect fixedTop>
+        return <Navbar collapseOnSelect fixedTop>
             <Navbar.Header>
                 <Navbar.Brand>
                     <Link to='/' className='navbar-brand'>ИНГРАД - проекты</Link>
