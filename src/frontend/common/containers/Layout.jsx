@@ -9,7 +9,7 @@ const markersTypes = [
 	{
 		id: 'inner_msc',
 		anchor: 'Москва',
-		url: '/map/inner_msc',
+		url: '/inner_msc',
 		active: true,
 		isMapCategory: true,
 		strict: true,
@@ -18,7 +18,7 @@ const markersTypes = [
 	{
 		id: 'out_msc',
 		anchor: 'Московская область',
-		url: '/map/out_msc',
+		url: '/out_msc',
 		active: true,
 		isMapCategory: true,
 		strict: true,
@@ -27,7 +27,7 @@ const markersTypes = [
 	{
 		id: 'office',
 		anchor: 'Офис',
-		url: '/map/office',
+		url: '/office',
 		active: true,
 		isMapCategory: true,
 		strict: true,
@@ -36,7 +36,7 @@ const markersTypes = [
 	{
 		id: 'add',
 		anchor: 'Добавить',
-		url: '/map/add',
+		url: '/add',
 		active: true,
 		strict: true,
 		submenu: []
@@ -62,7 +62,7 @@ class Layout extends React.Component {
 		this.handleSetPlace = this.handleSetPlace.bind(this);
 	}
 
-	generateMapSubMenu(places) {
+	generateMapMenu(places) {
 		return markersTypes.map(type => {
 			let locationType = { ...type };
 			locationType.active = this.state.activeTypes.indexOf(locationType.id) !== -1;
@@ -108,39 +108,18 @@ class Layout extends React.Component {
 	render() {
 		const { isActive, places, children } = this.props;
 		console.log('RENDER <Layout>');
-
-		const isMapPage = isActive('/map', false); 
 		
-		let menu = [
-			{
-				anchor: 'Проекты',
-				url: '/projects',
-				strict: false,
-				submenu: []
-			},
-			{
-				anchor: 'Карта',
-				url: '/map',
-				strict: true,
-				submenu: (places.data.length > 0 && isMapPage) ? this.generateMapSubMenu(places.data) : []
-			},
-			{
-				anchor: 'Стили',
-				url: '/styles',
-				strict: true,
-				submenu: []
-			}
-		];
+		let menu = this.generateMapMenu(places.data);
 
 		var childrenWithProps = React.Children.map(children, child =>
 			React.cloneElement(child, {
 				activeTypes: this.state.activeTypes,
 				openPlace: this.handleSetPlace,
-				placeId: isMapPage ? this.state.place : null,
-				type: isMapPage ? this.state.type : null
+				placeId: this.state.place,
+				type: this.state.type
 			}));
 
-		const showMenu = !isMapPage || (!this.state.place && !this.props.params.placeId);
+		const showMenu = !this.state.place && !this.props.params.placeId;
 		let classMain = ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0';
 		if (showMenu) {
 			classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';

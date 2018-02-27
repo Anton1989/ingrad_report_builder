@@ -235,7 +235,7 @@ export default class Form extends React.Component {
 
         console.log(data);
         this.props.updatePlace(data);
-        browserHistory.push('/map');
+        browserHistory.push('/');
     }
 
     add() {
@@ -244,7 +244,7 @@ export default class Form extends React.Component {
         data = this.prepareHouses(data);
 
         this.props.addPlace(data);
-        browserHistory.push('/map');
+        browserHistory.push('/');
     }
 
     prepareHouses(data) {
@@ -315,7 +315,7 @@ export default class Form extends React.Component {
         const { place, mapStyles } = this.props;
         console.log('RENDER <Form>');
 
-        let title = 'Добавить новый проект';
+        let title = 'Добавить проект';
         if (place) {
             title = 'Редактирование';
         }
@@ -509,7 +509,7 @@ export default class Form extends React.Component {
                             <ul className={styles.errors}>
                                 {this.state.errors.map(error => <li>{error}</li>)}
                             </ul>
-                            <Link className='btn btn-default' to='/map'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
+                            <Link className='btn btn-default' to='/'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
                         </div>
                     </form>
                 </div>

@@ -39,7 +39,7 @@ class Map extends React.Component {
                     zoom: 16
                 }
             } else {
-                browserHistory.push('/map');
+                browserHistory.push('/');
             }
         }
         return defaultCoordinates;
@@ -79,16 +79,16 @@ class Map extends React.Component {
                 mapTypeControl: true,
                 mapTypeControlOptions: {
                     style: google.maps.MapTypeControlStyle.HORIZONTAL_BAR,
-                    position: google.maps.ControlPosition.TOP_CENTER
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
                 },
                 zoomControl: true,
                 zoomControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                    position: google.maps.ControlPosition.RIGHT_CENTER
                 },
-                scaleControl: true,
+                scaleControl: false,
                 streetViewControl: true,
                 streetViewControlOptions: {
-                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                    position: google.maps.ControlPosition.RIGHT_CENTER
                 }
             }
             return <GoogleMap

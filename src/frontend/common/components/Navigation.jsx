@@ -18,9 +18,12 @@ export default class Navigation extends React.Component {
     generateMenu() {
         const { menu } = this.props;
         return menu.map((item, i) => {
-            return <NavItem key={item.url} eventKey={i} href={item.url} onClick={() => { this.goTo(item.url); }}>
-                {item.anchor}
-            </NavItem>;
+            if (!item.isMapCategory) {
+                return <NavItem key={item.url} eventKey={i} href={item.url} onClick={() => { this.goTo(item.url); }}>
+                    {item.anchor}
+                </NavItem>;
+            }
+            return null;
         })
     }
 
@@ -31,10 +34,10 @@ export default class Navigation extends React.Component {
     render() {
         console.log('RENDER <Navbar>');
 
-        return <Navbar collapseOnSelect fixedTop>
+        return <Navbar collapseOnSelect fixedTop className={styles.mobile}>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to='/' className='navbar-brand'>ИНГРАД - проекты</Link>
+                    <Link to='/' className='navbar-brand'>ИНГРАД - карта</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />
             </Navbar.Header>

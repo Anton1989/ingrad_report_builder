@@ -26,7 +26,7 @@ export default class PlaceDetails extends React.Component {
     }
 
     close() {
-        browserHistory.push('/map');
+        browserHistory.push('/');
     }
 
     onHide() {
@@ -47,7 +47,7 @@ export default class PlaceDetails extends React.Component {
                 <h1>
                     {place.name}
                     <span className={'glyphicon ' + hiddenBtn + ' ' + styles.btn} onClick={this.onHide}></span>
-                    <Link to={'/map/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link>
+                    <Link to={'/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link>
                 </h1>
                 {Object.keys(place).map(field => {
                     if (labels[field] && place[field] != '') {
@@ -62,7 +62,7 @@ export default class PlaceDetails extends React.Component {
                     }
                 })}
                 <p>
-                    <Link to='/map'><span className={'glyphicon glyphicon-chevron-left'}></span> назад</Link>
+                    <Link to='/'><span className={'glyphicon glyphicon-chevron-left'}></span> назад</Link>
                 </p>
             </div>
         </div>
