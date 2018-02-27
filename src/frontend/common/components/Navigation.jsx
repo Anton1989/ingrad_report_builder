@@ -15,15 +15,27 @@ export default class Navigation extends React.Component {
         this.goTo = this.goTo.bind(this);
     }
 
-    generateMenu() {
-        const { menu } = this.props;
+    generateMenu(menu = this.props.menu, parent) {
         return menu.map((item, i) => {
-            if (!item.isMapCategory) {
-                return <NavItem key={item.url} eventKey={i} href={item.url} onClick={() => { this.goTo(item.url); }}>
+            let submenu = null;
+            if (item.submenu.length > 0) {
+                submenu = this.generateMenu(item.submenu, item);
+            }
+
+            if (item.isMapCategory) {
+                return [
+                    <NavItem key={item.url} className={styles.subjectMenu + ' ' + styles.onlyMobile}>{item.anchor}</NavItem>,
+                    submenu ? submenu : null
+                ];
+            } else if (item.isPlace) {
+                return <NavItem key={item.url} className={styles.onlyMobile} eventKey={i} onClick={() => { this.props.setPlace(parent.id, item.id) }}>
+                    {item.anchor}
+                </NavItem>;
+            } else {
+                return <NavItem key={item.url} className={styles.onlyMobile} eventKey={i} href={item.url} onClick={() => { this.goTo(item.url); }}>
                     {item.anchor}
                 </NavItem>;
             }
-            return null;
         })
     }
 
@@ -32,12 +44,20 @@ export default class Navigation extends React.Component {
     }
 
     render() {
+        const { placeObj } = this.props;
         console.log('RENDER <Navbar>');
 
-        return <Navbar collapseOnSelect fixedTop className={styles.mobile}>
+        let title = <Link to='/' className='navbar-brand'>ИНГРАД - карта</Link>;
+        if (placeObj) {
+            title = <Link className='navbar-brand'>
+                <img src={placeObj.logo} height='20' className={styles.logo} /><Link to='/'>Карта</Link> | {placeObj.name}
+            </Link>
+        }
+
+        return <Navbar collapseOnSelect fixedTop fluid className={styles.mobile}>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to='/' className='navbar-brand'>ИНГРАД - карта</Link>
+                    {title}
                 </Navbar.Brand>
                 <Navbar.Toggle />
             </Navbar.Header>

@@ -87,10 +87,6 @@ class Layout extends React.Component {
 		this.setState({ place: null, type: null });
 	}
 
-	// componentWillUpdate() {
-	// 	console.log('componentWillUpdate');
-	// }
-
 	handleSetMapType(type) {
 		let activeTypes = [...this.state.activeTypes];
 		if (this.state.activeTypes.indexOf(type) !== -1) {
@@ -117,7 +113,13 @@ class Layout extends React.Component {
 				openPlace: this.handleSetPlace,
 				placeId: this.state.place,
 				type: this.state.type
-			}));
+			})
+		);
+
+		let placeObj = null;
+		if (this.state.place) {
+			placeObj = places.data.find(place => place._id == this.state.place);
+		}
 
 		const showMenu = !this.state.place && !this.props.params.placeId;
 		let classMain = ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0';
@@ -126,6 +128,7 @@ class Layout extends React.Component {
 		}
 		return <div className='container-fluid'>
 			<Navbar
+				placeObj={placeObj}
 				menu={menu}
 				setMapType={this.handleSetMapType}
 				setPlace={this.handleSetPlace} />

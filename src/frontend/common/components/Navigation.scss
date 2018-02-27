@@ -2,4 +2,33 @@
 	.mobileMenu a {
 		color: #ffffff;
 	}
+
+	.logo {
+		float: left;
+		margin-right: 10px;
+	}
+
+	.subjectMenu {
+		font-weight: bold;
+		text-transform: uppercase;
+		background: #ccc;
+
+		a {
+			color: #ffffff !important;
+		}
+	}
+
+	.onlyMobile {
+		display: none;
+	}
+
+	@media (max-width: 767px) {
+		.onlyMobile {
+			display: block;
+		}
+	}
+
+	.active {
+		background: #ebebeb;
+	}
 }
