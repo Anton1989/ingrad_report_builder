@@ -47,8 +47,8 @@
     "build": {
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
-        "SERVER": "http://map-ingrad.ru",
-        "SERVER_PORT": 80,
+        "SERVER": "map-ingrad.ru",
+        "SERVER_PORT": 8080,
         "NODE_ENV": "production"
       }
     }
