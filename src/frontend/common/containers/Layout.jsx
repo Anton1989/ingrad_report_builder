@@ -5,44 +5,6 @@ import Navbar from '../components/Navigation.jsx';
 import LeftMenu from '../components/LeftMenu.jsx';
 import styles from './Layout.scss';
 
-const markersTypes = [
-	{
-		id: 'inner_msc',
-		anchor: 'Москва',
-		url: '/map/inner_msc',
-		active: true,
-		isMapCategory: true,
-		strict: true,
-		submenu: []
-	},
-	{
-		id: 'out_msc',
-		anchor: 'Московская область',
-		url: '/map/out_msc',
-		active: true,
-		isMapCategory: true,
-		strict: true,
-		submenu: []
-	},
-	{
-		id: 'office',
-		anchor: 'Офис',
-		url: '/map/office',
-		active: true,
-		isMapCategory: true,
-		strict: true,
-		submenu: []
-	},
-	{
-		id: 'add',
-		anchor: 'Добавить',
-		url: '/map/add',
-		active: true,
-		strict: true,
-		submenu: []
-	}
-];
-
 class Layout extends React.Component {
 
 	constructor(...props) {
@@ -60,26 +22,6 @@ class Layout extends React.Component {
 
 		this.handleSetMapType = this.handleSetMapType.bind(this);
 		this.handleSetPlace = this.handleSetPlace.bind(this);
-	}
-
-	generateMapSubMenu(places) {
-		return markersTypes.map(type => {
-			let locationType = { ...type };
-			locationType.active = this.state.activeTypes.indexOf(locationType.id) !== -1;
-			if (locationType.active) {
-				locationType.submenu = places.filter(place => place.location == type.id).map(place => {
-					return {
-						id: place._id,
-						anchor: place.name,
-						url: type.url + '/' + place._id,
-						isPlace: true,
-						strict: false,
-						submenu: []
-					};
-				});
-			}
-			return locationType;
-		})
 	}
 
 	componentWillReceiveProps() {
@@ -106,23 +48,17 @@ class Layout extends React.Component {
 	}
 
 	render() {
-		const { isActive, places, children } = this.props;
+		const { isActive, children } = this.props;
 		console.log('RENDER <Layout>');
 
 		const isMapPage = isActive('/map', false); 
 		
 		let menu = [
 			{
-				anchor: 'Проекты',
-				url: '/projects',
-				strict: false,
-				submenu: []
-			},
-			{
 				anchor: 'Карта',
-				url: '/map',
+				url: '/',
 				strict: true,
-				submenu: (places.data.length > 0 && isMapPage) ? this.generateMapSubMenu(places.data) : []
+				submenu: []
 			},
 			{
 				anchor: 'Стили',
@@ -166,8 +102,7 @@ class Layout extends React.Component {
 
 function mapStateToProps(state, routerProps) {
 	return {
-		isActive: routerProps.router.isActive,
-		places: state.places
+		isActive: routerProps.router.isActive
 	}
 }
 

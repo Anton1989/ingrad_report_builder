@@ -13,8 +13,8 @@ const defaultCoordinates = {
 };
 
 const Maps = compose(
-    withStateHandlers(() => ({
-        zoom: 10,
+    withStateHandlers((props) => ({
+        zoom: (props.coordinates && props.coordinates.lng && props.coordinates.lat) ? 15 : 10,
         map: undefined
     }), {
             onMapMounted: () => ref => ({
@@ -37,14 +37,19 @@ const Maps = compose(
     withScriptjs,
     withGoogleMap
 )((props) => {
+    let center = null;
+    if(props.coordinates && props.coordinates.lng && props.coordinates.lat) {
+        center = props.coordinates;
+    }
+
     return <GoogleMap
         zoom={props.zoom}
-        defaultCenter={defaultCoordinates.coordinates}
+        center={center ? center : defaultCoordinates.coordinates}
         ref={props.onMapMounted}
         onZoomChanged={props.onZoomChanged}
     >
-        {props.coordinates && props.coordinates.lng && props.coordinates.lat && <Marker
-            position={props.coordinates}
+        {center && <Marker
+            position={center}
             defaultDraggable={true}
             onDragEnd={(e) => { props.onDragEnd(e, props) }}
         />}

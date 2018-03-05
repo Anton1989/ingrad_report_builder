@@ -18,7 +18,7 @@
       "command": "pm2 start ./pm2_config.json",
       "env": {
         "SERVER": "138.68.182.94",
-        "SERVER_PORT": 1989,
+        "SERVER_PORT": 8090,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
         "NODE_ENV": "production"
@@ -47,8 +47,8 @@
     "build": {
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
-        "SERVER": "138.68.182.94",
-        "SERVER_PORT": 1989,
+        "SERVER": "map-ingrad.ru",
+        "SERVER_PORT": 8090,
         "NODE_ENV": "production"
       }
     }
