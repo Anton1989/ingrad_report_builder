@@ -115,7 +115,7 @@ export default class EditeMap extends React.Component {
         return <div className={styles.maps}>
             <Maps
                 googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCK5pMR00_zxULM5AVzW5BNfiBpt6svVtk&signed_in=true'
-                loadingElement={<div style={{ height: '80%' }} />}
+                loadingElement={<div style={{ height: '100%' }} />}
                 containerElement={<div className={styles.containerElement} />}
                 mapElement={<div style={{ height: '100%' }} />}
                 coordinates={marker}

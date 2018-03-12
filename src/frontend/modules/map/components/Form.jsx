@@ -43,7 +43,6 @@ export default class Form extends React.Component {
         this.onDropImage = this.onDropImage.bind(this);
         this.onUpdateInputText = this.onUpdateInputText.bind(this);
         this.onSave = this.onSave.bind(this);
-        this.onHide = this.onHide.bind(this);
         this.onAddHouse = this.onAddHouse.bind(this);
         this.onRemoveHouse = this.onRemoveHouse.bind(this);
         this.onAddPoint = this.onAddPoint.bind(this);
@@ -198,10 +197,6 @@ export default class Form extends React.Component {
         this.setState({ houses });
     }
 
-    onHide() {
-        this.setState({hidden: !this.state.hidden});
-    }
-
     onSave() {
         if (this.validate()) {
             if (this.props.place) {
@@ -345,48 +340,45 @@ export default class Form extends React.Component {
                 <span id='logo' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
             </li>;
         }
-        let hiddenClass = this.state.hidden ? styles.hiddenForm : '';
-        let hiddenBtn = this.state.hidden ? 'glyphicon-chevron-right' : 'glyphicon-chevron-left';
 
-        return <div className={'col-sm-4 col-md-3 sidebar ' + styles.add + ' ' + hiddenClass}>
+        return <div className={'col-sm-12 col-md-12 ' + styles.add}>
             <div className='row'>
                 <h1>
                     {title} 
-                    <span className={'glyphicon ' + hiddenBtn + ' ' + styles.btn} onClick={this.onHide}></span>
                     <span title='Сохранить' onClick={this.onSave} className={'glyphicon glyphicon-floppy-save ' + styles.btn}></span>
                 </h1>
                 <div className={styles.scrolWrapper}>
                     <form>
-                        <div className='col-sm-12 col-md-12'>
-                            <div className='form-group'>
-                                <label htmlFor='name'>Название*</label>
-                                <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='description'>Описание</label>
-                                <input type='text' className='form-control' id='description' placeholder='Описание' value={this.state.description} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='step'>Шаг строительства</label>
-                                <input type='text' className='form-control' id='step' placeholder='Шаг строительства' value={this.state.step} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='site'>Коммерческий сайт</label>
-                                <input type='text' className='form-control' id='site' placeholder='http://site.ru' value={this.state.site} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='camera'>Камера</label>
-                                <input type='text' className='form-control' id='camera' placeholder='Ссылка на трансляцию' value={this.state.camera} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='photo'>Фото галлерея</label>
-                                <input type='text' className='form-control' id='photo' placeholder='Ссылка на фото галлерею' value={this.state.photo} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='address'>Адрес*</label>
-                                <input type='text' className='form-control' id='address' placeholder='Адрес' value={this.state.address} onChange={e => this.onUpdateInputText(e)} />
-                            </div>
-                            <div className='form-group row'>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='name'>Название*</label>
+                            <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='description'>Описание</label>
+                            <input type='text' className='form-control' id='description' placeholder='Описание' value={this.state.description} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='step'>Шаг строительства</label>
+                            <input type='text' className='form-control' id='step' placeholder='Шаг строительства' value={this.state.step} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='site'>Коммерческий сайт</label>
+                            <input type='text' className='form-control' id='site' placeholder='http://site.ru' value={this.state.site} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='camera'>Камера</label>
+                            <input type='text' className='form-control' id='camera' placeholder='Ссылка на трансляцию' value={this.state.camera} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='photo'>Фото галлерея</label>
+                            <input type='text' className='form-control' id='photo' placeholder='Ссылка на фото галлерею' value={this.state.photo} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='address'>Адрес*</label>
+                            <input type='text' className='form-control' id='address' placeholder='Адрес' value={this.state.address} onChange={e => this.onUpdateInputText(e)} />
+                        </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <div className='row'>
                                 <div className='col-xs-6'>
                                     <label htmlFor='coordinates-lat'>Координаты*</label>
                                     <input type='text' className='form-control' id='coordinates-lat' placeholder='Широта' value={this.state.coordinates.lat} onChange={e => this.onUpdateInputText(e)} />
@@ -396,121 +388,121 @@ export default class Form extends React.Component {
                                     <input type='text' className='form-control' id='coordinates-lng' placeholder='Долгота' value={this.state.coordinates.lng} onChange={e => this.onUpdateInputText(e)} />
                                 </div>
                             </div>
-                            <div className='form-group'>
-                                <label htmlFor='location'>Локация</label>
-                                <select id='location' className='form-control' value={this.state.location} onChange={e => this.onUpdateInputText(e)}>
-                                    <option value='inner_msc'>Москва</option>
-                                    <option value='out_msc'>Московская обл</option>
-                                    <option value='office'>Офисы</option>
-                                </select>
-                            </div>
-                            <div className='form-group'>
-                                <label>Лого*</label>
-                                <ul>
-                                    {logo}
-                                </ul>
-                                <Dropzone
-                                    accept='image/png'
-                                    className={styles.dropzone}
-                                    onDrop={this.onDropLogo}
-                                    multiple={false}
-                                >
-                                    {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
-                                        if (isDragActive) {
-                                            return 'Данный тип фалов разрешен';
-                                        }
-                                        if (isDragReject) {
-                                            return 'Данный тип фалов запрещен';
-                                        }
-                                        return acceptedFiles.length || rejectedFiles.length
-                                            ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
-                                            : 'Загрузите Лого объекта';
-                                    }}
-                                </Dropzone>
-                            </div>
-                            <div className='form-group'>
-                                <label>Фото объекта</label>
-                                <ul>
-                                    {image}
-                                </ul>
-                                <Dropzone
-                                    accept='image/png'
-                                    className={styles.dropzone}
-                                    onDrop={this.onDropImage}
-                                    multiple={false}
-                                >
-                                    {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
-                                        if (isDragActive) {
-                                            return 'Данный тип фалов разрешен';
-                                        }
-                                        if (isDragReject) {
-                                            return 'Данный тип фалов запрещен';
-                                        }
-                                        return acceptedFiles.length || rejectedFiles.length
-                                            ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
-                                            : 'Загрузите Фото объекта';
-                                    }}
-                                </Dropzone>
-                            </div>
-                            <div className='form-group'>
-                                <label htmlFor='photo'>Объекты</label>
-                                {this.state.houses.map((house, i) => {
-                                    return <div className={'form-group row ' + styles.house} key={'house_' + i}>
-                                        <div className='col-xs-12'>
-                                            <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить дом</button>
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <select id='style' className='form-control' value={house.style ? house.style : mapStyles.length > 0 ? mapStyles[0]._id : ''} onChange={e => this.updateInputTextHouse(e, i)}>
-                                                {mapStyles.length > 0 && mapStyles.map(style => {
-                                                    return <option value={style._id}>Стиль: {style.name}</option>;
-                                                })}
-                                            </select>
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>
-                                        {house.type == 'camera' && <div className='col-xs-12'>
-                                            <input type='text' className='form-control' id='camera' placeholder='Камера' value={house.camera} onChange={e => this.updateInputTextHouse(e, i)} />
-                                        </div>}
-                                        <div className='col-xs-12'>
-                                            <select id='type' className='form-control' value={(house.type && house.type != '') ? house.type : 'house'} onChange={e => this.updateInputTextHouse(e, i)}>
-                                                <option value='house'>Тип: Дом</option>
-                                                <option value='tube'>Тип: Коммуникации</option>
-                                                <option value='camera'>Тип: Камера</option>
-                                            </select>
-                                        </div>
-                                        <div className='col-xs-12'>
-                                            <input type='text' ref='coorStr' className='form-control' id='status' placeholder='Добавить координаты строкой' />
-                                            <button type='button' className='btn btn-info' onClick={e => this.updateCoordinatesByString(e, i)}><span className='glyphicon glyphicon-plus-sign'></span></button>
-                                        </div>
-                                        {house.coordinates.map((latLong, j) => {
-                                            return <div className='form-group' key={'house_' + i + '_' + j}>
-                                                <div className='col-xs-6'>
-                                                    <input type='text' className='form-control' id='lat' placeholder='Широта' value={latLong.lat} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
-                                                </div>
-                                                <div className='col-xs-6'>
-                                                    <input type='text' className='form-control' id='lng' placeholder='Долгота' value={latLong.lng} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
-                                                </div>
-                                            </div>
-                                        })}
-                                        <div className='col-xs-12'>
-                                            <button type='button' className='btn btn-info' onClick={() => { this.onAddPoint(i); }}><span className='glyphicon glyphicon-plus-sign'></span></button>
-                                            &nbsp;
-                                            <button type='button' className='btn btn-danger' onClick={() => { this.onRemovePoint(i); }}><span className='glyphicon glyphicon-minus-sign'></span></button>
-                                        </div>
-                                    </div>
-                                })}
-                                <br />
-                                <button type='button' className='btn btn-info' onClick={this.onAddHouse}>Добавить дом</button>
-                            </div>
-                            <ul className={styles.errors}>
-                                {this.state.errors.map(error => <li>{error}</li>)}
-                            </ul>
-                            <Link className='btn btn-default' to='/'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
                         </div>
+                        <div className='form-group col-sm-4 col-md-4'>
+                            <label htmlFor='location'>Локация</label>
+                            <select id='location' className='form-control' value={this.state.location} onChange={e => this.onUpdateInputText(e)}>
+                                <option value='inner_msc'>Москва</option>
+                                <option value='out_msc'>Московская обл</option>
+                                <option value='office'>Офисы</option>
+                            </select>
+                        </div>
+                        <div className='form-group col-sm-6 col-md-6'>
+                            <label>Лого*</label>
+                            <ul>
+                                {logo}
+                            </ul>
+                            <Dropzone
+                                accept='image/png'
+                                className={styles.dropzone}
+                                onDrop={this.onDropLogo}
+                                multiple={false}
+                            >
+                                {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+                                    if (isDragActive) {
+                                        return 'Данный тип фалов разрешен';
+                                    }
+                                    if (isDragReject) {
+                                        return 'Данный тип фалов запрещен';
+                                    }
+                                    return acceptedFiles.length || rejectedFiles.length
+                                        ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
+                                        : 'Загрузите Лого объекта';
+                                }}
+                            </Dropzone>
+                        </div>
+                        <div className='form-group col-sm-6 col-md-6'>
+                            <label>Фото объекта</label>
+                            <ul>
+                                {image}
+                            </ul>
+                            <Dropzone
+                                accept='image/png'
+                                className={styles.dropzone}
+                                onDrop={this.onDropImage}
+                                multiple={false}
+                            >
+                                {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+                                    if (isDragActive) {
+                                        return 'Данный тип фалов разрешен';
+                                    }
+                                    if (isDragReject) {
+                                        return 'Данный тип фалов запрещен';
+                                    }
+                                    return acceptedFiles.length || rejectedFiles.length
+                                        ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
+                                        : 'Загрузите Фото объекта';
+                                }}
+                            </Dropzone>
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='photo'>Объекты</label>
+                            {this.state.houses.map((house, i) => {
+                                return <div className={'form-group row ' + styles.house} key={'house_' + i}>
+                                    <div className='col-xs-12'>
+                                        <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить дом</button>
+                                    </div>
+                                    <div className='col-xs-4'>
+                                        <input type='text' className='form-control' id='name' placeholder='Навание' value={house.name} onChange={e => this.updateInputTextHouse(e, i)} />
+                                    </div>
+                                    <div className='col-xs-4'>
+                                        <select id='style' className='form-control' value={house.style ? house.style : mapStyles.length > 0 ? mapStyles[0]._id : ''} onChange={e => this.updateInputTextHouse(e, i)}>
+                                            {mapStyles.length > 0 && mapStyles.map(style => {
+                                                return <option value={style._id}>Стиль: {style.name}</option>;
+                                            })}
+                                        </select>
+                                    </div>
+                                    <div className='col-xs-4'>
+                                        <input type='text' className='form-control' id='status' placeholder='Статус' value={house.status} onChange={e => this.updateInputTextHouse(e, i)} />
+                                    </div>
+                                    {house.type == 'camera' && <div className='col-xs-4'>
+                                        <input type='text' className='form-control' id='camera' placeholder='Камера' value={house.camera} onChange={e => this.updateInputTextHouse(e, i)} />
+                                    </div>}
+                                    <div className='col-xs-4'>
+                                        <select id='type' className='form-control' value={(house.type && house.type != '') ? house.type : 'house'} onChange={e => this.updateInputTextHouse(e, i)}>
+                                            <option value='house'>Тип: Дом</option>
+                                            <option value='tube'>Тип: Коммуникации</option>
+                                            <option value='camera'>Тип: Камера</option>
+                                        </select>
+                                    </div>
+                                    <div className={'col-xs-4 ' + styles.apply_path_by_str}>
+                                        <input type='text' ref='coorStr' className='form-control' id='status' placeholder='Добавить координаты строкой' />
+                                        <button type='button' className='btn btn-info' onClick={e => this.updateCoordinatesByString(e, i)}><span className='glyphicon glyphicon-plus-sign'></span></button>
+                                    </div>
+                                    {house.coordinates.map((latLong, j) => {
+                                        return <div className='form-group' key={'house_' + i + '_' + j}>
+                                            <div className='col-xs-6'>
+                                                <input type='text' className='form-control' id='lat' placeholder='Широта' value={latLong.lat} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
+                                            </div>
+                                            <div className='col-xs-6'>
+                                                <input type='text' className='form-control' id='lng' placeholder='Долгота' value={latLong.lng} onChange={e => this.onUpdateInputTextPoint(e, i, j)} />
+                                            </div>
+                                        </div>
+                                    })}
+                                    <div className='col-xs-12'>
+                                        <button type='button' className='btn btn-info' onClick={() => { this.onAddPoint(i); }}><span className='glyphicon glyphicon-plus-sign'></span></button>
+                                        &nbsp;
+                                        <button type='button' className='btn btn-danger' onClick={() => { this.onRemovePoint(i); }}><span className='glyphicon glyphicon-minus-sign'></span></button>
+                                    </div>
+                                </div>
+                            })}
+                            <br />
+                            <button type='button' className='btn btn-info' onClick={this.onAddHouse}>Добавить дом</button>
+                        </div>
+                        <ul className={styles.errors}>
+                            {this.state.errors.map(error => <li>{error}</li>)}
+                        </ul>
+                        <Link className='btn btn-default' to='/'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
                     </form>
                 </div>
             </div>

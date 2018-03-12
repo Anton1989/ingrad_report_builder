@@ -60,8 +60,8 @@ class PlaceAdd extends React.Component {
         }
 
         return <div>
-            <Form place={place} mapStyles={styles.data} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
             <EditeMap marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
+            <Form place={place} mapStyles={styles.data} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
         </div>;
     }
 }

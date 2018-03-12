@@ -27,7 +27,7 @@ class Map extends React.Component {
         console.log('RENDER <Map>');
 
         let detailStyle = placeId && places.data.length > 0 ? styles.detail : '';
-        return <div className={styles.maps + ' ' + detailStyle}>
+        return <div className={detailStyle}>
             <h1>Редактирование объектов на карте</h1>
             <Link to={'/add'} className='btn btn-default'><span className='glyphicon glyphicon-plus-sign'></span> Добавить</Link>
             <div className='table-responsive'>

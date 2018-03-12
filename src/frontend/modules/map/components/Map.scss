@@ -1,24 +1,12 @@
 .maps {
-    position: absolute;
-    left: 0px;
-    top: 0px;
-    bottom: 0px;
     width: 100%;
     height: 100%;
-
-    @media (max-width: 991px) {
-        &.detail {
-            .containerElement {
-                height: calc(90vh - 51px);
-            }
-        }
-    }
 
     .row {
         cursor: pointer;
     }
 
     .containerElement {
-        height: calc(100vh - 51px);
+        height: calc(70vh - 51px);
     }
 }

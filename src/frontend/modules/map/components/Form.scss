@@ -1,16 +1,5 @@
 .add {
-    position: fixed;
-    left: 0px;
-    top: 51px;
-    bottom: 0px;
-    z-index: 1050;
     background-color: #fff;
-    box-shadow: 0px 0px 5px #000;
-
-    &.hiddenForm {
-        left: auto;
-        right: calc(100% - 40px)
-    }
 
     .btn {
         cursor: pointer;
@@ -30,8 +19,14 @@
         }
     }
 
+    .apply_path_by_str input {
+        width: calc(100% - 51px);
+        float: left;
+        margin-right: 10px;
+    }
+
     .scrolWrapper {
-        overflow-y: auto;
+        
         max-height: calc(100vh - 103px);
     }
 
