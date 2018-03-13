@@ -12,6 +12,17 @@
         right: calc(100% - 40px)
     }
 
+    .layer {
+        background: #e6e1e1;
+        padding: 5px;
+        margin: 5px 5px 5px 0;
+        cursor: pointer;
+    }
+
+    .active {
+        background: #9e9e9e;
+    }
+
     .close {
         position: absolute;
         right: 20px;

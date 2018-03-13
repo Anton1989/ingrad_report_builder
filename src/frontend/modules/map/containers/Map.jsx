@@ -3,7 +3,7 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 import browserHistory from 'react-router/lib/browserHistory';
 import { compose, withStateHandlers } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Polyline, InfoWindow } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, Polygon, Polyline, InfoWindow, GroundOverlay } from 'react-google-maps';
 //Actions
 import { getPlaces, dismissError } from '../actions/placesActions';
 import { getStyles } from '../../styles/actions/stylesActions';
@@ -22,7 +22,7 @@ const defaultCoordinates = {
 const Maps = compose(
     withStateHandlers(
         () => ({
-            infoWindow: null,
+            infoWindow: null
         }),
         {
             onToggleOpen: () => (event, house) => {
@@ -43,7 +43,7 @@ const Maps = compose(
     withScriptjs,
     withGoogleMap
 )(props => {
-    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates } = props;
+    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer } = props;
     let options = {
         mapTypeControl: true,
         mapTypeControlOptions: {
@@ -133,7 +133,7 @@ const Maps = compose(
                             />
                         }
                     });
-                } else {
+                } else if (!placeId || placeId == place._id) {
                     placeHtml = <Marker
                         key={place._id}
                         defaultIcon={{ url: place.logo, scaledSize: new google.maps.Size(30, 30) }}
@@ -154,10 +154,29 @@ const Maps = compose(
                 <br />
             </p>
         </InfoWindow>}
+        {selectedLayer && <GroundOverlay
+            defaultUrl={selectedLayer.image}
+            defaultBounds={new google.maps.LatLngBounds(
+                new google.maps.LatLng(selectedLayer.coordinates[0].lat, selectedLayer.coordinates[0].lng),
+                new google.maps.LatLng(selectedLayer.coordinates[1].lat, selectedLayer.coordinates[1].lng),
+                selectedLayer.coordinates[1]
+            )}
+            defaultOpacity={selectedLayer.opcity}
+        />}
     </GoogleMap>
 });
 
 class Map extends React.Component {
+
+    constructor() {
+        super();
+
+        this.state = {
+            selectedLayer: null
+        }
+
+        this.onSelectLayer = this.onSelectLayer.bind(this);
+    }
 
     componentDidMount() {
         if (this.props.places.data.length == 0) {
@@ -165,6 +184,18 @@ class Map extends React.Component {
         }
         if (this.props.mapStyles.data.length == 0) {
             this.props.getStyles();
+        }
+    }
+
+    onSelectLayer(layer) {
+        if (this.state.selectedLayer !== null && layer._id == this.state.selectedLayer._id) {
+            this.setState({
+                selectedLayer: null
+            });
+        } else {
+            this.setState({
+                selectedLayer: layer
+            });
         }
     }
 
@@ -198,12 +229,13 @@ class Map extends React.Component {
                 mapElement={<div style={{ height: '100%' }} />}
                 mapStyles={mapStyles.data}
                 places={places}
+                selectedLayer={this.state.selectedLayer}
                 activeTypes={activeTypes}
                 placeId={placeId}
                 openPlace={openPlace}
                 defaultCoordinates={defaultCoordinates}
             />
-            {placeId && places.data.length > 0 && <PlaceDetails place={places.data.find(place => place._id == placeId)} />}
+            {placeId && places.data.length > 0 && <PlaceDetails selectedLayer={this.state.selectedLayer} onSelectLayer={this.onSelectLayer} place={places.data.find(place => place._id == placeId)} />}
             {this.props.children}
         </div>;
     }
