@@ -47,7 +47,6 @@ export default class PlaceDetails extends React.Component {
                 <h1>
                     {place.name}
                     <span className={'glyphicon ' + hiddenBtn + ' ' + styles.btn} onClick={this.onHide}></span>
-                    <Link to={'/edit/' + place._id}><span className='glyphicon glyphicon-edit'></span></Link>
                 </h1>
                 {Object.keys(place).map(field => {
                     if (labels[field] && place[field] != '') {

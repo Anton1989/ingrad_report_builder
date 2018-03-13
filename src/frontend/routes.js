@@ -12,7 +12,6 @@ export default (/* data */) => {
         <Route path='/' component={Layout}>
             <IndexRoute component={MapContainer} />
             <Route path='add' component={PlaceAdd} />
-            <Route path='edit/:placeId' component={PlaceAdd} />
         </Route>
     );
 }
