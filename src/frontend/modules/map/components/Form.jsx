@@ -26,6 +26,7 @@ export default class Form extends React.Component {
             site: '',
             camera: '',
             photo: '',
+            layers: [],
             houses: [],
             address: '',
             coordinates: {
@@ -41,6 +42,7 @@ export default class Form extends React.Component {
 
         this.onDropLogo = this.onDropLogo.bind(this);
         this.onDropImage = this.onDropImage.bind(this);
+        this.onDropLayer = this.onDropLayer.bind(this);
         this.onUpdateInputText = this.onUpdateInputText.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onAddHouse = this.onAddHouse.bind(this);
@@ -113,6 +115,16 @@ export default class Form extends React.Component {
         });
     }
 
+    onDropLayer(files, targetLayer) {
+        let layers = [...this.state.layers];
+        let layerInd = layers.findIndex((layer) => targetLayer._id == layer.id);
+        layers[layerInd].image = files[0];
+
+        this.setState({
+            layers
+        });
+    }
+
     onUpdateInputText(e) {
         let variable = {};
         if (e.target.id == 'coordinates-lat') {
@@ -168,7 +180,7 @@ export default class Form extends React.Component {
             let coordLL = coord.split(', ');
             if (coordLL[0] && coordLL[1] && coordLL[0] != '' && coordLL[1] != '') {
                 houses[house_index].coordinates.push({
-                    lat: parseFloat(coordLL[0].replace(',', '.')), 
+                    lat: parseFloat(coordLL[0].replace(',', '.')),
                     lng: parseFloat(coordLL[1].replace(',', '.'))
                 });
             }
@@ -179,7 +191,7 @@ export default class Form extends React.Component {
         this.refs.coorStr.value = '';
         this.setState({ houses });
     }
-    
+
     onUpdateInputTextPoint(e, house_index, point_index) {
         let houses = [...this.state.houses];
         houses[house_index].coordinates[point_index][e.target.id] = parseFloat(e.target.value);
@@ -344,7 +356,7 @@ export default class Form extends React.Component {
         return <div className={'col-sm-12 col-md-12 ' + styles.add}>
             <div className='row'>
                 <h1>
-                    {title} 
+                    {title}
                     <span title='Сохранить' onClick={this.onSave} className={'glyphicon glyphicon-floppy-save ' + styles.btn}></span>
                 </h1>
                 <div className={styles.scrolWrapper}>
@@ -434,16 +446,83 @@ export default class Form extends React.Component {
                             >
                                 {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
                                     if (isDragActive) {
-                                        return 'Данный тип фалов разрешен';
+                                        return 'Данный тип файлов разрешен';
                                     }
                                     if (isDragReject) {
-                                        return 'Данный тип фалов запрещен';
+                                        return 'Данный тип файлов запрещен';
                                     }
                                     return acceptedFiles.length || rejectedFiles.length
                                         ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
                                         : 'Загрузите Фото объекта';
                                 }}
                             </Dropzone>
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='layers'>Слои</label>
+                            {this.state.layers.map((layer, i) => {
+                                let image = null;
+                                if (layer.image && typeof layer.image === 'object') {
+                                    image = <li>
+                                        {layer.image.name} - {layer.image.size} bytes&nbsp;
+                                        <span id='image' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+                                    </li>;
+                                } else if (layer.image) {
+                                    image = <li>
+                                        <a href={layer.image} target='_blank'>{layer.image}</a>&nbsp;
+                                        <span id='image' onClick={this.onRemoveImage} className='glyphicon glyphicon-minus-sign'></span>
+                                    </li>;
+                                }
+
+                                return <div className={'form-group row ' + styles.house} key={'house_' + i}>
+                                    <div className='col-xs-12'>
+                                        <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить слой</button>
+                                    </div>
+                                    <div className='col-xs-3'>
+                                        <input type='text' className='form-control' id='name' placeholder='Навание' value={layer.name} onChange={e => this.updateInputTextHouse(e, i)} />
+                                    </div>
+                                    <div className='col-xs-1'>
+                                        <input type='text' className='form-control' id='opcity' placeholder='Прозрачность' value={layer.opcity} onChange={e => this.updateInputTextHouse(e, i)} />
+                                    </div>
+                                    <div className='form-group' key={'layer_' + i}>
+                                        <div className='col-xs-2'>
+                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[0].lat} onChange={e => this.onUpdateInputTextPoint(e, i, 0)} />
+                                        </div>
+                                        <div className='col-xs-2'>
+                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[0].lng} onChange={e => this.onUpdateInputTextPoint(e, i, 0)} />
+                                        </div>
+                                        <div className='col-xs-2'>
+                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[1].lat} onChange={e => this.onUpdateInputTextPoint(e, i, 1)} />
+                                        </div>
+                                        <div className='col-xs-2'>
+                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[1].lng} onChange={e => this.onUpdateInputTextPoint(e, i, 1)} />
+                                        </div>
+                                    </div>
+                                    <div className='form-group col-sm-12 col-md-12'>
+                                        <label>Фон слоя</label>
+                                        <ul>
+                                            {image}
+                                        </ul>
+                                        <Dropzone
+                                            accept='image/png'
+                                            className={styles.dropzone}
+                                            onDrop={(files) => { this.onDropLayer(files, layer); }}
+                                            multiple={false}
+                                        >
+                                            {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+                                                if (isDragActive) {
+                                                    return 'Данный тип файлов разрешен';
+                                                }
+                                                if (isDragReject) {
+                                                    return 'Данный тип файлов запрещен';
+                                                }
+                                                return acceptedFiles.length || rejectedFiles.length
+                                                    ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
+                                                    : 'Загрузите фон слоя';
+                                            }}
+                                        </Dropzone>
+                                    </div>
+                                </div>
+                            })}
                         </div>
                         <div className='form-group'>
                             <label htmlFor='photo'>Объекты</label>

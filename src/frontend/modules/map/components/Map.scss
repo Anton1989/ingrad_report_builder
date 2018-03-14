@@ -1,12 +1,7 @@
-.maps {
-    width: 100%;
-    height: 100%;
+.row {
+    cursor: pointer;
+}
 
-    .row {
-        cursor: pointer;
-    }
-
-    .containerElement {
-        height: calc(70vh - 51px);
-    }
+.containerElement {
+    height: calc(70vh - 51px);
 }
