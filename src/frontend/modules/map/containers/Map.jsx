@@ -158,8 +158,7 @@ const Maps = compose(
             defaultUrl={selectedLayer.image}
             defaultBounds={new google.maps.LatLngBounds(
                 new google.maps.LatLng(selectedLayer.coordinates[0].lat, selectedLayer.coordinates[0].lng),
-                new google.maps.LatLng(selectedLayer.coordinates[1].lat, selectedLayer.coordinates[1].lng),
-                selectedLayer.coordinates[1]
+                new google.maps.LatLng(selectedLayer.coordinates[1].lat, selectedLayer.coordinates[1].lng)
             )}
             defaultOpacity={selectedLayer.opcity}
         />}
