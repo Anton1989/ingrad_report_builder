@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './Map.scss';
 import { compose, withStateHandlers } from 'recompose';
-import { withScriptjs, withGoogleMap, Marker, Polygon, Polyline, GoogleMap } from 'react-google-maps';
+import { withScriptjs, withGoogleMap, Marker, Polygon, Polyline, GoogleMap, GroundOverlay } from 'react-google-maps';
 
 const defaultCoordinates = {
     coordinates: {
@@ -103,13 +103,27 @@ const Maps = compose(
                 />
             }
         })}
+        {props.layers.map(layer => {
+            if (layer.show && layer.coordinates[0].lat && layer.coordinates[0].lng && 
+                layer.coordinates[1].lat && layer.coordinates[1].lng && layer.image) {
+                return <GroundOverlay
+                    key={JSON.stringify(layer)}
+                    defaultUrl={layer.image.preview ? layer.image.preview: layer.image}
+                    defaultBounds={new google.maps.LatLngBounds(
+                        new google.maps.LatLng(layer.coordinates[0].lat, layer.coordinates[0].lng),
+                        new google.maps.LatLng(layer.coordinates[1].lat, layer.coordinates[1].lng)
+                    )}
+                    defaultOpacity={layer.opcity}
+                />
+            }
+        })}
     </GoogleMap>
 });
 
 export default class EditeMap extends React.Component {
 
     render() {
-        const { marker, houses, setMarker, mapStyles } = this.props;
+        const { marker, layers, houses, setMarker, mapStyles } = this.props;
         console.log('RENDER <PlaceDetails>');
 
         return <div className={styles.maps}>
@@ -120,6 +134,7 @@ export default class EditeMap extends React.Component {
                 mapElement={<div style={{ height: '100%' }} />}
                 coordinates={marker}
                 houses={houses}
+                layers={layers}
                 mapStyles={mapStyles}
                 setMarker={setMarker}
             />

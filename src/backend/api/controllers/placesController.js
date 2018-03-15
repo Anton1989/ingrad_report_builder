@@ -61,6 +61,18 @@ export default class PlacesController {
                 this._deleteFile(placeEntity._id, image);
                 placeEntity.image = await this._saveFile(placeEntity._id, image);
             }
+            if (images.layer && images.layer.length > 0) {
+                let i = 0;
+                let layers = [...placeEntity.layers];
+                for (let index=0; index < layers.length; index++) {
+                    if (layers[index].image == 'TOSAVE') {
+                        this._deleteFile(layers[index]._id, images.layer[i]);
+                        layers[index].image = await this._saveFile(layers[index]._id, images.layer[i]);
+                        i++;
+                    }
+                }
+                placeEntity.layers = layers;
+            }
             placeEntity.save();
         } catch (error) {
             console.error(error);

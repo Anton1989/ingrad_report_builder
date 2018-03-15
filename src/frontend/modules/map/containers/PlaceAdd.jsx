@@ -15,11 +15,13 @@ class PlaceAdd extends React.Component {
 
         this.state = {
             marker: null,
+            layers: [],
             houses: []
         }
 
         this.setMarker = this.setMarker.bind(this);
         this.setPolygons = this.setPolygons.bind(this);
+        this.setOverlays = this.setOverlays.bind(this);
     }
 
     componentWillMount() {
@@ -49,6 +51,10 @@ class PlaceAdd extends React.Component {
         this.setState({ houses });
     }
 
+    setOverlays(layers) {
+        this.setState({ layers });
+    }
+
     render() {
         const { places, styles, addPlace, updatePlace, params } = this.props;
         console.log('RENDER <PlaceAdd>');
@@ -60,8 +66,8 @@ class PlaceAdd extends React.Component {
         }
 
         return <div>
-            <EditeMap marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
-            <Form place={place} mapStyles={styles.data} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
+            <EditeMap layers={this.state.layers} marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
+            <Form setOverlays={this.setOverlays} place={place} mapStyles={styles.data} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
         </div>;
     }
 }

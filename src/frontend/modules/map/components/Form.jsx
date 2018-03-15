@@ -14,6 +14,14 @@ const defaultHouse = {
     coordinates: []
 };
 
+const defaultLayer = {
+    name: '',
+    image: null,
+    show: false,
+    opcity: 1,
+    coordinates: []
+};
+
 export default class Form extends React.Component {
 
     constructor() {
@@ -46,10 +54,14 @@ export default class Form extends React.Component {
         this.onUpdateInputText = this.onUpdateInputText.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onAddHouse = this.onAddHouse.bind(this);
+        this.onAddLayer = this.onAddLayer.bind(this);
         this.onRemoveHouse = this.onRemoveHouse.bind(this);
+        this.onRemoveLayers = this.onRemoveLayer.bind(this);
         this.onAddPoint = this.onAddPoint.bind(this);
         this.onRemovePoint = this.onRemovePoint.bind(this);
         this.onUpdateInputTextPoint = this.onUpdateInputTextPoint.bind(this);
+        this.onUpdateInputTextLayer = this.onUpdateInputTextLayer.bind(this);
+        this.onUpdateInputCooLayer = this.onUpdateInputCooLayer.bind(this);
         this.onRemoveImage = this.onRemoveImage.bind(this);
         this.updateCoordinatesByString = this.updateCoordinatesByString.bind(this);
         this.timeout = null;
@@ -115,16 +127,6 @@ export default class Form extends React.Component {
         });
     }
 
-    onDropLayer(files, targetLayer) {
-        let layers = [...this.state.layers];
-        let layerInd = layers.findIndex((layer) => targetLayer._id == layer.id);
-        layers[layerInd].image = files[0];
-
-        this.setState({
-            layers
-        });
-    }
-
     onUpdateInputText(e) {
         let variable = {};
         if (e.target.id == 'coordinates-lat') {
@@ -175,9 +177,9 @@ export default class Form extends React.Component {
         if (coords == '') {
             return false;
         }
-        let coordA = coords.split('; ');
+        let coordA = coords.trim().split(';');
         coordA.forEach(coord => {
-            let coordLL = coord.split(', ');
+            let coordLL = coord.split(',');
             if (coordLL[0] && coordLL[1] && coordLL[0] != '' && coordLL[1] != '') {
                 houses[house_index].coordinates.push({
                     lat: parseFloat(coordLL[0].replace(',', '.')),
@@ -274,6 +276,54 @@ export default class Form extends React.Component {
             }
             return false;
         });
+    }
+
+    onAddLayer() {
+        let layers = [...this.state.layers];
+        let newLayer = { ...defaultLayer };
+        newLayer.coordinates = [{ lat: '', lng: '' }, { lat: '', lng: '' }];
+        layers.push(newLayer);
+
+        this.setState({ layers });
+    }
+
+    onRemoveLayer(layer_index) {
+        let layers = [...this.state.layers];
+
+        layers.splice(layer_index, 1);
+        this.setState({ layers });
+        this.props.setOverlays(layers);
+    }
+
+    showLayer(layer_index) {
+        let layers = [...this.state.layers];
+
+        layers[layer_index].show = !layers[layer_index].show;
+        this.setState({ layers });
+        this.props.setOverlays(layers);
+    }
+
+    onUpdateInputTextLayer(e, layer_index) {
+        let layers = [...this.state.layers];
+        layers[layer_index][e.target.id] = e.target.value;
+
+        this.props.setOverlays(layers);
+        this.setState({ layers });
+    }
+
+    onUpdateInputCooLayer(e, layer_index, coordinate_index) {
+        let layers = [...this.state.layers];
+        layers[layer_index].coordinates[coordinate_index][e.target.id] = parseFloat(e.target.value);
+
+        this.props.setOverlays(layers);
+        this.setState({ layers });
+    }
+
+    onDropLayer(files, layer_index) {
+        let layers = [...this.state.layers];
+        layers[layer_index].image = files[0];
+
+        this.setState({ layers });
     }
 
     onAddHouse() {
@@ -474,38 +524,51 @@ export default class Form extends React.Component {
                                 }
 
                                 return <div className={'form-group row ' + styles.house} key={'house_' + i}>
-                                    <div className='col-xs-12'>
-                                        <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveHouse(i) }}>Удалить слой</button>
+                                    <div className={'col-xs-12 ' + styles.layer_btns}>
+                                        <button type='button' className='btn btn-danger' onClick={() => { this.onRemoveLayer(i) }}>Удалить слой</button>
+                                        <button type='button' className='btn btn-general' onClick={() => { this.showLayer(i) }}>{layer.show ? 'Скрыть на карте' : 'Показать на карте'}</button>
                                     </div>
                                     <div className='col-xs-3'>
-                                        <input type='text' className='form-control' id='name' placeholder='Навание' value={layer.name} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        Название слоя
                                     </div>
                                     <div className='col-xs-1'>
-                                        <input type='text' className='form-control' id='opcity' placeholder='Прозрачность' value={layer.opcity} onChange={e => this.updateInputTextHouse(e, i)} />
+                                        Прозр.
+                                    </div>
+                                    <div className='col-xs-4'>
+                                        Левый нижний угол
+                                    </div>
+                                    <div className='col-xs-4'>
+                                        Правый верхний угол
+                                    </div>
+                                    <div className='col-xs-3'>
+                                        <input type='text' className='form-control' id='name' placeholder='Навание' value={layer.name} onChange={e => this.onUpdateInputTextLayer(e, i)} />
+                                    </div>
+                                    <div className='col-xs-1'>
+                                        <input type='text' className='form-control' id='opcity' placeholder='Прозрачность' value={layer.opcity} onChange={e => this.onUpdateInputTextLayer(e, i)} />
                                     </div>
                                     <div className='form-group' key={'layer_' + i}>
                                         <div className='col-xs-2'>
-                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[0].lat} onChange={e => this.onUpdateInputTextPoint(e, i, 0)} />
+                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[0].lat} onChange={e => this.onUpdateInputCooLayer(e, i, 0)} />
                                         </div>
                                         <div className='col-xs-2'>
-                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[0].lng} onChange={e => this.onUpdateInputTextPoint(e, i, 0)} />
+                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[0].lng} onChange={e => this.onUpdateInputCooLayer(e, i, 0)} />
                                         </div>
                                         <div className='col-xs-2'>
-                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[1].lat} onChange={e => this.onUpdateInputTextPoint(e, i, 1)} />
+                                            <input type='text' className='form-control' id='lat' placeholder='Широта' value={layer.coordinates[1].lat} onChange={e => this.onUpdateInputCooLayer(e, i, 1)} />
                                         </div>
                                         <div className='col-xs-2'>
-                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[1].lng} onChange={e => this.onUpdateInputTextPoint(e, i, 1)} />
+                                            <input type='text' className='form-control' id='lng' placeholder='Долгота' value={layer.coordinates[1].lng} onChange={e => this.onUpdateInputCooLayer(e, i, 1)} />
                                         </div>
                                     </div>
                                     <div className='form-group col-sm-12 col-md-12'>
-                                        <label>Фон слоя</label>
+                                        <p>Фон слоя</p>
                                         <ul>
                                             {image}
                                         </ul>
                                         <Dropzone
                                             accept='image/png'
                                             className={styles.dropzone}
-                                            onDrop={(files) => { this.onDropLayer(files, layer); }}
+                                            onDrop={(files) => { this.onDropLayer(files, i); }}
                                             multiple={false}
                                         >
                                             {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
@@ -523,6 +586,8 @@ export default class Form extends React.Component {
                                     </div>
                                 </div>
                             })}
+                            <br />
+                            <button type='button' className='btn btn-info' onClick={this.onAddLayer}>Добавить слой</button>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='photo'>Объекты</label>
@@ -537,7 +602,7 @@ export default class Form extends React.Component {
                                     <div className='col-xs-4'>
                                         <select id='style' className='form-control' value={house.style ? house.style : mapStyles.length > 0 ? mapStyles[0]._id : ''} onChange={e => this.updateInputTextHouse(e, i)}>
                                             {mapStyles.length > 0 && mapStyles.map(style => {
-                                                return <option value={style._id}>Стиль: {style.name}</option>;
+                                                return <option key={style._id} value={style._id}>Стиль: {style.name}</option>;
                                             })}
                                         </select>
                                     </div>

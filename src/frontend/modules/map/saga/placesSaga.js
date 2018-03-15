@@ -61,6 +61,15 @@ function putPlace(data) {
 		formData.append('logo', data.logo);
 		delete data.logo;
 	}
+	if (data.layers && data.layers.length > 0) {
+		data.layers.forEach((layer, index) => {
+			delete data.layers[index].show;
+			if(layer.image && typeof layer.image === 'object') {
+				formData.append('layer', layer.image);
+				data.layers[index].image = 'TOSAVE';
+			}
+		});
+	}
 	
 	formData.append('data', JSON.stringify(data));
 	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + data._id, {

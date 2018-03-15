@@ -34,7 +34,8 @@ export default class ApiConfig {
         //Init endpoints for express.
         var cpUpload = upload.fields([
             { name: 'image', maxCount: 1 },
-            { name: 'logo', maxCount: 1 }
+            { name: 'logo', maxCount: 1 },
+            { name: 'layer', maxCount: 100 }
         ]);
         this._network.use('/v1/projects', projectsController.getRouter());
         this._network.use('/v1/styles', stylesController.getRouter());
