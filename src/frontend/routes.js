@@ -7,6 +7,7 @@ import Layout from './common/containers/Layout.jsx';
 import Styles from './modules/styles/containers/Styles.jsx';
 import MapContainer from './modules/map/containers/Map.jsx';
 import PlaceAdd from './modules/map/containers/PlaceAdd.jsx';
+import Pd from './modules/pd/containers/Pd.jsx';
 
 export default (/* data */) => {
     return (
@@ -15,6 +16,7 @@ export default (/* data */) => {
             <Route path='add' component={PlaceAdd} />
             <Route path='edit/:placeId' component={PlaceAdd} />
             <Route path='styles' component={Styles} />
+            <Route path='pd' component={Pd} />
         </Route>
     )
 }

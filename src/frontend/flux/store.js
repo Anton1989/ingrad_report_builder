@@ -6,6 +6,7 @@ import createSagaMiddleware from 'redux-saga';
 import projectSaga from '../modules/projects/saga/projectSaga';
 import placesSaga from '../modules/map/saga/placesSaga';
 import stylesSaga from '../modules/styles/saga/stylesSaga';
+import pdSaga from '../modules/pd/saga/pdSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -23,5 +24,6 @@ export default function configureStore(initialState) {
     sagaMiddleware.run(projectSaga);
     sagaMiddleware.run(placesSaga);
     sagaMiddleware.run(stylesSaga);
+    sagaMiddleware.run(pdSaga);
     return store
 }

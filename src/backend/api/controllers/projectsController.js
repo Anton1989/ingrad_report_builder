@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import Response from '../models/responseDto';
 import Projects from '../models/Projects';
-import Floors from '../models/Floors';
-import Sections from '../models/Sections';
+//import Floors from '../models/Floors';
+//import Sections from '../models/Sections';
 
 export default class ProjectsController {
 

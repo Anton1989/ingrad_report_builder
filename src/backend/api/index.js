@@ -2,6 +2,8 @@ import cors from 'cors';
 import ProjectsController from './controllers/projectsController';
 import PlacesController from './controllers/placesController';
 import StylesController from './controllers/stylesController';
+import PdController from './controllers/pdController';
+
 import bodyParser from 'body-parser';
 import multer from 'multer';
 
@@ -30,15 +32,18 @@ export default class ApiConfig {
         let projectsController = new ProjectsController(this._network);
         let placesController = new PlacesController(this._network);
         let stylesController = new StylesController(this._network);
+        let pdController = new PdController(this._network);
 
         //Init endpoints for express.
         var cpUpload = upload.fields([
             { name: 'image', maxCount: 1 },
             { name: 'logo', maxCount: 1 },
-            { name: 'layer', maxCount: 100 }
+            { name: 'layer', maxCount: 100 },
+            { name: 'csv', maxCount: 1 }
         ]);
         this._network.use('/v1/projects', projectsController.getRouter());
         this._network.use('/v1/styles', stylesController.getRouter());
         this._network.use('/v1/places', cpUpload, placesController.getRouter());
+        this._network.use('/v1/pd', cpUpload, pdController.getRouter());
     }
 }

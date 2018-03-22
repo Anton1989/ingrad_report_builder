@@ -19,6 +19,7 @@ if (ENV_DEVELOPMENT === false) {
 }
 app.use('/css', express.static(__dirname + '/static/css'));
 app.use('/images', express.static(__dirname + '/static/images'));
+app.use('/files', express.static(__dirname + '/static/files'));
 app.use('/js', express.static(__dirname + '/static/bundle'));
 app.use('/favicon.ico', express.static(__dirname + '/static/images/favicon.ico'));
 app.use(ServerRenderingMiddleware);

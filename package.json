@@ -96,6 +96,7 @@
     "body-parser": "^1.18.2",
     "clean-webpack-plugin": "^0.1.17",
     "cors": "^2.8.4",
+    "csv": "^2.0.0",
     "express": "^4.15.2",
     "google-map-react": "^0.29.0",
     "isomorphic-fetch": "2.2.1",
@@ -118,6 +119,8 @@
     "redux-saga": "^0.15.3",
     "redux-thunk": "2.2.0",
     "strip-loader": "^0.1.2",
-    "webpack-isomorphic-tools": "^3.0.5"
+    "uuid": "^3.2.1",
+    "webpack-isomorphic-tools": "^3.0.5",
+    "xml2js": "^0.4.19"
   }
 }

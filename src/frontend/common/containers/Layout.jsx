@@ -65,6 +65,12 @@ class Layout extends React.Component {
 				url: '/styles',
 				strict: true,
 				submenu: []
+			},
+			{
+				anchor: 'Проектная декларация',
+				url: '/pd',
+				strict: true,
+				submenu: []
 			}
 		];
 
