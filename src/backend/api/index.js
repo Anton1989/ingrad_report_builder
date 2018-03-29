@@ -39,7 +39,12 @@ export default class ApiConfig {
             { name: 'image', maxCount: 1 },
             { name: 'logo', maxCount: 1 },
             { name: 'layer', maxCount: 100 },
-            { name: 'csv', maxCount: 1 }
+            { name: 'csv', maxCount: 1 },
+            { name: 'csvDie', maxCount: 1 },
+            { name: 'csvLive', maxCount: 1 },
+            { name: 'csvCommonAreas', maxCount: 1 },
+            { name: 'csvOtherCommonProperties', maxCount: 1 },
+            { name: 'xmlTamplate', maxCount: 1 }
         ]);
         this._network.use('/v1/projects', projectsController.getRouter());
         this._network.use('/v1/styles', stylesController.getRouter());

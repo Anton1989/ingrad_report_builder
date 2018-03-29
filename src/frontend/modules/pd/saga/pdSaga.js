@@ -21,9 +21,12 @@ function* postCsv(action) {
 /* queries */
 function uploadCsv(csv) {
 	var formData = new FormData();
-	if (csv && typeof csv === 'object') {
-		formData.append('csv', csv);
-	}
+	console.log(csv)
+	formData.append('csvDie', csv.csvDie);
+	formData.append('csvLive', csv.csvLive);
+	formData.append('csvCommonAreas', csv.csvCommonAreas);
+	formData.append('csvOtherCommonProperties', csv.csvOtherCommonProperties);
+	formData.append('xmlTamplate', csv.xmlTamplate);
 
 	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.generatePdUrl, {
 		method: 'POST',
