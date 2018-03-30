@@ -63,7 +63,7 @@ function renderPage(appHtml, store) {
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
         ${cssTag}
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-        <title>STARTER BY AAA</title>
+        <title>ЦУП | Разработка</title>
         <script>
             window.__INITIAL_STATE__ = ${JSON.stringify(finalState)}
         </script>

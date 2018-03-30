@@ -47,7 +47,7 @@ export default class Navigation extends React.Component {
         const { placeObj } = this.props;
         console.log('RENDER <Navbar>');
 
-        let title = <Link to='/' className='navbar-brand'>ИНГРАД - карта</Link>;
+        let title = <Link to='/' className='navbar-brand'>ЦУП - карта</Link>;
         if (placeObj) {
             title = <Link className='navbar-brand'>
                 <img src={placeObj.logo} height='20' className={styles.logo} /><Link to='/'>Карта</Link> | {placeObj.name}

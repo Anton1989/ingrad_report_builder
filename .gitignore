@@ -2,6 +2,8 @@ node_modules
 src/backend/static/bundle
 src/backend/static/css
 src/backend/static/images
+src/backend/static/files
+uploads
 webpack-assets.json
 webpack-stats.json
 npm-debug.log
