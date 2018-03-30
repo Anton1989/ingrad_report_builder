@@ -34,7 +34,7 @@ export default class Navigation extends React.Component {
         return <Navbar collapseOnSelect fixedTop fluid>
             <Navbar.Header>
                 <Navbar.Brand>
-                    <Link to='/' className='navbar-brand'>ИНГРАД - админ панель</Link>
+                    <Link to='/' className='navbar-brand'>ЦУП - админ панель</Link>
                 </Navbar.Brand>
                 <Navbar.Toggle />
             </Navbar.Header>
