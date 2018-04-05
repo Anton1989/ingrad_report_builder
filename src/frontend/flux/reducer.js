@@ -3,10 +3,12 @@ import projects from '../modules/projects/reducers/project';
 import places from '../modules/map/reducers/place';
 import styles from '../modules/styles/reducers/styles';
 import pd from '../modules/pd/reducers/pd';
+import kpi from '../modules/kpi/reducers/kpi';
 
 export default combineReducers({
     projects,
     places,
     styles,
-    pd
+    pd,
+    kpi
 });

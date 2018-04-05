@@ -1,0 +1,30 @@
+.kpiTable {
+    
+    thead tr th {
+        vertical-align: middle;
+
+        &.mainCol {
+            min-width: 450px;
+        }
+    }
+
+    .editable {
+        cursor: pointer;
+    }
+
+    .head {
+        background: rgb(146, 227, 238);
+    }
+
+    .unhead {
+        background: white;
+    }
+
+    tbody {
+        tr {
+            td {
+                vertical-align: middle;
+            }
+        }
+    }
+}

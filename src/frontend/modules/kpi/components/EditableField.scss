@@ -1,0 +1,19 @@
+.editableField {
+
+    font-size: 10px;
+    margin: 0pc;
+
+    input {
+        width: calc(100% - 77px);
+        float: left;
+        margin-right: 3px;
+        font-size: 12px;
+        padding: 2px 5px;
+        line-height: 1.2em;
+        height: 28px;
+    }
+
+    button {
+        font-size: 10px;
+    }
+}

@@ -71,6 +71,12 @@ class Layout extends React.Component {
 				url: '/pd',
 				strict: true,
 				submenu: []
+			},
+			{
+				anchor: 'KPI таблицы',
+				url: '/kpi',
+				strict: false,
+				submenu: []
 			}
 		];
 

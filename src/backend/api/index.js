@@ -3,7 +3,7 @@ import ProjectsController from './controllers/projectsController';
 import PlacesController from './controllers/placesController';
 import StylesController from './controllers/stylesController';
 import PdController from './controllers/pdController';
-
+import KpiController from './controllers/kpiController';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 
@@ -32,6 +32,7 @@ export default class ApiConfig {
         let projectsController = new ProjectsController(this._network);
         let placesController = new PlacesController(this._network);
         let stylesController = new StylesController(this._network);
+        let kpiController = new KpiController(this._network);
         let pdController = new PdController(this._network);
 
         //Init endpoints for express.
@@ -50,5 +51,6 @@ export default class ApiConfig {
         this._network.use('/v1/styles', stylesController.getRouter());
         this._network.use('/v1/places', cpUpload, placesController.getRouter());
         this._network.use('/v1/pd', cpUpload, pdController.getRouter());
+        this._network.use('/v1/kpi', kpiController.getRouter());
     }
 }
