@@ -33,7 +33,8 @@ export default class EditableField extends React.Component {
     }
 
     handleSave() {
-
+        this.props.save(this.props.name, this.state.value);
+        this.setState({ editable: false, value: '' });
     }
 
     handleCancel() {

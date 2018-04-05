@@ -1,4 +1,4 @@
-import { KPI_REQUEST, POST_KPI_REQUEST, DISMISS_PD_ERROR } from '../constants';
+import { KPI_REQUEST, POST_KPI_REQUEST, PUT_KPI_REQUEST, DISMISS_PD_ERROR } from '../constants';
 
 export function get(csv) {
 	return (dispatch) => {
@@ -18,11 +18,11 @@ export function post(name) {
 	}
 }
 
-export function put(name) {
+export function put(project) {
 	return (dispatch) => {
 		dispatch({
-			type: POST_KPI_REQUEST,
-			name
+			type: PUT_KPI_REQUEST,
+			project
 		});
 	}
 }

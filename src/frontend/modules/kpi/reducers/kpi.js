@@ -2,6 +2,7 @@ import {
     KPI_REQUEST,
     KPI_SUCCESS,
     KPI_ADD_SUCCESS,
+    KPI_SAVE_SUCCESS,
     KPI_ERROR,
     DISMISS_KPI_ERROR,
     POST_KPI_REQUEST
@@ -35,6 +36,16 @@ export default function kpi(state = initialState, action) {
                 fetching: false,
                 errors: null
             }
+        case KPI_SAVE_SUCCESS: {
+            let data = [...state.data];
+            data[data.findIndex((kpi) => kpi._id == action.kpi._id)] = action.kpi;
+            return {
+                ...state,
+                data,
+                fetching: false,
+                errors: null
+            }
+        }
         case KPI_ERROR:
             return {
                 ...state,

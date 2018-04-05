@@ -24,6 +24,10 @@
         tr {
             td {
                 vertical-align: middle;
+
+                input {
+                    min-width: 50px;
+                }
             }
         }
     }

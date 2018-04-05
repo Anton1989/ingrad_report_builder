@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import fs from 'fs';
 import Response from '../models/responseDto';
 import Kpi from '../models/Kpi';
 
@@ -34,48 +33,17 @@ export default class KpiController {
     }
 
     async update(req, res) {
-        // let data = JSON.parse(req.body.data);
-        // let images = req.files;
-
-        // let id = data._id;
-        // delete data._id;
-
-        // console.log('BODY ', data)
-        // console.log('files ', images)
-
-        // let placeEntity = null;
-        // try {
-        //     placeEntity = await Places.findByIdAndUpdate(id, { $set: data }, { new: true });
-
-        //     if (images.logo && images.logo.length > 0) {
-        //         let logo = images.logo[0];
-        //         this._deleteFile(placeEntity._id, logo);
-        //         placeEntity.logo = await this._saveFile(placeEntity._id, logo);
-        //     }
-        //     if (images.image && images.image.length > 0) {
-        //         let image = images.image[0];
-        //         this._deleteFile(placeEntity._id, image);
-        //         placeEntity.image = await this._saveFile(placeEntity._id, image);
-        //     }
-        //     if (images.layer && images.layer.length > 0) {
-        //         let i = 0;
-        //         let layers = [...placeEntity.layers];
-        //         for (let index=0; index < layers.length; index++) {
-        //             if (layers[index].image == 'TOSAVE') {
-        //                 this._deleteFile(layers[index]._id, images.layer[i]);
-        //                 layers[index].image = await this._saveFile(layers[index]._id, images.layer[i]);
-        //                 i++;
-        //             }
-        //         }
-        //         placeEntity.layers = layers;
-        //     }
-        //     placeEntity.save();
-        // } catch (error) {
-        //     console.error(error);
-        //     return res.status(500).send(error);
-        // }
-
-        return this._resp.formattedSuccessResponse(res, [], 200);
+        let project = req.body.project;
+        const id = project._id;
+        delete project._id;
+        console.log(project)
+        try {
+            project = await Kpi.findByIdAndUpdate(id, { $set: project }, { new: true });
+            return this._resp.formattedSuccessResponse(res, project, 200);
+        } catch (error) {
+            console.error(error);
+            return this._resp.formattedErrorResponse(res, req, error.message, 500);
+        }
     }
 
     async add(req, res) {
@@ -137,25 +105,5 @@ export default class KpiController {
             console.error(error);
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
-        // let data = JSON.parse(req.body.data);
-        // let images = req.files;
-
-        // let place = new Places(data);
-        // let placeEntity = null;
-        // try {
-        //     placeEntity = await place.save(data);
-
-        //     if (images.logo && images.logo.length > 0) {
-        //         placeEntity.logo = await this._saveFile(placeEntity._id, images.logo[0]);
-        //     }
-        //     if (images.image && images.image.length > 0) {
-        //         placeEntity.image = await this._saveFile(placeEntity._id, images.image[0]);
-        //     }
-        //     placeEntity.save();
-        // } catch (error) {
-        //     console.error(error);
-        //     return res.status(500).send(error);
-        // }
-        return this._resp.formattedSuccessResponse(res, {}, 200);
     }
 }
