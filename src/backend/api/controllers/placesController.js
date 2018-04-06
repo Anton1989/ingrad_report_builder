@@ -27,7 +27,7 @@ export default class PlacesController {
 
     async all(req, res) {
         try {
-            const places = await Places.find({}).populate([{
+            const places = await Places.find({}).sort({name: 1}).populate([{
                 path: 'styles'
             }]).exec();
             return this._resp.formattedSuccessResponse(res, places, 200);
