@@ -17,6 +17,7 @@ export default class PlacesController {
 
             this._router.put('/:id', this.update.bind(this));
             this._router.post('/', this.add.bind(this));
+            this._router.delete('/:id', this.delete.bind(this));
         }
         console.log('End init places controller');
     }
@@ -105,10 +106,33 @@ export default class PlacesController {
         return this._resp.formattedSuccessResponse(res, placeEntity, 200);
     }
 
+    async delete(req, res) {
+        try {
+            const entity = await Places.findById(req.params.id);
+            if (entity.logo) {
+                this._deleteFileByName(entity._id, entity.logo);
+            }
+            if (entity.image) {
+                this._deleteFileByName(entity._id, entity.image);
+            }
+            await Places.findByIdAndRemove(req.params.id);
+        } catch (error) {
+            return this._resp.formattedErrorResponse(res, req, error.message, 500);
+        }
+        return this._resp.formattedSuccessResponse(res, {}, 200);
+    }
+
     _deleteFile(id, object) {
         let extension = object.mimetype.split('/')[1];
         let file = `${object.fieldname}.${extension}`;
         let path = `./src/backend/static/images/${id}/${file}`;
+        if (fs.existsSync(path)) {
+            fs.unlinkSync(path);
+        }
+    }
+
+    _deleteFileByName(id, name) {
+        let path = `./src/backend/static${name}`;
         if (fs.existsSync(path)) {
             fs.unlinkSync(path);
         }

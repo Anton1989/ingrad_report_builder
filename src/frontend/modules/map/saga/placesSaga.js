@@ -1,4 +1,4 @@
-import { ADD_PLACES_REQUEST, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
+import { ADD_PLACES_REQUEST, DEL_PLACES_REQUEST, DEL_PLACES_SUCCESS, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
 import fetch from 'isomorphic-fetch';
 import config from '../../../config';
 import { call, put, takeEvery } from 'redux-saga/effects';
@@ -8,6 +8,7 @@ function* sagaPlaces() {
 	yield takeEvery(GET_PLACES_REQUEST, fetchPlaces);
 	yield takeEvery(ADD_PLACES_REQUEST, addPlace);
 	yield takeEvery(UPD_PLACES_REQUEST, updPlace);
+	yield takeEvery(DEL_PLACES_REQUEST, delPlace);
 }
 
 /* middlewares */
@@ -35,11 +36,33 @@ function* updPlace(action) {
 		yield put({ type: GET_PLACES_ERROR, message: e.message });
 	}
 }
+function* delPlace(action) {
+	try {
+		yield call(deletePlace, action.id);
+		yield put({ type: DEL_PLACES_SUCCESS, place_id: action.id });
+	} catch (e) {
+		yield put({ type: GET_PLACES_ERROR, message: e.message });
+	}
+}
 
 /* queries */
 function getPlaces() {
 	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl, {
 		method: 'GET'
+	})
+		.then(response => {
+			if (200 == response.status) {
+				return response
+			} else {
+				throw new Error('Cannot load data from server. Response status ' + response.status)
+			}
+		})
+		.then(response => response.json())
+}
+
+function deletePlace(id) {
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + id, {
+		method: 'DELETE'
 	})
 		.then(response => {
 			if (200 == response.status) {

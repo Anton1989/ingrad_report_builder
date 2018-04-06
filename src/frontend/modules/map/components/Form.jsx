@@ -465,7 +465,6 @@ export default class Form extends React.Component {
                                 {logo}
                             </ul>
                             <Dropzone
-                                accept='image/png'
                                 className={styles.dropzone}
                                 onDrop={this.onDropLogo}
                                 multiple={false}
@@ -489,7 +488,6 @@ export default class Form extends React.Component {
                                 {image}
                             </ul>
                             <Dropzone
-                                accept='image/png'
                                 className={styles.dropzone}
                                 onDrop={this.onDropImage}
                                 multiple={false}

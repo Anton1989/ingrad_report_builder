@@ -1,4 +1,4 @@
-import { ADD_PLACES_REQUEST, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR, DISMISS_PLACES_ERROR } from '../constants';
+import { ADD_PLACES_REQUEST, DEL_PLACES_REQUEST, DEL_PLACES_SUCCESS, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR, DISMISS_PLACES_ERROR } from '../constants';
 
 const initialState = {
     data: [],
@@ -10,6 +10,7 @@ export default function places(state = initialState, action) {
     switch (action.type) {
         case UPD_PLACES_REQUEST:
         case ADD_PLACES_REQUEST:
+        case DEL_PLACES_REQUEST:
         case GET_PLACES_REQUEST:
             return { ...state, fetching: true }
         case GET_PLACES_SUCCESS:
@@ -18,6 +19,9 @@ export default function places(state = initialState, action) {
             let updateData = [...state.data];
             updateData.push(action.place);
             return { ...state, data: updateData, fetching: false, errors: null }
+        }
+        case DEL_PLACES_SUCCESS: {
+            return { ...state, data: state.data.filter(place => place._id != action.place_id), fetching: false, errors: null }
         }
         case UPD_PLACES_SUCCESS: {
             let updateData = [...state.data];

@@ -4,7 +4,7 @@ import connect from 'react-redux/lib/connect/connect';
 import browserHistory from 'react-router/lib/browserHistory';
 import Link from 'react-router/lib/Link';
 //Actions
-import { getPlaces, dismissError } from '../actions/placesActions';
+import { getPlaces, delPlace, dismissError } from '../actions/placesActions';
 import { getStyles } from '../../styles/actions/stylesActions';
 //Components
 import PlaceDetails from '../components/PlaceDetails.jsx';
@@ -20,6 +20,10 @@ class Map extends React.Component {
 
     editPlace(id) {
         browserHistory.push('/edit/' + id);
+    }
+
+    handleDelete(id) {
+        this.props.delPlace(id);
     }
 
     render() {
@@ -38,15 +42,19 @@ class Map extends React.Component {
                         <th>Название</th>
                         <th>Адрес</th>
                         <th>Домов</th>
+                        <th>Удалить</th>
                     </tr>
                 </thead>
                 <tbody>
                     {places.data.length > 0 && places.data.map(place => {
-                        return <tr key={'key_' + place._id} className={styles.row} onClick={() => { this.editPlace(place._id) }}>
-                            <td>{place._id}</td>
-                            <td>{place.name}</td>
-                            <td>{place.address}</td>
-                            <td>{place.houses.length}</td>
+                        return <tr key={'key_' + place._id} className={styles.row}>
+                            <td onClick={() => { this.editPlace(place._id) }}>{place._id}</td>
+                            <td onClick={() => { this.editPlace(place._id) }}>{place.name}</td>
+                            <td onClick={() => { this.editPlace(place._id) }}>{place.address}</td>
+                            <td onClick={() => { this.editPlace(place._id) }}>{place.houses.length}</td>
+                            <td>
+                                <button type='button' className='btn btn-danger' onClick={() => {this.handleDelete(place._id);}}><span className='glyphicon glyphicon-remove'></span></button>
+                            </td>
                         </tr>
                     })}
                 </tbody>
@@ -64,6 +72,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
     return {
+        delPlace: bindActionCreators(delPlace, dispatch),
         getStyles: bindActionCreators(getStyles, dispatch),
         getPlaces: bindActionCreators(getPlaces, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)
