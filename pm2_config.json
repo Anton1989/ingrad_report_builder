@@ -1,6 +1,6 @@
 {
     "apps": [{
-        "name": "ingrad-admin",
+        "name": "ingrad-kpi",
         "script": "src/backend",
         "watch": false,
         "exec_interpreter": "babel-node",

@@ -3,10 +3,6 @@ import rootReducer from './reducer';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import projectSaga from '../modules/projects/saga/projectSaga';
-import placesSaga from '../modules/map/saga/placesSaga';
-import stylesSaga from '../modules/styles/saga/stylesSaga';
-import pdSaga from '../modules/pd/saga/pdSaga';
 import kpiSaga from '../modules/kpi/saga/kpiSaga';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -22,10 +18,7 @@ export default function configureStore(initialState) {
         })
     }
 
-    sagaMiddleware.run(projectSaga);
-    sagaMiddleware.run(placesSaga);
-    sagaMiddleware.run(stylesSaga);
-    sagaMiddleware.run(pdSaga);
+
     sagaMiddleware.run(kpiSaga);
     return store
 }

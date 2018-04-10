@@ -55,26 +55,8 @@ class Layout extends React.Component {
 		
 		let menu = [
 			{
-				anchor: 'Карта',
-				url: '/',
-				strict: true,
-				submenu: []
-			},
-			{
-				anchor: 'Стили',
-				url: '/styles',
-				strict: true,
-				submenu: []
-			},
-			{
-				anchor: 'Проектная декларация',
-				url: '/pd',
-				strict: true,
-				submenu: []
-			},
-			{
 				anchor: 'KPI таблицы',
-				url: '/kpi',
+				url: '/',
 				strict: false,
 				submenu: []
 			}

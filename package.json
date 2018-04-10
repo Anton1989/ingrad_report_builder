@@ -1,5 +1,5 @@
 {
-  "name": "ingrad-admin",
+  "name": "ingrad-kpi",
   "version": "1.2.5",
   "description": "React Redux ingrad",
   "author": "AAA",
@@ -18,7 +18,7 @@
       "command": "pm2 start ./pm2_config.json",
       "env": {
         "SERVER": "138.68.182.94",
-        "SERVER_PORT": 8090,
+        "SERVER_PORT": 8091,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
         "NODE_ENV": "production"
@@ -28,7 +28,7 @@
       "command": "babel-node --presets es2015 src/backend/index.js",
       "env": {
         "SERVER": "127.0.0.1",
-        "SERVER_PORT": 8008,
+        "SERVER_PORT": 8009,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
         "NODE_ENV": "development"
@@ -40,15 +40,15 @@
         "UV_THREADPOOL_SIZE": 64,
         "NODE_PATH": "./src",
         "SERVER": "127.0.0.1",
-        "SERVER_PORT": 8009,
-        "API_PORT": 8008
+        "SERVER_PORT": 8010,
+        "API_PORT": 8009
       }
     },
     "build": {
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
         "SERVER": "map-ingrad.ru",
-        "SERVER_PORT": 8090,
+        "SERVER_PORT": 8091,
         "NODE_ENV": "production"
       }
     }
@@ -97,6 +97,7 @@
     "clean-webpack-plugin": "^0.1.17",
     "cors": "^2.8.4",
     "csv": "^2.0.0",
+    "excel4node": "^1.3.6",
     "express": "^4.15.2",
     "google-map-react": "^0.29.0",
     "isomorphic-fetch": "2.2.1",
@@ -121,6 +122,7 @@
     "strip-loader": "^0.1.2",
     "uuid": "^3.2.1",
     "webpack-isomorphic-tools": "^3.0.5",
+    "xlsx": "^0.12.8",
     "xml2js": "^0.4.19"
   }
 }
