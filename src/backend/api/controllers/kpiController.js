@@ -36,63 +36,139 @@ export default class KpiController {
             const wb = new xl.Workbook();
             let ws = wb.addWorksheet(entity.name);
 
-            
-            entity.events.forEach((event, i) => {
-                event = event.toJSON();
-                Object.keys(event).forEach((key, j) => {
-                    console.log(i, j, event[key].toString())
-                    ws.cell(i+1, j+1).string(event[key].toString());
+            let header = [
+                [
+                    {
+                        v: '№ пп',
+                        rc: [1, 1, 2, 1]
+                    },
+                    {
+                        v: 'Проекты',
+                        rc: [1, 2, 2, 2]
+                    },
+                    {
+                        v: entity.title,
+                        rc: [1, 3, 1, 7]
+                    },
+                    {
+                        v: 'Вес',
+                        rc: [1, 8, 2, 8]
+                    },
+                    {
+                        v: 'Шкала',
+                        rc: [1, 9, 2, 9]
+                    },
+                    {
+                        v: 'Источник информации',
+                        rc: [1, 10, 2, 10]
+                    }
+                ],
+                [
+                    {
+                        v: 'I кв',
+                        rc: [2, 3]
+                    },
+                    {
+                        v: 'II кв',
+                        rc: [2, 4]
+                    },
+                    {
+                        v: 'III кв',
+                        rc: [2, 5]
+                    },
+                    {
+                        v: 'Годовой',
+                        rc: [2, 6]
+                    },
+                    {
+                        v: 'Факт на текщий КВ',
+                        rc: [2, 7]
+                    }
+                ],
+                [
+                    {
+                        v: '1 ' + entity.name,
+                        rc: [3, 1, 3, 10]
+                    },
+                ]
+            ];
+
+            header.forEach(row => {
+                row.forEach(col => {
+                    if (col.rc.length > 2) {
+                        ws.cell(...col.rc, true).string(col.v.toString());
+                    } else {
+                        ws.cell(...col.rc).string(col.v.toString());
+                    }
                 });
             });
 
-            wb.write('ExcelFile.xlsx', res);
+            let index = 1;
+            entity.planes.forEach((plane, i) => {
+                ws.cell(4 + i, 1).string((i+1) + '.');
+                ws.cell(4 + i, 2).string(plane.name.toString());
+                ws.cell(4 + i, 3).string(plane.kv1.toString());
+                ws.cell(4 + i, 4).string(plane.kv2.toString());
+                ws.cell(4 + i, 5).string(plane.kv3.toString());
+                ws.cell(4 + i, 6).string(plane.year.toString());
+                ws.cell(4 + i, 7).string(plane.actual.toString());
+                ws.cell(4 + i, 8).string(plane.weight.toString());
+                ws.cell(4 + i, 9).string(plane.rate.split('<br/>').join('\n'));
+                ws.cell(4 + i, 10).string(plane.info.toString());
+                index = i;
+            });
+            index += 5;
 
+            let header2 = [
+                [
+                    {
+                        v: '',
+                        rc: [index, 1]
+                    },
+                    {
+                        v: 'Дата выполнения ключевого события',
+                        rc: [index, 2, index, 7]
+                    },
+                    {
+                        v: 'Вес',
+                        rc: [index, 8]
+                    },
+                    {
+                        v: 'Критичность срыва сроков',
+                        rc: [index, 9]
+                    },
+                    {
+                        v: 'Описание критичности',
+                        rc: [index, 10]
+                    }
+                ]
+            ];
 
+            header2.forEach(row => {
+                row.forEach(col => {
+                    if (col.rc.length > 2) {
+                        ws.cell(...col.rc, true).string(col.v.toString());
+                    } else {
+                        ws.cell(...col.rc).string(col.v.toString());
+                    }
+                });
+            });
 
-            // var wb = XLSX.utils.book_new();
-            // var ws_name = 'SheetJS';
+            entity.events.forEach((event, i) => {
+                index += 1;
+                ws.cell(index, 1).string('');
+                ws.cell(index, 2).string(`4.${(i+1)}. ${event.name.toString()}`);
+                ws.cell(index, 3).string(event.kv1.toString());
+                ws.cell(index, 4).string(event.kv2.toString());
+                ws.cell(index, 5).string(event.kv3.toString());
+                ws.cell(index, 6).string(event.year.toString());
+                ws.cell(index, 7).string(event.actual.toString());
+                ws.cell(index, 8).string(event.weight.toString());
+                ws.cell(index, 9).string(event.critical.toString());
+            });
 
-            /* make worksheet */
-            // var ws_data = [
-            //     ['S', 'h', 'e', 'e', 't', 'J', 'S'],
-            //     [1, 2, 3, 4, 5],
-            //     '!merges': [{
-            //         s: {
-            //             r: 0,
-            //             c: 0
-            //         },
-            //         e: {
-            //             r: 1,
-            //             c: 0
-            //         }
-            //     } /* A1:A2 */ ]
-            // ];
-            // var ws = XLSX.utils.aoa_to_sheet(ws_data);
-
-            // for (var R = 0; R <= 5; ++R) {
-            //     for (var C = 0; C <= 5; ++C) {
-            //         var cell_address = {
-            //             c: C,
-            //             r: R
-            //         };
-            //         /* if an A1-style address is needed, encode the address */
-            //         var cell_ref = XLSX.utils.encode_cell(cell_address);
-            //         cell_ref.v = 'HH';
-            //     }
-            // }
-
-            // var output_file_name = 'out.csv';
-            // var stream = XLSX.stream.to_csv(ws);
-            // stream.pipe(fs.createWriteStream(output_file_name));
-
-
-
-            /* Add the worksheet to the workbook */
-            // XLSX.utils.book_append_sheet(wb, ws, ws_name);
-            // XLSX.writeFile(wb, 'out.xls');
-
-
-            // return this._resp.formattedSuccessResponse(res, entity, 200);
+            ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие');
+            wb.write('kpi.xlsx', res);
         } catch (error) {
             console.error(error);
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
