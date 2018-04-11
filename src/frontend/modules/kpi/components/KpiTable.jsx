@@ -30,7 +30,7 @@ export default class KpiTable extends React.Component {
                     </Alert>
                 </div>
             }
-            {project && <a href={'/v1/kpi/' + project._id} target='_blank' className='btn btn-info'><span className='glyphicon glyphicon glyphicon-download'></span> Скачать в ECXEL</a>}
+            {project && <a href={'/v1/kpi/' + project._id} target='_blank' className='btn btn-info'><span className='glyphicon glyphicon glyphicon-download'></span> Скачать в EXCEL</a>}
             <br/><br/>
             {project && <table className={'table table-bordered ' + styles.kpiTable}>
                 <thead className={styles.head}>

@@ -34,7 +34,77 @@ export default class KpiController {
             const entity = await Kpi.findById(id);
 
             const wb = new xl.Workbook();
-            let ws = wb.addWorksheet(entity.name);
+            var optionsWorksheet = {
+                // 'outline': {
+                //     'summaryBelow': false,
+                //     'summaryRight': false
+                // },
+            };
+            let ws = wb.addWorksheet(optionsWorksheet);
+            ws.column(10).setWidth(50);
+
+            const headerStyle = wb.createStyle({
+                font: {
+                    color: '#000000',
+                    size: 12
+                },
+                alignment: {
+                    wrapText: true,
+                    vertical: 'center'
+                },
+                border: {
+                    left: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    right: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    top: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    bottom: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                },
+                fill: {
+                    type: 'pattern',
+                    patternType: 'solid',
+                    fgColor: '92e3ee',
+                    bgColor: '92e3ee',
+                }
+            });
+            const generalStyle = wb.createStyle({
+                font: {
+                    color: '#000000',
+                    size: 12
+                },
+                alignment: {
+                    wrapText: true,
+                    vertical: 'center'
+                },
+                border: {
+                    left: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    right: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    top: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                    bottom: {
+                        style: 'thin',
+                        color: 'dddddd'
+                    },
+                }
+            });
 
             let header = [
                 [
@@ -96,25 +166,25 @@ export default class KpiController {
             header.forEach(row => {
                 row.forEach(col => {
                     if (col.rc.length > 2) {
-                        ws.cell(...col.rc, true).string(col.v.toString());
+                        ws.cell(...col.rc, true).string(col.v.toString()).style(headerStyle);
                     } else {
-                        ws.cell(...col.rc).string(col.v.toString());
+                        ws.cell(...col.rc).string(col.v.toString()).style(headerStyle);
                     }
                 });
             });
 
             let index = 1;
             entity.planes.forEach((plane, i) => {
-                ws.cell(4 + i, 1).string((i+1) + '.');
-                ws.cell(4 + i, 2).string(plane.name.toString());
-                ws.cell(4 + i, 3).string(plane.kv1.toString());
-                ws.cell(4 + i, 4).string(plane.kv2.toString());
-                ws.cell(4 + i, 5).string(plane.kv3.toString());
-                ws.cell(4 + i, 6).string(plane.year.toString());
-                ws.cell(4 + i, 7).string(plane.actual.toString());
-                ws.cell(4 + i, 8).string(plane.weight.toString());
-                ws.cell(4 + i, 9).string(plane.rate.split('<br/>').join('\n'));
-                ws.cell(4 + i, 10).string(plane.info.toString());
+                ws.cell(4 + i, 1).string((i+1) + '.').style(generalStyle);
+                ws.cell(4 + i, 2).string(plane.name.toString()).style(generalStyle);
+                ws.cell(4 + i, 3).string(plane.kv1.toString()).style(generalStyle);
+                ws.cell(4 + i, 4).string(plane.kv2.toString()).style(generalStyle);
+                ws.cell(4 + i, 5).string(plane.kv3.toString()).style(generalStyle);
+                ws.cell(4 + i, 6).string(plane.year.toString()).style(generalStyle);
+                ws.cell(4 + i, 7).string(plane.actual.toString()).style(generalStyle);
+                ws.cell(4 + i, 8).string(plane.weight.toString()).style(generalStyle);
+                ws.cell(4 + i, 9).string(plane.rate.split('<br/>').join('\n')).style(generalStyle);
+                ws.cell(4 + i, 10).string(plane.info.toString()).style(generalStyle);
                 index = i;
             });
             index += 5;
@@ -147,27 +217,31 @@ export default class KpiController {
             header2.forEach(row => {
                 row.forEach(col => {
                     if (col.rc.length > 2) {
-                        ws.cell(...col.rc, true).string(col.v.toString());
+                        ws.cell(...col.rc, true).string(col.v.toString()).style(headerStyle);
                     } else {
-                        ws.cell(...col.rc).string(col.v.toString());
+                        if (col.v != '') {
+                            ws.cell(...col.rc).string(col.v.toString()).style(headerStyle);
+                        } else {
+                            ws.cell(...col.rc).string(col.v.toString()).style(generalStyle);
+                        }
                     }
                 });
             });
 
             entity.events.forEach((event, i) => {
                 index += 1;
-                ws.cell(index, 1).string('');
-                ws.cell(index, 2).string(`4.${(i+1)}. ${event.name.toString()}`);
-                ws.cell(index, 3).string(event.kv1.toString());
-                ws.cell(index, 4).string(event.kv2.toString());
-                ws.cell(index, 5).string(event.kv3.toString());
-                ws.cell(index, 6).string(event.year.toString());
-                ws.cell(index, 7).string(event.actual.toString());
-                ws.cell(index, 8).string(event.weight.toString());
-                ws.cell(index, 9).string(event.critical.toString());
+                ws.cell(index, 1).string('').style(generalStyle);
+                ws.cell(index, 2).string(`4.${(i+1)}. ${event.name.toString()}`).style(generalStyle);
+                ws.cell(index, 3).string(event.kv1.toString()).style(generalStyle);
+                ws.cell(index, 4).string(event.kv2.toString()).style(generalStyle);
+                ws.cell(index, 5).string(event.kv3.toString()).style(generalStyle);
+                ws.cell(index, 6).string(event.year.toString()).style(generalStyle);
+                ws.cell(index, 7).string(event.actual.toString()).style(generalStyle);
+                ws.cell(index, 8).string(event.weight.toString()).style(generalStyle);
+                ws.cell(index, 9).string(event.critical.toString()).style(generalStyle);
             });
 
-            ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие');
+            ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие').style(generalStyle);
             wb.write('kpi.xlsx', res);
         } catch (error) {
             console.error(error);
