@@ -5,6 +5,7 @@ import KpiEvents from './schemas/KpiEvents';
 const KpiSchema = new Schema({
     name: String,
     title: String,
+    role: String,
     planes: [KpiPlans],
     events: [KpiEvents],
     created_at: { type: Date, default: Date.now }

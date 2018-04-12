@@ -52,6 +52,7 @@ export default class KpiController {
         try {
             const kpi = new Kpi({
                 name,
+                role: 'admin',
                 title: `Планы ГК Инград по достижению фин. показателей на ${(new Date()).getFullYear()} год, руб`,
                 planes: [{
                     name: 'Контрактация по проекту',
