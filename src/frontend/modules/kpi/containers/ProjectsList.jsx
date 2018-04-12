@@ -12,7 +12,7 @@ import ToolBar from '../components/ToolBar.jsx';
 class ProjectsList extends React.Component {
 
     componentDidMount() {
-        if (this.props.kpi.data.length == 0) this.props.get();
+        if (this.props.kpi.data.length == 0) this.props.get(this.props.location.query.role);
     }
 
     render() {

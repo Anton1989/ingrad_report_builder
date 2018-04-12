@@ -11,9 +11,9 @@ function* sagaKpi() {
 }
 
 /* middlewares */
-function* get(/*action*/) {
+function* get(action) {
 	try {
-		const kpi = yield call(getRequest);
+		const kpi = yield call(getRequest, action.role);
 		yield put({ type: KPI_SUCCESS, kpi: kpi.data });
 	} catch (e) {
 		yield put({ type: KPI_ERROR, message: e.message });
@@ -37,8 +37,8 @@ function* save(action) {
 }
 
 /* queries */
-function getRequest() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl, {
+function getRequest(role) {
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + '?role=' + role, {
 		method: 'GET'
 	})
 		.then(response => {

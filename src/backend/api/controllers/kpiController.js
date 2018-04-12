@@ -41,7 +41,8 @@ export default class KpiController {
                 // },
             };
             let ws = wb.addWorksheet(optionsWorksheet);
-            ws.column(10).setWidth(50);
+            ws.column(10).setWidth(40);
+            ws.column(9).setWidth(25);
 
             const headerStyle = wb.createStyle({
                 font: {
@@ -175,7 +176,7 @@ export default class KpiController {
 
             let index = 1;
             entity.planes.forEach((plane, i) => {
-                ws.cell(4 + i, 1).string((i+1) + '.').style(generalStyle);
+                ws.cell(4 + i, 1).string((i + 1) + '.').style(generalStyle);
                 ws.cell(4 + i, 2).string(plane.name.toString()).style(generalStyle);
                 ws.cell(4 + i, 3).string(plane.kv1.toString()).style(generalStyle);
                 ws.cell(4 + i, 4).string(plane.kv2.toString()).style(generalStyle);
@@ -231,7 +232,7 @@ export default class KpiController {
             entity.events.forEach((event, i) => {
                 index += 1;
                 ws.cell(index, 1).string('').style(generalStyle);
-                ws.cell(index, 2).string(`4.${(i+1)}. ${event.name.toString()}`).style(generalStyle);
+                ws.cell(index, 2).string(`4.${(i + 1)}. ${event.name.toString()}`).style(generalStyle);
                 ws.cell(index, 3).string(event.kv1.toString()).style(generalStyle);
                 ws.cell(index, 4).string(event.kv2.toString()).style(generalStyle);
                 ws.cell(index, 5).string(event.kv3.toString()).style(generalStyle);
@@ -241,7 +242,10 @@ export default class KpiController {
                 ws.cell(index, 9).string(event.critical.toString()).style(generalStyle);
             });
 
-            ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие').style(generalStyle);
+            if (entity.events.length > 0) {
+                ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие').style(generalStyle);
+            }
+
             wb.write('kpi.xlsx', res);
         } catch (error) {
             console.error(error);
@@ -251,7 +255,12 @@ export default class KpiController {
 
     async all(req, res) {
         try {
-            const projects = await Kpi.find({}).exec();
+            let projects = [];
+            if (req.query.role) {
+                projects = await Kpi.find({ role: req.query.role }).exec();
+            } else {
+                projects = await Kpi.find({}).exec();
+            }
             return this._resp.formattedSuccessResponse(res, projects, 200);
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
@@ -268,8 +277,8 @@ export default class KpiController {
             project = await Kpi.findByIdAndUpdate(id, {
                 $set: project
             }, {
-                new: true
-            });
+                    new: true
+                });
             return this._resp.formattedSuccessResponse(res, project, 200);
         } catch (error) {
             console.error(error);
@@ -285,49 +294,49 @@ export default class KpiController {
                 name,
                 title: `Планы ГК Инград по достижению фин. показателей на ${(new Date()).getFullYear()} год, руб`,
                 planes: [{
-                        name: 'Контрактация по проекту',
-                        kv1: '',
-                        kv2: '',
-                        kv3: '',
-                        year: '',
-                        actual: '',
-                        weight: '',
-                        rate: 'свыше 100% k=1+0.02 (за каждый процент перевыполнения) <br/> 95-100% к=1<br/> 90-94% к=0.9<br/> 85-89% к=0.85<br/> 80-84% к=0.8<br/> менее 80% к=0',
-                        info: 'Отчет по продажам'
-                    },
-                    {
-                        name: 'Операционная маржа',
-                        kv1: '',
-                        kv2: '',
-                        kv3: '',
-                        year: '',
-                        actual: '',
-                        weight: '',
-                        rate: '90% и выше пропорционально выполнению<br/> 85-89% к=0.9<br/> 80-84% к=0.8<br/> 75-79% к=0.7<br/> 70-74% к=0.5<br/> менее 70% к=0',
-                        info: 'годовой отчет по результатам деятельности компании (данные управленческого учета)'
-                    },
-                    {
-                        name: 'Объем оплат ИСР',
-                        kv1: '',
-                        kv2: '',
-                        kv3: '',
-                        year: '',
-                        actual: '',
-                        weight: '',
-                        rate: '90% и выше к=1<br/> 80-89% к=0.8<br/> 70-79% к=0.5<br/> менее 70% к=0',
-                        info: 'годовой отчет по результатам деятельности компании (данные управленческого учета)'
-                    },
-                    {
-                        name: 'Ключевые события',
-                        kv1: '',
-                        kv2: '',
-                        kv3: '',
-                        year: '',
-                        actual: '',
-                        weight: '',
-                        rate: 'Пропорционально выполнению',
-                        info: 'ИСУП (отчет по ключевым событиям)'
-                    }
+                    name: 'Контрактация по проекту',
+                    kv1: '',
+                    kv2: '',
+                    kv3: '',
+                    year: '',
+                    actual: '',
+                    weight: '',
+                    rate: 'свыше 100% k=1+0.02 (за каждый процент перевыполнения) <br/> 95-100% к=1<br/> 90-94% к=0.9<br/> 85-89% к=0.85<br/> 80-84% к=0.8<br/> менее 80% к=0',
+                    info: 'Отчет по продажам'
+                },
+                {
+                    name: 'Операционная маржа',
+                    kv1: '',
+                    kv2: '',
+                    kv3: '',
+                    year: '',
+                    actual: '',
+                    weight: '',
+                    rate: '90% и выше пропорционально выполнению<br/> 85-89% к=0.9<br/> 80-84% к=0.8<br/> 75-79% к=0.7<br/> 70-74% к=0.5<br/> менее 70% к=0',
+                    info: 'годовой отчет по результатам деятельности компании (данные управленческого учета)'
+                },
+                {
+                    name: 'Объем оплат ИСР',
+                    kv1: '',
+                    kv2: '',
+                    kv3: '',
+                    year: '',
+                    actual: '',
+                    weight: '',
+                    rate: '90% и выше к=1<br/> 80-89% к=0.8<br/> 70-79% к=0.5<br/> менее 70% к=0',
+                    info: 'годовой отчет по результатам деятельности компании (данные управленческого учета)'
+                },
+                {
+                    name: 'Ключевые события',
+                    kv1: '',
+                    kv2: '',
+                    kv3: '',
+                    year: '',
+                    actual: '',
+                    weight: '',
+                    rate: 'Пропорционально выполнению',
+                    info: 'ИСУП (отчет по ключевым событиям)'
+                }
                 ],
                 events: []
             });

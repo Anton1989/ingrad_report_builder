@@ -1,10 +1,10 @@
 import { KPI_REQUEST, POST_KPI_REQUEST, PUT_KPI_REQUEST, DISMISS_PD_ERROR } from '../constants';
 
-export function get(csv) {
+export function get(role) {
 	return (dispatch) => {
 		dispatch({
 			type: KPI_REQUEST,
-			csv
+			role
 		});
 	}
 }
