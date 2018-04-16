@@ -47,7 +47,7 @@ export default class KpiController {
             ws.column(4).setWidth(10);
             ws.column(5).setWidth(10);
             ws.column(6).setWidth(10);
-            ws.column(7).setWidth(3);
+            ws.column(7).setWidth(4);
             ws.column(8).setWidth(20);
             ws.column(9).setWidth(40);
 
