@@ -42,11 +42,11 @@ export default class KpiController {
             };
             let ws = wb.addWorksheet(optionsWorksheet);
             ws.column(1).setWidth(30);
-            ws.column(2).setWidth(10);
-            ws.column(3).setWidth(10);
-            ws.column(4).setWidth(10);
-            ws.column(5).setWidth(10);
-            ws.column(6).setWidth(10);
+            ws.column(2).setWidth(14);
+            ws.column(3).setWidth(14);
+            ws.column(4).setWidth(14);
+            ws.column(5).setWidth(14);
+            ws.column(6).setWidth(14);
             ws.column(7).setWidth(4);
             ws.column(8).setWidth(20);
             ws.column(9).setWidth(40);
@@ -118,7 +118,7 @@ export default class KpiController {
                 [
                     {
                         v: 'Проекты',
-                        rc: [1, 1, 2, 2]
+                        rc: [1, 1, 2, 1]
                     },
                     {
                         v: entity.title,
@@ -158,14 +158,10 @@ export default class KpiController {
                         v: 'Факт на текщий КВ',
                         rc: [2, 6]
                     }
-                ],
-                [
-                    {
-                        v: '1 ' + entity.name,
-                        rc: [3, 1, 3, 9]
-                    },
                 ]
             ];
+
+            ws.cell(3, 1, 3, 9, true).string('1 ' + entity.name).style(generalStyle);
 
             header.forEach(row => {
                 row.forEach(col => {
