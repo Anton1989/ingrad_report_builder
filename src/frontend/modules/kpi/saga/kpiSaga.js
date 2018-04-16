@@ -38,7 +38,8 @@ function* save(action) {
 
 /* queries */
 function getRequest(role) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + '?role=' + role, {
+	const roleQuery = role ? '?role=' + role : '';
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + roleQuery, {
 		method: 'GET'
 	})
 		.then(response => {
