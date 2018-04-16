@@ -35,7 +35,6 @@ export default class KpiTable extends React.Component {
             {project && <table className={'table table-bordered ' + styles.kpiTable}>
                 <thead className={styles.head}>
                     <tr>
-                        <th rowSpan='2'>№ пп</th>
                         <th rowSpan='2'>Проекты</th>
                         <th className={styles.editable + ' ' + styles.mainCol} colSpan='5'>{project.title}</th>
                         <th rowSpan='2'>Вес</th>
@@ -51,16 +50,15 @@ export default class KpiTable extends React.Component {
                     </tr>
                 </thead>
                 <tbody>
-                    {fetching && <tr><td colSpan='10'><Loading /></td></tr>}
+                    {fetching && <tr><td colSpan='9'><Loading /></td></tr>}
                     <tr>
-                        <td colSpan='10'>
+                        <td colSpan='9'>
                             1 {project.name}
                         </td>
                     </tr>
                     {project && project.planes && project.planes.map((plan, i) => {
                         return <tr key={plan._id}>
-                            <td>{i + 1}.</td>
-                            <td>{plan.name}</td>
+                            <td>{i + 1}. {plan.name}</td>
                             <td >
                                 {plan.kv1}
                             </td>
@@ -71,20 +69,19 @@ export default class KpiTable extends React.Component {
                                 {plan.kv3}
                             </td>
                             <td >
-                            {plan.year}
+                                {plan.year}
                             </td>
                             <td>
-                            {plan.actual}
+                                {plan.actual}
                             </td>
                             <td>
-                            {plan.weight}
+                                {plan.weight}
                             </td>
                             <td dangerouslySetInnerHTML={{ __html: plan.rate }}></td>
                             <td dangerouslySetInnerHTML={{ __html: plan.info }}></td>
                         </tr>;
                     })}
                     <tr className={styles.head}>
-                        <td className={styles.unhead}></td>
                         <td colSpan='6'>Дата выполнения ключевого события</td>
                         <td>Вес</td>
                         <td>Критичность срыва сроков</td>
@@ -92,8 +89,6 @@ export default class KpiTable extends React.Component {
                     </tr>
                     {project && project.events && project.events.map((event, i) => {
                         return <tr key={event._id}>
-                            <td>
-                            </td>
                             <td>4.{i + 1}. {event.name}</td>
                             <td>
                             {event.kv1}

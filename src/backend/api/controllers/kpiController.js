@@ -41,8 +41,15 @@ export default class KpiController {
                 // },
             };
             let ws = wb.addWorksheet(optionsWorksheet);
-            ws.column(10).setWidth(40);
-            ws.column(9).setWidth(25);
+            ws.column(1).setWidth(30);
+            ws.column(2).setWidth(10);
+            ws.column(3).setWidth(10);
+            ws.column(4).setWidth(10);
+            ws.column(5).setWidth(10);
+            ws.column(6).setWidth(10);
+            ws.column(7).setWidth(3);
+            ws.column(8).setWidth(20);
+            ws.column(9).setWidth(40);
 
             const headerStyle = wb.createStyle({
                 font: {
@@ -110,56 +117,52 @@ export default class KpiController {
             let header = [
                 [
                     {
-                        v: '№ пп',
-                        rc: [1, 1, 2, 1]
-                    },
-                    {
                         v: 'Проекты',
-                        rc: [1, 2, 2, 2]
+                        rc: [1, 1, 2, 2]
                     },
                     {
                         v: entity.title,
-                        rc: [1, 3, 1, 7]
+                        rc: [1, 2, 1, 6]
                     },
                     {
                         v: 'Вес',
-                        rc: [1, 8, 2, 8]
+                        rc: [1, 7, 2, 7]
                     },
                     {
                         v: 'Шкала',
-                        rc: [1, 9, 2, 9]
+                        rc: [1, 8, 2, 8]
                     },
                     {
                         v: 'Источник информации',
-                        rc: [1, 10, 2, 10]
+                        rc: [1, 9, 2, 9]
                     }
                 ],
                 [
                     {
                         v: 'I кв',
-                        rc: [2, 3]
+                        rc: [2, 2]
                     },
                     {
                         v: 'II кв',
-                        rc: [2, 4]
+                        rc: [2, 3]
                     },
                     {
                         v: 'III кв',
-                        rc: [2, 5]
+                        rc: [2, 4]
                     },
                     {
                         v: 'Годовой',
-                        rc: [2, 6]
+                        rc: [2, 5]
                     },
                     {
                         v: 'Факт на текщий КВ',
-                        rc: [2, 7]
+                        rc: [2, 6]
                     }
                 ],
                 [
                     {
                         v: '1 ' + entity.name,
-                        rc: [3, 1, 3, 10]
+                        rc: [3, 1, 3, 9]
                     },
                 ]
             ];
@@ -176,16 +179,15 @@ export default class KpiController {
 
             let index = 1;
             entity.planes.forEach((plane, i) => {
-                ws.cell(4 + i, 1).string((i + 1) + '.').style(generalStyle);
-                ws.cell(4 + i, 2).string(plane.name.toString()).style(generalStyle);
-                ws.cell(4 + i, 3).string(plane.kv1.toString()).style(generalStyle);
-                ws.cell(4 + i, 4).string(plane.kv2.toString()).style(generalStyle);
-                ws.cell(4 + i, 5).string(plane.kv3.toString()).style(generalStyle);
-                ws.cell(4 + i, 6).string(plane.year.toString()).style(generalStyle);
-                ws.cell(4 + i, 7).string(plane.actual.toString()).style(generalStyle);
-                ws.cell(4 + i, 8).string(plane.weight.toString()).style(generalStyle);
-                ws.cell(4 + i, 9).string(plane.rate.split('<br/>').join('\n')).style(generalStyle);
-                ws.cell(4 + i, 10).string(plane.info.toString()).style(generalStyle);
+                ws.cell(4 + i, 1).string((i + 1) + '. ' + plane.name.toString()).style(generalStyle);
+                ws.cell(4 + i, 2).string(plane.kv1.toString()).style(generalStyle);
+                ws.cell(4 + i, 3).string(plane.kv2.toString()).style(generalStyle);
+                ws.cell(4 + i, 4).string(plane.kv3.toString()).style(generalStyle);
+                ws.cell(4 + i, 5).string(plane.year.toString()).style(generalStyle);
+                ws.cell(4 + i, 6).string(plane.actual.toString()).style(generalStyle);
+                ws.cell(4 + i, 7).string(plane.weight.toString()).style(generalStyle);
+                ws.cell(4 + i, 8).string(plane.rate.split('<br/>').join('\n')).style(generalStyle);
+                ws.cell(4 + i, 9).string(plane.info.toString()).style(generalStyle);
                 index = i;
             });
             index += 5;
@@ -193,24 +195,20 @@ export default class KpiController {
             let header2 = [
                 [
                     {
-                        v: '',
-                        rc: [index, 1]
-                    },
-                    {
                         v: 'Дата выполнения ключевого события',
-                        rc: [index, 2, index, 7]
+                        rc: [index, 1, index, 6]
                     },
                     {
                         v: 'Вес',
-                        rc: [index, 8]
+                        rc: [index, 7]
                     },
                     {
                         v: 'Критичность срыва сроков',
-                        rc: [index, 9]
+                        rc: [index, 8]
                     },
                     {
                         v: 'Описание критичности',
-                        rc: [index, 10]
+                        rc: [index, 9]
                     }
                 ]
             ];
@@ -231,19 +229,18 @@ export default class KpiController {
 
             entity.events.forEach((event, i) => {
                 index += 1;
-                ws.cell(index, 1).string('').style(generalStyle);
-                ws.cell(index, 2).string(`4.${(i + 1)}. ${event.name.toString()}`).style(generalStyle);
-                ws.cell(index, 3).string(event.kv1.toString()).style(generalStyle);
-                ws.cell(index, 4).string(event.kv2.toString()).style(generalStyle);
-                ws.cell(index, 5).string(event.kv3.toString()).style(generalStyle);
-                ws.cell(index, 6).string(event.year.toString()).style(generalStyle);
-                ws.cell(index, 7).string(event.actual.toString()).style(generalStyle);
-                ws.cell(index, 8).string(event.weight.toString()).style(generalStyle);
-                ws.cell(index, 9).string(event.critical.toString()).style(generalStyle);
+                ws.cell(index, 1).string(`4.${(i + 1)}. ${event.name.toString()}`).style(generalStyle);
+                ws.cell(index, 2).string(event.kv1.toString()).style(generalStyle);
+                ws.cell(index, 3).string(event.kv2.toString()).style(generalStyle);
+                ws.cell(index, 4).string(event.kv3.toString()).style(generalStyle);
+                ws.cell(index, 5).string(event.year.toString()).style(generalStyle);
+                ws.cell(index, 6).string(event.actual.toString()).style(generalStyle);
+                ws.cell(index, 7).string(event.weight.toString()).style(generalStyle);
+                ws.cell(index, 8).string(event.critical.toString()).style(generalStyle);
             });
 
             if (entity.events.length > 0) {
-                ws.cell(index - entity.events.length + 1, 10, index, 10, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие').style(generalStyle);
+                ws.cell(index - entity.events.length + 1, 9, index, 9, true).string('Если в графе стоит - 0\nто срыв на 1 месяц обнуляет это событие\nЕсли в графе стоит - 1\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- срыв на 2 месяца обнуляет это событие\nЕсли в графе стоит - 2\n- то срыв на 1 месяц дает 90% от этого события в общую сумму KPI\n- то срыв на 2 месяц дает 80% от этого события в общую сумму KPI\n- срыв на 3 месяца обнуляет это событие').style(generalStyle);
             }
 
             wb.write('kpi.xlsx', res);
