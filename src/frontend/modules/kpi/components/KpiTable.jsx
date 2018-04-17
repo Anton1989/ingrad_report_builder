@@ -20,7 +20,7 @@ export default class KpiTable extends React.Component {
 
     render() {
         const { project, errors, fetching } = this.props;
-        console.log('RENDER <KpiTable>', project);
+        console.log('RENDER <KpiTable>');
 
         return <div className='table-responsive'>
             {
@@ -35,40 +35,40 @@ export default class KpiTable extends React.Component {
             {project && <table className={'table table-bordered ' + styles.kpiTable}>
                 <thead className={styles.head}>
                     <tr>
-                        <th rowSpan='2'>Проекты</th>
-                        <th className={styles.editable + ' ' + styles.mainCol} colSpan='5'>{project.title}</th>
+                        <th className={styles.center} rowSpan='2'>Наименование показателей</th>
+                        <th className={styles.mainCol} colSpan='5'>{project.title}</th>
                         <th rowSpan='2'>Вес</th>
-                        <th rowSpan='2'>Шкала</th>
-                        <th rowSpan='2'>Источник информации</th>
+                        <th className={styles.center} rowSpan='2'>Шкала</th>
+                        <th rowSpan='2' className={styles.center}>Источник информации</th>
                     </tr>
                     <tr>
-                        <th>I кв</th>
-                        <th>II кв</th>
-                        <th>III кв</th>
-                        <th>Годовой</th>
-                        <th>Факт на текщий КВ</th>
+                        <th className={styles.quarts}>I кв</th>
+                        <th className={styles.quarts}>II кв</th>
+                        <th className={styles.quarts}>III кв</th>
+                        <th className={styles.quarts}>Годовой</th>
+                        <th className={styles.quarts}>Факт на текщий КВ</th>
                     </tr>
                 </thead>
                 <tbody>
                     {fetching && <tr><td colSpan='9'><Loading /></td></tr>}
                     <tr>
                         <td colSpan='9'>
-                            1 {project.name}
+                            {project.name}
                         </td>
                     </tr>
                     {project && project.planes && project.planes.map((plan, i) => {
                         return <tr key={plan._id}>
                             <td>{i + 1}. {plan.name}</td>
-                            <td >
+                            <td className={styles.center}>
                                 {plan.kv1}
                             </td>
-                            <td >
+                            <td className={styles.center}>
                                 {plan.kv2}
                             </td>
-                            <td >
+                            <td className={styles.center}>
                                 {plan.kv3}
                             </td>
-                            <td >
+                            <td className={styles.center}>
                                 {plan.year}
                             </td>
                             <td>
@@ -84,32 +84,32 @@ export default class KpiTable extends React.Component {
                     <tr className={styles.head}>
                         <td colSpan='6'>Дата выполнения ключевого события</td>
                         <td>Вес</td>
-                        <td>Критичность срыва сроков</td>
-                        <td>Описание критичности</td>
+                        <td className={styles.center}>Критичность срыва сроков</td>
+                        <td className={styles.center}>Описание критичности</td>
                     </tr>
                     {project && project.events && project.events.map((event, i) => {
                         return <tr key={event._id}>
                             <td>4.{i + 1}. {event.name}</td>
-                            <td>
-                            {event.kv1}
+                            <td className={styles.center}>
+                                {event.kv1}
+                            </td>
+                            <td className={styles.center}>
+                                {event.kv2}
+                            </td>
+                            <td className={styles.center}>
+                                {event.kv3}
+                            </td>
+                            <td className={styles.center}>
+                                {event.year}
                             </td>
                             <td>
-                            {event.kv2}
+                                {event.actual}
                             </td>
                             <td>
-                            {event.kv3}
+                                {event.weight}
                             </td>
-                            <td>
-                            {event.year}
-                            </td>
-                            <td>
-                            {event.actual}
-                            </td>
-                            <td>
-                            {event.weight}
-                            </td>
-                            <td>
-                            {event.critical}
+                            <td className={styles.center}>
+                                {event.critical}
                             </td>
                             {i == 0 && <td rowSpan={project.events.length}>
                                 <b>Если в графе стоит - 0</b><br />

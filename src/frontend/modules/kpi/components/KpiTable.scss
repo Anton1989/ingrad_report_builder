@@ -12,8 +12,16 @@
         cursor: pointer;
     }
 
+    .center {
+        text-align: center;
+    }
+
     .head {
         background: rgb(146, 227, 238);
+
+        .quarts {
+            min-width: 102px;
+        }
     }
 
     .unhead {

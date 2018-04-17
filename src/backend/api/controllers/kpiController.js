@@ -29,7 +29,6 @@ export default class KpiController {
 
     async download(req, res) {
         const id = req.params.id;
-        console.log(id);
         try {
             const entity = await Kpi.findById(id);
 
@@ -51,7 +50,7 @@ export default class KpiController {
             ws.column(8).setWidth(20);
             ws.column(9).setWidth(40);
 
-            const headerStyle = wb.createStyle({
+            let headerStyleConf = {
                 font: {
                     color: '#000000',
                     size: 12
@@ -84,8 +83,16 @@ export default class KpiController {
                     fgColor: '92e3ee',
                     bgColor: '92e3ee',
                 }
-            });
-            const generalStyle = wb.createStyle({
+            };
+            const headerStyle = wb.createStyle(headerStyleConf);
+            headerStyleConf.alignment = {
+                wrapText: true,
+                vertical: 'center',
+                horizontal: 'center'
+            };
+            const headerCenterStyle = wb.createStyle(headerStyleConf);
+
+            let generalStyleConf = {
                 font: {
                     color: '#000000',
                     size: 12
@@ -112,63 +119,80 @@ export default class KpiController {
                         color: 'dddddd'
                     },
                 }
-            });
+            };
+            const generalStyle = wb.createStyle(generalStyleConf);
+            headerStyleConf.alignment = {
+                wrapText: true,
+                vertical: 'center',
+                horizontal: 'center'
+            };
+            const generalCenterStyle = wb.createStyle(generalStyleConf);
 
             let header = [
                 [
                     {
-                        v: 'Проекты',
-                        rc: [1, 1, 2, 1]
+                        v: 'Наименование показателей',
+                        rc: [1, 1, 2, 1],
+                        s: headerCenterStyle
                     },
                     {
                         v: entity.title,
-                        rc: [1, 2, 1, 6]
+                        rc: [1, 2, 1, 6],
+                        s: headerStyle
                     },
                     {
                         v: 'Вес',
-                        rc: [1, 7, 2, 7]
+                        rc: [1, 7, 2, 7],
+                        s: headerStyle
                     },
                     {
                         v: 'Шкала',
-                        rc: [1, 8, 2, 8]
+                        rc: [1, 8, 2, 8],
+                        s: headerCenterStyle
                     },
                     {
                         v: 'Источник информации',
-                        rc: [1, 9, 2, 9]
+                        rc: [1, 9, 2, 9],
+                        s: headerCenterStyle
                     }
                 ],
                 [
                     {
                         v: 'I кв',
-                        rc: [2, 2]
+                        rc: [2, 2],
+                        s: headerStyle
                     },
                     {
                         v: 'II кв',
-                        rc: [2, 3]
+                        rc: [2, 3],
+                        s: headerStyle
                     },
                     {
                         v: 'III кв',
-                        rc: [2, 4]
+                        rc: [2, 4],
+                        s: headerStyle
                     },
                     {
                         v: 'Годовой',
-                        rc: [2, 5]
+                        rc: [2, 5],
+                        s: headerStyle
                     },
                     {
                         v: 'Факт на текщий КВ',
-                        rc: [2, 6]
+                        rc: [2, 6],
+                        s: headerStyle
                     }
                 ]
             ];
 
-            ws.cell(3, 1, 3, 9, true).string('1 ' + entity.name).style(generalStyle);
+            ws.cell(3, 1, 3, 9, true).string(entity.name).style(generalStyle);
 
             header.forEach(row => {
                 row.forEach(col => {
                     if (col.rc.length > 2) {
-                        ws.cell(...col.rc, true).string(col.v.toString()).style(headerStyle);
+                        ws.cell(...col.rc, true).string(col.v.toString()).style(col.s);
                     } else {
-                        ws.cell(...col.rc).string(col.v.toString()).style(headerStyle);
+                        ws.cell(...col.rc).string(col.v.toString()).style(col.s);
                     }
                 });
             });
@@ -176,10 +200,10 @@ export default class KpiController {
             let index = 1;
             entity.planes.forEach((plane, i) => {
                 ws.cell(4 + i, 1).string((i + 1) + '. ' + plane.name.toString()).style(generalStyle);
-                ws.cell(4 + i, 2).string(plane.kv1.toString()).style(generalStyle);
-                ws.cell(4 + i, 3).string(plane.kv2.toString()).style(generalStyle);
-                ws.cell(4 + i, 4).string(plane.kv3.toString()).style(generalStyle);
-                ws.cell(4 + i, 5).string(plane.year.toString()).style(generalStyle);
+                ws.cell(4 + i, 2).string(plane.kv1.toString()).style(generalCenterStyle);
+                ws.cell(4 + i, 3).string(plane.kv2.toString()).style(generalCenterStyle);
+                ws.cell(4 + i, 4).string(plane.kv3.toString()).style(generalCenterStyle);
+                ws.cell(4 + i, 5).string(plane.year.toString()).style(generalCenterStyle);
                 ws.cell(4 + i, 6).string(plane.actual.toString()).style(generalStyle);
                 ws.cell(4 + i, 7).string(plane.weight.toString()).style(generalStyle);
                 ws.cell(4 + i, 8).string(plane.rate.split('<br/>').join('\n')).style(generalStyle);
@@ -192,19 +216,23 @@ export default class KpiController {
                 [
                     {
                         v: 'Дата выполнения ключевого события',
-                        rc: [index, 1, index, 6]
+                        rc: [index, 1, index, 6],
+                        s: headerStyle
                     },
                     {
                         v: 'Вес',
-                        rc: [index, 7]
+                        rc: [index, 7],
+                        s: headerStyle
                     },
                     {
                         v: 'Критичность срыва сроков',
-                        rc: [index, 8]
+                        rc: [index, 8],
+                        s: headerCenterStyle
                     },
                     {
                         v: 'Описание критичности',
-                        rc: [index, 9]
+                        rc: [index, 9],
+                        s: headerCenterStyle
                     }
                 ]
             ];
@@ -212,13 +240,9 @@ export default class KpiController {
             header2.forEach(row => {
                 row.forEach(col => {
                     if (col.rc.length > 2) {
-                        ws.cell(...col.rc, true).string(col.v.toString()).style(headerStyle);
+                        ws.cell(...col.rc, true).string(col.v.toString()).style(col.s);
                     } else {
-                        if (col.v != '') {
-                            ws.cell(...col.rc).string(col.v.toString()).style(headerStyle);
-                        } else {
-                            ws.cell(...col.rc).string(col.v.toString()).style(generalStyle);
-                        }
+                        ws.cell(...col.rc).string(col.v.toString()).style(col.s);
                     }
                 });
             });
@@ -232,7 +256,7 @@ export default class KpiController {
                 ws.cell(index, 5).string(event.year.toString()).style(generalStyle);
                 ws.cell(index, 6).string(event.actual.toString()).style(generalStyle);
                 ws.cell(index, 7).string(event.weight.toString()).style(generalStyle);
-                ws.cell(index, 8).string(event.critical.toString()).style(generalStyle);
+                ws.cell(index, 8).string(event.critical.toString()).style(generalCenterStyle);
             });
 
             if (entity.events.length > 0) {
