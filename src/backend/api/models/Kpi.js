@@ -4,7 +4,9 @@ import KpiEvents from './schemas/KpiEvents';
 
 const KpiSchema = new Schema({
     name: String,
+    nameStyle: Schema.Types.ObjectId,
     title: String,
+    titleStyle: Schema.Types.ObjectId,
     planes: [KpiPlans],
     events: [KpiEvents],
     created_at: { type: Date, default: Date.now }

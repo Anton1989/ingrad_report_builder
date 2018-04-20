@@ -11,7 +11,32 @@ export default class KpiTable extends React.Component {
     constructor(...props) {
         super(...props);
 
+        this.state = {
+            styles: {}
+        };
+
         this.handleAlertDismiss = this.handleAlertDismiss.bind(this);
+    }
+
+    componentWillMount() {
+        this.parseStyles();
+    }
+
+    componentWillReceiveProps(newProps) {
+        this.parseStyles(newProps);
+    }
+
+    parseStyles(props = this.props) {
+        let styles = {};
+        props.kpiStyles.forEach(style => {
+            styles[style._id] = {
+                fontWeight: style.textStyle,
+                backgroundColor: style.cellColor,
+                color: style.textColor
+            }
+        });
+
+        this.setState({ styles });
     }
 
     handleAlertDismiss() {
@@ -36,7 +61,7 @@ export default class KpiTable extends React.Component {
                 <thead className={styles.head}>
                     <tr>
                         <th className={styles.center} rowSpan='2'>Наименование показателей</th>
-                        <th className={styles.mainCol} colSpan='5'>{project.title}</th>
+                        <th style={project.titleStyle ? this.state.styles[project.titleStyle] : {}} className={styles.mainCol} colSpan='5'>{project.title}</th>
                         <th rowSpan='2'>Вес</th>
                         <th className={styles.center} rowSpan='2'>Шкала</th>
                         <th rowSpan='2' className={styles.center}>Источник информации</th>
@@ -46,35 +71,35 @@ export default class KpiTable extends React.Component {
                         <th className={styles.quarts}>II кв</th>
                         <th className={styles.quarts}>III кв</th>
                         <th className={styles.quarts}>Годовой</th>
-                        <th className={styles.quarts}>Факт на текщий КВ</th>
+                        <th className={styles.quarts}>Факт на текущий квартал</th>
                     </tr>
                 </thead>
                 <tbody>
                     {fetching && <tr><td colSpan='9'><Loading /></td></tr>}
                     <tr>
-                        <td colSpan='9'>
+                        <td style={project.nameStyle ? this.state.styles[project.nameStyle] : {}} colSpan='9'>
                             {project.name}
                         </td>
                     </tr>
                     {project && project.planes && project.planes.map((plan, i) => {
                         return <tr key={plan._id}>
                             <td>{i + 1}. {plan.name}</td>
-                            <td className={styles.center}>
+                            <td style={plan.kv1Style ? this.state.styles[plan.kv1Style] : {}} className={styles.center}>
                                 {plan.kv1}
                             </td>
-                            <td className={styles.center}>
+                            <td style={plan.kv2Style ? this.state.styles[plan.kv2Style] : {}} className={styles.center}>
                                 {plan.kv2}
                             </td>
-                            <td className={styles.center}>
+                            <td style={plan.kv3Style ? this.state.styles[plan.kv3Style] : {}} className={styles.center}>
                                 {plan.kv3}
                             </td>
-                            <td className={styles.center}>
+                            <td style={plan.yearStyle ? this.state.styles[plan.yearStyle] : {}} className={styles.center}>
                                 {plan.year}
                             </td>
-                            <td>
+                            <td style={plan.actualStyle ? this.state.styles[plan.actualStyle] : {}} className={styles.center}>
                                 {plan.actual}
                             </td>
-                            <td>
+                            <td style={plan.weightStyle ? this.state.styles[plan.weightStyle] : {}}>
                                 {plan.weight}
                             </td>
                             <td dangerouslySetInnerHTML={{ __html: plan.rate }}></td>
@@ -89,26 +114,26 @@ export default class KpiTable extends React.Component {
                     </tr>
                     {project && project.events && project.events.map((event, i) => {
                         return <tr key={event._id}>
-                            <td>4.{i + 1}. {event.name}</td>
-                            <td className={styles.center}>
+                            <td style={event.nameStyle ? this.state.styles[event.nameStyle] : {}}>4.{i + 1}. {event.name}</td>
+                            <td style={event.kv1Style ? this.state.styles[event.kv1Style] : {}} className={styles.center}>
                                 {event.kv1}
                             </td>
-                            <td className={styles.center}>
+                            <td style={event.kv2Style ? this.state.styles[event.kv2Style] : {}} className={styles.center}>
                                 {event.kv2}
                             </td>
-                            <td className={styles.center}>
+                            <td style={event.kv3Style ? this.state.styles[event.kv3Style] : {}} className={styles.center}>
                                 {event.kv3}
                             </td>
-                            <td className={styles.center}>
+                            <td style={event.yearStyle ? this.state.styles[event.yearStyle] : {}} className={styles.center}>
                                 {event.year}
                             </td>
-                            <td>
+                            <td style={event.actualStyle ? this.state.styles[event.actualStyle] : {}} className={styles.center}>
                                 {event.actual}
                             </td>
-                            <td>
+                            <td style={event.weightStyle ? this.state.styles[event.weightStyle] : {}}>
                                 {event.weight}
                             </td>
-                            <td className={styles.center}>
+                            <td style={event.criticalStyle ? this.state.styles[event.criticalStyle] : {}} className={styles.center}>
                                 {event.critical}
                             </td>
                             {i == 0 && <td rowSpan={project.events.length}>
@@ -132,6 +157,7 @@ export default class KpiTable extends React.Component {
 
 KpiTable.propTypes = {
     project: PropTypes.object,
+    kpiStyles: PropTypes.array.isRequired,
     save: PropTypes.func.isRequired,
     dismissError: PropTypes.func.isRequired
 }

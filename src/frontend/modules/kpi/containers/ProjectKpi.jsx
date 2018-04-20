@@ -3,6 +3,7 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 //Actions
 import { get, put, dismissError } from '../actions/kpiActions';
+import { getStyles } from '../../styles/actions/stylesActions';
 //Components
 import KpiTable from '../components/KpiTable.jsx';
 
@@ -22,6 +23,7 @@ class ProjectKpi extends React.Component {
 
     componentDidMount() {
         if (this.props.kpi.data.length == 0) this.props.get();
+        if (this.props.styles.kpiData.length == 0) this.props.getStyles('kpi');
     }
 
     componentWillMount() {
@@ -39,19 +41,21 @@ class ProjectKpi extends React.Component {
     }
 
     render() {
-        const { kpi, put, dismissError } = this.props;
+        const { kpi, styles, put, dismissError } = this.props;
         console.log('RENDER <ProjectKpi>');
 
-        return <KpiTable project={this.state.project} fetching={kpi.fetching} errors={kpi.errors} save={put} dismissError={dismissError} />;
+        return <KpiTable project={this.state.project} kpiStyles={styles.kpiData} fetching={kpi.fetching} errors={kpi.errors} save={put} dismissError={dismissError} />;
     }
 }
 function mapStateToProps(state) {
     return {
+        styles: state.styles,
         kpi: state.kpi
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
+        getStyles: bindActionCreators(getStyles, dispatch),
         get: bindActionCreators(get, dispatch),
         put: bindActionCreators(put, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)

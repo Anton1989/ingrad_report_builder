@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Response from '../models/responseDto';
 import Styles from '../models/Styles';
+import KpiStyles from '../models/KpiStyles';
 
 export default class StylesController {
 
@@ -11,11 +12,8 @@ export default class StylesController {
 
         this._router = Router();
         if (this._router) {
-            this._router.get('/', this.all.bind(this));
-
-            this._router.put('/:id', this.update.bind(this));
-            this._router.post('/', this.add.bind(this));
-            this._router.delete('/:id', this.delete.bind(this));
+            this._router.get('/map', this.all.bind(this));
+            this._router.get('/kpi', this.allKpi.bind(this));
         }
         console.log('End init styles controller');
     }
@@ -31,37 +29,14 @@ export default class StylesController {
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
-
     }
 
-    async update(req, res) {
-        return this._resp.formattedSuccessResponse(res, {}, 200);
-    }
-
-    async add(req, res) {
-        let data = req.body.styles;
-        
+    async allKpi(req, res) {
         try {
-            let resp = [];
-            for (let i=0; i<data.length; i++) {
-                if (data[i]._id) {
-                    let id = data[i]._id;
-                    delete data[i]._id;
-                    console.log(data[i])
-                    resp.push(await Styles.findByIdAndUpdate(id, { $set: data[i] }, { new: true }));
-                } else {
-                    let style = new Styles(data[i]);
-                    resp.push(await style.save());
-                }
-            }
-            return this._resp.formattedSuccessResponse(res, resp, 200);
+            const styles = await KpiStyles.find({}).exec();
+            return this._resp.formattedSuccessResponse(res, styles, 200);
         } catch (error) {
-            console.error(error);
-            return res.status(500).send(error);
+            return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
-    }
-
-    delete(req, res) {
-        return this._resp.formattedSuccessResponse(res, {}, 200);
     }
 }
