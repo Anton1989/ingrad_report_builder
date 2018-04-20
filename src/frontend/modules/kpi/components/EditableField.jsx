@@ -10,17 +10,19 @@ export default class EditableField extends React.Component {
 
         this.state = {
             value: '',
+            style: null,
             editable: false
         };
 
         this.handleTextChange = this.handleTextChange.bind(this);
+        this.handleStyleChange = this.handleStyleChange.bind(this);
         this.handleShow = this.handleShow.bind(this);
         this.handleSave = this.handleSave.bind(this);
         this.handleCancel = this.handleCancel.bind(this);
     }
 
     componentWillMount() {
-        this.setState({ value: this.props.value });
+        this.setState({ value: this.props.value, style: this.props.style });
     }
 
     handleTextChange(e) {
@@ -28,27 +30,36 @@ export default class EditableField extends React.Component {
         this.setState({ value });
     }
 
+    handleStyleChange(e) {
+        const style = e.target.value == '' ? null : e.target.value;
+        this.setState({ style });
+    }
+
     handleShow() {
-        this.setState({ editable: true, value: this.props.value });
+        this.setState({ editable: true, value: this.props.value, style: this.props.style });
     }
 
     handleSave() {
-        this.props.save(this.props.name, this.state.value);
-        this.setState({ editable: false, value: '' });
+        this.props.save(this.props.name, this.state.value, this.state.style);
+        this.setState({ editable: false, value: '', style: null });
     }
 
     handleCancel() {
-        this.setState({ editable: false, value: '' });
+        this.setState({ editable: false, value: '', style: null });
     }
 
     render() {
-        const { name, value } = this.props;
+        const { name, value, kpiStyles } = this.props;
         console.log('RENDER <EditableField>');
 
         let field = <span onClick={this.handleShow}>{value} <span className='glyphicon glyphicon-edit'></span></span>;
         if (this.state.editable) {
             field = <p className={styles.editableField}>
                 <input type='text' className='form-control' id={name} value={this.state.value} onChange={(e) => { this.handleTextChange(e); }} />
+                <select className='form-control' value={this.state.style} onChange={this.handleStyleChange}>
+                    <option key='nostyle' value=''>--Без стиля--</option>
+                    {kpiStyles.map(style => <option key={style._id} value={style._id}>{style.name}</option>)}
+                </select>
                 <button type='button' className='btn btn-success' onClick={this.handleSave}><span className='glyphicon glyphicon-ok'></span></button>
                 <button type='button' className='btn btn-danger' onClick={this.handleCancel}><span className='glyphicon glyphicon-ban-circle'></span></button>
             </p>;

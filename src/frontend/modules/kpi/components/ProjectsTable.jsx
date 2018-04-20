@@ -32,9 +32,7 @@ export default class ProjectsTable extends React.Component {
             <table className='table table-striped'>
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Название</th>
-                        <th>Дата создания</th>
                     </tr>
                 </thead>
                 <tbody>

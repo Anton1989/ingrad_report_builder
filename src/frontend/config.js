@@ -2,7 +2,7 @@ const config = {
     apiConfig: {
         getProjectsUrl: '/v1/projects',
         getPlacesUrl: '/v1/places',
-        getStylesUrl: '/v1/styles',
+		getStylesUrl: '/v1/styles',
         generatePdUrl: '/v1/pd',
         getKpiUrl: '/v1/kpi'
     },

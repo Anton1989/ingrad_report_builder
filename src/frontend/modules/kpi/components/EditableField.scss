@@ -3,14 +3,19 @@
     font-size: 10px;
     margin: 0pc;
 
-    input {
-        width: calc(100% - 77px);
+    input, select {
+        width: calc(100% - 120px);
         float: left;
         margin-right: 3px;
         font-size: 12px;
         padding: 2px 5px;
         line-height: 1.2em;
         height: 28px;
+    }
+
+    select {
+        width: 40px;
+        padding: 2px 0px;
     }
 
     button {

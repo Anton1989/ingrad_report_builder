@@ -9,15 +9,12 @@ import styles from './StyleForm.scss';
 
 const DEFAULT_STYLE = {
     name: '',
-    width: 2,
-    strokColor: '#000000',
-    color: '#000000',
-    fillOpacity: 0.8,
-    strokeOpacity: 0.8,
-    lineStyle: 'solide'
+    textColor: '#000000',
+    cellColor: '#ffffff',
+    textStyle: 'normal'
 }
 
-export default class StyleForm extends React.Component {
+export default class KpiStyleForm extends React.Component {
 
     constructor(...props) {
         super(...props);
@@ -36,7 +33,7 @@ export default class StyleForm extends React.Component {
 
     componentWillMount() {
         this.setState({
-            styles: this.props.mapStyles.data.map(style => {
+            styles: this.props.mapStyles.kpiData.map(style => {
                 return Object.assign({}, { ...DEFAULT_STYLE }, style);
             })
         });
@@ -44,7 +41,7 @@ export default class StyleForm extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.setState({
-            styles: newProps.mapStyles.data.map(style => {
+            styles: newProps.mapStyles.kpiData.map(style => {
                 return Object.assign({}, { ...DEFAULT_STYLE }, style);
             })
         });
@@ -69,7 +66,7 @@ export default class StyleForm extends React.Component {
 
     onSaveAll() {
         let styles = [...this.state.styles];
-        this.props.save(styles);
+        this.props.save(styles, 'kpi');
     }
 
     updateInputText(e, index) {
@@ -81,10 +78,10 @@ export default class StyleForm extends React.Component {
 
     render() {
         const { mapStyles } = this.props;
-        console.log('RENDER <StyleForm>', this.state);
+        console.log('RENDER <KpiStyleForm>', this.state);
 
         return <div className={styles.detailPage}>
-            <h1>Стили карты</h1>
+            <h1>Стили KPI таблицы</h1>
             {
                 mapStyles.errors && <div className='col-xs-12'>
                     <Alert bsStyle='danger' onDismiss={this.handleAlertDismiss}>
@@ -92,40 +89,26 @@ export default class StyleForm extends React.Component {
                     </Alert>
                 </div>
             }
-            {mapStyles.fetching && mapStyles.data.length == 0 && <Loading />}
+            {mapStyles.fetching && mapStyles.kpiData.length == 0 && <Loading />}
             {this.state.styles.length > 0 && this.state.styles.map((mapStyle, i) => {
-                return <div key={'style_' + i}>
+                return <div key={'style_' + i} className={styles.row}>
                     <div className='form-group'>
                         <label htmlFor='name'>Имя стиля</label>
                         <input type='text' className='form-control' id='name' placeholder='Имя стиля' value={mapStyle.name} onChange={e => this.updateInputText(e, i)} />
                     </div>
                     <div className='form-group'>
-                        <label htmlFor='width'>Ширина обводки</label>
-                        <input type='number' className='form-control' id='width' placeholder='Ширина обводки' value={mapStyle.width} onChange={e => this.updateInputText(e, i)} />
-                    </div>
-                    
-                    <div className='form-group'>
-                        <label htmlFor='lineStyle'>Стиль обводки</label>
-                        <select id='lineStyle' className='form-control' value={mapStyle.lineStyle} onChange={e => this.updateInputText(e, i)}>
-                            <option value='solide'>Сплошная линия</option>
-                            <option value='dashed'>Пунктирная линия</option>
+                        <label htmlFor='textStyle'>Стиль текста</label>
+                        <select id='textStyle' className='form-control' value={mapStyle.textStyle} onChange={e => this.updateInputText(e, i)}>
+                            <option value='normal'>Обычный</option>
+                            <option value='bold'>Жирный</option>
                         </select>
                     </div>
                     <div className='form-group'>
-                        <SketchExample onSetColor={this.onSetColor} color={mapStyle.strokColor} index={i} field='strokColor' />
+                        <SketchExample onSetColor={this.onSetColor} color={mapStyle.textColor} index={i} field='textColor' />
                     </div>
                     <div className='form-group'>
-                        <label htmlFor='strokeOpacity'>Прозрачность обводки</label>
-                        <input type='number' className='form-control' id='strokeOpacity' placeholder='Прозрачность обводки' value={mapStyle.strokeOpacity} onChange={e => this.updateInputText(e, i)} />
+                        <SketchExample onSetColor={this.onSetColor} color={mapStyle.cellColor} index={i} field='cellColor' />
                     </div>
-                    <div className='form-group'>
-                        <SketchExample onSetColor={this.onSetColor} color={mapStyle.color} index={i} field='color' />
-                    </div>
-                    <div className='form-group'>
-                        <label htmlFor='fillOpacity'>Прозрачность фона</label>
-                        <input type='number' className='form-control' id='fillOpacity' placeholder='Прозрачность фона' value={mapStyle.fillOpacity} onChange={e => this.updateInputText(e, i)} />
-                    </div>
-                    <hr />
                 </div>
             })}
             <div className='row'>
@@ -142,7 +125,7 @@ export default class StyleForm extends React.Component {
         </div>
     }
 }
-StyleForm.propTypes = {
+KpiStyleForm.propTypes = {
     mapStyles: PropTypes.object.isRequired,
     dismissError: PropTypes.func.isRequired
 }

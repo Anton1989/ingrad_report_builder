@@ -61,8 +61,14 @@ class Layout extends React.Component {
 				submenu: []
 			},
 			{
-				anchor: 'Стили',
+				anchor: 'Стили Карты',
 				url: '/styles',
+				strict: true,
+				submenu: []
+			},
+			{
+				anchor: 'Стили KPI таблиц',
+				url: '/kpi-styles',
 				strict: true,
 				submenu: []
 			},

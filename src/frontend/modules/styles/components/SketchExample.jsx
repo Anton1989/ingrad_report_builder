@@ -28,7 +28,9 @@ export default class SketchExample extends React.Component {
 
     const labels = {
       color: 'Цвет фона',
-      strokColor: 'Цвет обводки'
+      strokColor: 'Цвет обводки',
+      textColor: 'Цвет текста',
+      cellColor: 'Цвет фона'
     };
 
     const styles = reactCSS({

@@ -1,4 +1,4 @@
-import { GET_STYLES_REQUEST, POST_STYLES_REQUEST, GET_STYLES_SUCCESS, GET_STYLES_ERROR } from '../constants';
+import { GET_STYLES_REQUEST, POST_STYLES_REQUEST, GET_KPI_STYLES_SUCCESS, GET_STYLES_SUCCESS, GET_STYLES_ERROR } from '../constants';
 import fetch from 'isomorphic-fetch';
 import config from '../../../config';
 import { call, put, takeEvery } from 'redux-saga/effects';
@@ -10,26 +10,34 @@ function* sagaProjects() {
 }
 
 /* middlewares */
-function* fetchStyles(/* action */) {
+function* fetchStyles(action) {
 	try {
-		const styles = yield call(getStyles);
-		yield put({ type: GET_STYLES_SUCCESS, styles: styles.data });
+		const styles = yield call(getStyles, action.page);
+		if (action.page == 'kpi') {
+			yield put({ type: GET_KPI_STYLES_SUCCESS, styles: styles.data });
+		} else {
+			yield put({ type: GET_STYLES_SUCCESS, styles: styles.data });
+		}
 	} catch (e) {
 		yield put({ type: GET_STYLES_ERROR, message: e.message });
 	}
 }
 function* postStyles(action) {
 	try {
-		const styles = yield call(sendStyles, action.styles);
-		yield put({ type: GET_STYLES_SUCCESS, styles: styles.data });
+		const styles = yield call(sendStyles, action.styles, action.page);
+		if (action.page == 'kpi') {
+			yield put({ type: GET_KPI_STYLES_SUCCESS, styles: styles.data });
+		} else {
+			yield put({ type: GET_STYLES_SUCCESS, styles: styles.data });
+		}
 	} catch (e) {
 		yield put({ type: GET_STYLES_ERROR, message: e.message });
 	}
 }
 
 /* queries */
-function sendStyles(styles) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl, {
+function sendStyles(styles, page) {
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -46,8 +54,8 @@ function sendStyles(styles) {
 		})
 		.then(response => response.json())
 }
-function getStyles() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl, {
+function getStyles(page) {
+	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
 		method: 'get'
 	})
 		.then(response => {

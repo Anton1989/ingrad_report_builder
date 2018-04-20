@@ -36,7 +36,6 @@ export default class KpiController {
         let project = req.body.project;
         const id = project._id;
         delete project._id;
-        console.log(project)
         try {
             project = await Kpi.findByIdAndUpdate(id, { $set: project }, { new: true });
             return this._resp.formattedSuccessResponse(res, project, 200);
