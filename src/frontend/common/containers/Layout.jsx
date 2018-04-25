@@ -1,8 +1,8 @@
 import React from 'react';
 import connect from 'react-redux/lib/connect/connect';
 //Components
-import Navbar from '../components/Navigation.jsx';
-import LeftMenu from '../components/LeftMenu.jsx';
+// import Navbar from '../components/Navigation.jsx';
+// import LeftMenu from '../components/LeftMenu.jsx';
 import styles from './Layout.scss';
 
 class Layout extends React.Component {
@@ -51,16 +51,7 @@ class Layout extends React.Component {
 		const { isActive, children } = this.props;
 		console.log('RENDER <Layout>');
 
-		const isMapPage = isActive('/map', false); 
-		
-		let menu = [
-			{
-				anchor: 'KPI таблицы',
-				url: '/',
-				strict: false,
-				submenu: []
-			}
-		];
+		const isMapPage = isActive('/map', false);
 
 		var childrenWithProps = React.Children.map(children, child =>
 			React.cloneElement(child, {
@@ -70,21 +61,9 @@ class Layout extends React.Component {
 				type: isMapPage ? this.state.type : null
 			}));
 
-		const showMenu = !isMapPage || (!this.state.place && !this.props.params.placeId);
-		let classMain = ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0';
-		if (showMenu) {
-			classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
-		}
+		let classMain = ' col-sm-12';
+
 		return <div className='container-fluid'>
-			<Navbar
-				menu={menu}
-				setMapType={this.handleSetMapType}
-				setPlace={this.handleSetPlace} />
-			{showMenu && <LeftMenu
-				menu={menu}
-				isActive={isActive}
-				setMapType={this.handleSetMapType}
-				setPlace={this.handleSetPlace} />}
 			<div className='row'>
 				<div className={styles.main + classMain}>
 					{childrenWithProps}
