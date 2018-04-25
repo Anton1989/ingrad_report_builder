@@ -5,7 +5,7 @@ import connect from 'react-redux/lib/connect/connect';
 import { get, post, dismissError } from '../actions/kpiActions';
 //Components
 import ProjectsTable from '../components/ProjectsTable.jsx';
-import ToolBar from '../components/ToolBar.jsx';
+// import ToolBar from '../components/ToolBar.jsx';
 
 //import styles from './ProjectsList.scss';
 
@@ -16,11 +16,10 @@ class ProjectsList extends React.Component {
     }
 
     render() {
-        const { kpi, post, dismissError } = this.props;
+        const { kpi, dismissError } = this.props;
         console.log('RENDER <ProjectsList>');
 
         return <div>
-            <ToolBar create={post} />
             <ProjectsTable projects={kpi} dismissError={dismissError} />
         </div>
     }

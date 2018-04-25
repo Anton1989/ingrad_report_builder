@@ -30,11 +30,6 @@ export default class ProjectsTable extends React.Component {
                 </div>
             }
             <table className='table table-striped'>
-                <thead>
-                    <tr>
-                        <th>Название</th>
-                    </tr>
-                </thead>
                 <tbody>
                     {projects.fetching && projects.data.length == 0 && <tr><td colSpan='5'><Loading /></td></tr>}
                     {projects.data.length > 0 && projects.data.map(project => {
