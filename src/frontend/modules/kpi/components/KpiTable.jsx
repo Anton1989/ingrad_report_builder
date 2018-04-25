@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 //Components
 import Alert from 'react-bootstrap/lib/Alert';
 import Loading from '../../../common/components/Loading.jsx';
+import Link from 'react-router/lib/Link';
 // import Row from '../components/Row.jsx';
 import styles from './KpiTable.scss';
 
@@ -55,6 +56,9 @@ export default class KpiTable extends React.Component {
                     </Alert>
                 </div>
             }
+            <Link to={'/'} className='btn btn-default'>
+                <span className='glyphicon glyphicon-chevron-left'></span> Назад к списку
+            </Link>&nbsp;
             {project && <a href={'/v1/kpi/' + project._id} target='_blank' className='btn btn-info'><span className='glyphicon glyphicon glyphicon-download'></span> Скачать в EXCEL</a>}
             <br/><br/>
             {project && <table className={'table table-bordered ' + styles.kpiTable}>
