@@ -37,7 +37,7 @@ function* postStyles(action) {
 
 /* queries */
 function sendStyles(styles, page) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
+	return fetch('https://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -55,7 +55,7 @@ function sendStyles(styles, page) {
 		.then(response => response.json())
 }
 function getStyles(page) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
+	return fetch('https://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
 		method: 'get'
 	})
 		.then(response => {

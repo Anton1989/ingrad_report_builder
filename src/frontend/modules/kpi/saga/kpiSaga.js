@@ -39,7 +39,7 @@ function* save(action) {
 /* queries */
 function getRequest(role) {
 	const roleQuery = role ? '?role=' + role : '';
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + roleQuery, {
+	return fetch('https://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + roleQuery, {
 		method: 'GET'
 	})
 		.then(response => {
@@ -52,7 +52,7 @@ function getRequest(role) {
 		.then(response => response.json())
 }
 function postRequest(name) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl, {
+	return fetch('https://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -70,7 +70,7 @@ function postRequest(name) {
 		.then(response => response.json())
 }
 function putRequest(project) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + '/' + project._id, {
+	return fetch('https://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + '/' + project._id, {
 		method: 'PUT',
 		headers: {
 			'Accept': 'application/json',
