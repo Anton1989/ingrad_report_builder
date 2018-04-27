@@ -24,7 +24,9 @@ export default class KpiController {
 
     async all(req, res) {
         try {
-            const projects = await Kpi.find({}).exec();
+            const projects = await Kpi.find({}).sort({
+                name: 1
+            }).exec();
             return this._resp.formattedSuccessResponse(res, projects, 200);
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
