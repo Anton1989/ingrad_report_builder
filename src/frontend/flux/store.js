@@ -3,7 +3,7 @@ import rootReducer from './reducer';
 import createLogger from 'redux-logger';
 import thunk from 'redux-thunk';
 import createSagaMiddleware from 'redux-saga';
-import kpiSaga from '../modules/kpi/saga/kpiSaga';
+import statusSaga from '../modules/status/saga/statusSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -19,6 +19,7 @@ export default function configureStore(initialState) {
     }
 
 
-    sagaMiddleware.run(kpiSaga);
+    sagaMiddleware.run(statusSaga);
+
     return store
 }

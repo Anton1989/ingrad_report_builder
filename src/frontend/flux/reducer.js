@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-import kpi from '../modules/kpi/reducers/kpi';
+import status from '../modules/status/reducers/status';
+import projects from '../modules/status/reducers/projects';
 
 export default combineReducers({
-    kpi
+    status,
+    projects
 });

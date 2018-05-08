@@ -1,0 +1,174 @@
+.main {
+    padding: 20px;
+
+    table {
+
+        tr td, tr th {
+            color: #333333;
+        }
+
+        .paddingRight {
+            border-right: 20px solid #fff;
+        }
+
+        .bordRight10 {
+            border-right: 10px solid #fff;
+        }
+
+        thead {
+            
+            tr {
+
+                &.head1 {
+
+                    th {
+                        font-weight: 700;
+                        font-style: normal;
+                        font-size: 17px;
+                        text-align: left;
+            
+                        &.closeStatus {
+                            text-align: center;
+                        }
+                    }
+                }
+
+                th {
+                    color: #333333;
+                    border-bottom: 0px;
+                    border-top: 0px;
+
+                    .hideNameIco {
+                        float: right;
+                    }
+
+                    .button {
+                        cursor: pointer;
+                        color: #00ccff;
+                    }
+
+                    .button:hover {
+                        color: #ff1004;
+                        text-shadow: 2px 2px #CCC;
+                    }
+
+                    &.headFade {
+                        color: #cccccc;
+                    }
+
+                    &.mainSteps {
+                        font-weight: 700;
+                        font-style: normal;
+                        color: #333333;
+                    }
+
+                    &.subSteps {
+                        text-align: center;
+                        font-weight: 400;
+                        font-style: normal;
+                        font-size: 13px;
+                        color: #333333;
+                        line-height: normal;
+                        border-bottom: 4px solid #f3f3f2;
+                    }
+
+                    &.borderBottom {
+                        border-bottom: 4px solid #f3f3f2;
+                    }
+
+                    &.leftBorder {
+                        border-left: 1px solid #f3f3f2;
+                        border-right: 1px solid #f3f3f2;
+                        border-collapse: collapse;
+                    }
+
+                    &.headStatus {
+                        background: #f3f3f2;
+                    }
+                }
+            }
+        }
+
+        tbody {
+            tr {
+                border-bottom: 5px solid #fff;
+
+                td {
+                    color: #333333;
+                    vertical-align: middle;
+                    border: 0px;
+
+                    .nameProj {
+                        margin-bottom: 0px;
+                    }
+
+                    .addressProj {
+                        color: rgb(204, 204, 204);
+                        margin-bottom: 0px;
+                    }
+
+                    &.number {
+                        width: 35px;
+                    }
+
+                    &.icon {
+                        width: 58px;
+                        background: #f3f3f2;
+
+                        img {
+                            width: 36px;
+                        }
+                    }
+
+                    &.selectedCell {
+                        background: #f3f3f2;
+                    }
+
+                    &.selectedCell:hover {
+                        background: #e4e4e4;
+                    }
+
+                    &.inPlan {
+                        text-align: center;
+                        background: #fff;
+                    }
+
+                    &.inProgress {
+                        text-align: center;
+                        background: #f3f3f2;
+                    }
+
+                    &.done {
+                        text-align: center;
+                        background: #ccfe9a;
+                    }
+
+                    &:hover {
+                        background: #e4e4e4;
+                    }
+                }
+            }
+        }
+
+
+        
+
+        
+
+        
+
+        
+
+        
+        
+        
+
+        
+    }
+}
+@media (min-width: 768px) {
+    .main {
+        padding-right: 40px;
+        padding-left: 40px;
+    }
+}

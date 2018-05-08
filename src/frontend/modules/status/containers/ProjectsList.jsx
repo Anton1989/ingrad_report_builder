@@ -2,38 +2,36 @@ import React from 'react';
 import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 //Actions
-import { get, post, dismissError } from '../actions/kpiActions';
+import { get, dismissError } from '../actions/statusActions';
 //Components
-import ProjectsTable from '../components/ProjectsTable.jsx';
-import ToolBar from '../components/ToolBar.jsx';
-
+// import ProjectsTable from '../components/ProjectsTable.jsx';
+import StatusTable from '../components/StatusTable.jsx';
 //import styles from './ProjectsList.scss';
 
 class ProjectsList extends React.Component {
 
     componentDidMount() {
-        if (this.props.kpi.data.length == 0) this.props.get(this.props.location.query.role);
+        if (this.props.projects.data.length == 0) this.props.get();
     }
 
     render() {
-        const { kpi, post, dismissError } = this.props;
+        const { projects, status, dismissError } = this.props;
         console.log('RENDER <ProjectsList>');
 
-        return <div>
-            <ToolBar create={post} />
-            <ProjectsTable projects={kpi} dismissError={dismissError} />
+        return <div className='row'>
+            <StatusTable projects={projects} status={status} dismissError={dismissError} />
         </div>
     }
 }
 function mapStateToProps(state) {
     return {
-        kpi: state.kpi
+        projects: state.projects,
+        status: state.status
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
         get: bindActionCreators(get, dispatch),
-        post: bindActionCreators(post, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)
     }
 }

@@ -4,14 +4,12 @@ import Route from 'react-router/lib/Route';
 //Layouts
 import Layout from './common/containers/Layout.jsx';
 //containers
-import ProjectsList from './modules/kpi/containers/ProjectsList.jsx';
-import ProjectKpi from './modules/kpi/containers/ProjectKpi.jsx';
+import ProjectsList from './modules/status/containers/ProjectsList.jsx';
 
 export default (/* data */) => {
     return (
         <Route path='/' component={Layout}>
             <IndexRoute component={ProjectsList} />
-            <Route path=':projectId' component={ProjectKpi} />
         </Route>
     )
 }

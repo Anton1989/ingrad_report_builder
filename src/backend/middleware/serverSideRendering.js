@@ -70,6 +70,7 @@ function renderPage(appHtml, store) {
         </head>
         <body>
         <div id="root">${appHtml}</div>
+        <div id="root-modal"></div>
         <script src="${jsBundle}"></script>
         </body>
     </html>`
