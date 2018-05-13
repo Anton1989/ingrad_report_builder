@@ -1,4 +1,4 @@
 #!/bin/sh
 git pull
-npm build
+npm run build
 pm2 restart ingrad-status
