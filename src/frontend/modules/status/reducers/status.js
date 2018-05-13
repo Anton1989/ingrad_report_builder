@@ -6,7 +6,7 @@ const initialState = {
     data: []
 }
 
-export default function kpi(state = initialState, action) {
+export default function status(state = initialState, action) {
     switch (action.type) {
         case STATUS_SUCCESS:
             return {

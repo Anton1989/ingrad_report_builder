@@ -2,6 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import Alert from 'react-bootstrap/lib/Alert';
 import DataCell from './DataCell.jsx';
+import Details from './Details.jsx';
 import styles from './StatusTable.scss';
 
 const STATUSES = {
@@ -16,11 +17,13 @@ export default class StatusTable extends React.Component {
         super(props, context);
 
         this.state = {
+            openProjects: [],
             locations: [],
             showNames: true
         }
 
         this.handleAlertDismiss = this.handleAlertDismiss.bind(this);
+        this.handleShowBuilds = this.handleShowBuilds.bind(this);
         this.showNames = this.showNames.bind(this);
     }
 
@@ -54,13 +57,24 @@ export default class StatusTable extends React.Component {
         this.props.dismissError();
     }
 
+    handleShowBuilds(id) {
+        const openProjects = [...this.state.openProjects];
+        const index = openProjects.indexOf(id);
+        if (index !== -1) {
+            openProjects.splice(index, 1);
+        } else {
+            openProjects.push(id);
+        }
+        this.setState({ openProjects });
+    }
+
     showNames() {
         this.setState({ showNames: !this.state.showNames });
     }
 
     render() {
-        const { projects, status } = this.props;
-        console.log('RENDER <StatusTable>', this.state.locations);
+        const { projects, status, detailStatus, getDetails } = this.props;
+        console.log('RENDER <StatusTable>');
 
         let classIc = this.state.showNames ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right';
 
@@ -139,26 +153,32 @@ export default class StatusTable extends React.Component {
                                 filteredProjects.map((project, i) => {
                                     let projectStatuse = status.data.find(item => item.project_id == project._id);
                                     const ind = i + 1;
-                                    return <tr>
-                                        <td className={styles.number}>
-                                            {ind < 10 ? '0' + ind : ind}
-                                        </td>
-                                        <td className={styles.icon + ' ' + styles.bordRight10}>
-                                            <img src={project.logo} />
-                                        </td>
-                                        {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight}>
-                                            <p className={styles.nameProj}>{project.name}</p>
-                                            <p className={styles.addressProj}>{project.address}</p>
-                                        </td>}
+                                    let hasDetails = this.state.openProjects.includes(project._id);
+                                    let details = detailStatus.data.filter(detail => detail.project_id == project._id);
 
-                                        {projectStatuse.steps.map((mainStep, i) => {
-                                            return mainStep.subSteps.map((subStep, j) => {
-                                                return <td className={STATUSES[subStep.status]}>
-                                                    <DataCell step={subStep} uni={i + '-' + j} header={subStep.name} loc_icon={icon} project={project} />
-                                                </td>
-                                            });
-                                        })}
-                                    </tr>;
+                                    return <React.Fragment>
+                                        <tr>
+                                            <td className={styles.number}>
+                                                {ind < 10 ? '0' + ind : ind}
+                                            </td>
+                                            <td className={styles.icon + ' ' + styles.bordRight10} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                                <img src={project.logo} />
+                                            </td>
+                                            {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                                <p className={styles.nameProj}>{project.name}</p>
+                                                <p className={styles.addressProj}>{project.address}</p>
+                                            </td>}
+
+                                            {projectStatuse.steps.map((mainStep, i) => {
+                                                return mainStep.subSteps.map((subStep, j) => {
+                                                    return <td className={STATUSES[subStep.status]}>
+                                                        <DataCell step={subStep} uni={i + '-' + j} header={subStep.name} loc_icon={icon} project={project} />
+                                                    </td>
+                                                });
+                                            })}
+                                        </tr>
+                                        {hasDetails && <Details details={details} showNames={this.state.showNames} fetching={detailStatus.fetching} getDetails={getDetails} id={project._id} />}
+                                    </React.Fragment>;
                                 })
                             ]
                         })}

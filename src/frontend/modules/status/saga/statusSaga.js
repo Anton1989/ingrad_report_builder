@@ -1,10 +1,11 @@
-import { PRJ_REQUEST, PRJ_SUCCESS, PRJ_ERROR, STATUS_SUCCESS } from '../constants';
+import { PRJ_REQUEST, PRJ_SUCCESS, PRJ_ERROR, STATUS_SUCCESS, DETAILS_REQUEST, DETAILS_SUCCESS } from '../constants';
 import fetch from 'isomorphic-fetch';
 import { call, put, takeEvery } from 'redux-saga/effects';
 
 /* subscribe on actions */
 function* sagaStatus() {
 	yield takeEvery(PRJ_REQUEST, get);
+	yield takeEvery(DETAILS_REQUEST, getDetails);
 }
 
 /* middlewares */
@@ -24,7 +25,29 @@ function* get(/*action*/) {
 	}
 }
 
+function* getDetails(action) {
+	try {
+		const details = yield call(getBuilds, action.id);
+		yield put({ type: DETAILS_SUCCESS, details });
+	} catch (e) {
+		yield put({ type: PRJ_ERROR, message: e.message });
+	}
+}
+
 /* queries */
+function getBuilds(project_id) {
+	return fetch('http://www.mocky.io/v2/5af880f03200009a0986af0c?project_id=' + project_id, {
+		method: 'GET'
+	})
+		.then(response => {
+			if (200 == response.status) {
+				return response
+			} else {
+				throw new Error('Cannot load data from server. Response status ' + response.status)
+			}
+		})
+		.then(response => response.json())
+}
 function getProjects() {
 	return fetch('http://www.mocky.io/v2/5aeb823e3000004900575538', {
 		method: 'GET'

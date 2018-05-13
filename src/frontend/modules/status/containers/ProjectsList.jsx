@@ -2,7 +2,7 @@ import React from 'react';
 import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 //Actions
-import { get, dismissError } from '../actions/statusActions';
+import { get, dismissError, getDetails } from '../actions/statusActions';
 //Components
 // import ProjectsTable from '../components/ProjectsTable.jsx';
 import StatusTable from '../components/StatusTable.jsx';
@@ -15,22 +15,24 @@ class ProjectsList extends React.Component {
     }
 
     render() {
-        const { projects, status, dismissError } = this.props;
+        const { projects, status, detailStatus, dismissError, getDetails } = this.props;
         console.log('RENDER <ProjectsList>');
 
         return <div className='row'>
-            <StatusTable projects={projects} status={status} dismissError={dismissError} />
+            <StatusTable projects={projects} detailStatus={detailStatus} status={status} getDetails={getDetails} dismissError={dismissError} />
         </div>
     }
 }
 function mapStateToProps(state) {
     return {
         projects: state.projects,
-        status: state.status
+        status: state.status,
+        detailStatus: state.detailStatus
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
+        getDetails: bindActionCreators(getDetails, dispatch),
         get: bindActionCreators(get, dispatch),
         dismissError: bindActionCreators(dismissError, dispatch)
     }

@@ -1,9 +1,19 @@
-import { PRJ_REQUEST, DISMISS_PRJ_ERROR } from '../constants';
+import { PRJ_REQUEST, DISMISS_PRJ_ERROR, DETAILS_REQUEST } from '../constants';
 
 export function get() {
 	return (dispatch) => {
 		dispatch({
 			type: PRJ_REQUEST
+		});
+	}
+}
+
+export function getDetails(id) {
+	return (dispatch) => {
+		console.log('!!!!!!');
+		dispatch({
+			type: DETAILS_REQUEST,
+			id
 		});
 	}
 }
