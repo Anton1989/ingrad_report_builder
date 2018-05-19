@@ -1,21 +1,15 @@
 import mongoose, { Schema } from 'mongoose';
+import Tasks from './schemas/Tasks';
 
 const ProjectSchema = new Schema({
-    comercialName: String,
-    agreementNo: String,
-    counterparty: String,
-    city: String,
-    to: String,
-    toType: String,
-    subject: String,
-    buildingArea: Number,
-    generalArea: Number,
-    startCMP: Date,
-    endCMP: Date,
-    numberOfBk: Number,
-    piles: Boolean,
-    floors: [{ type: Schema.Types.ObjectId, ref: 'floors' }],
-    sections: [{ type: Schema.Types.ObjectId, ref: 'sections' }]
+    guid: String,
+    name: String,
+    sortId: Number,
+    location: String,
+    tasks: [Tasks],
+    tasksAmount: Number,
+    projectIntegrationId: String,
+    published: Date
 })
 
 let projects = mongoose.model('projects', ProjectSchema);

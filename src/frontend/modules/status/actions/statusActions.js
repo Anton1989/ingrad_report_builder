@@ -10,7 +10,6 @@ export function get() {
 
 export function getDetails(id) {
 	return (dispatch) => {
-		console.log('!!!!!!');
 		dispatch({
 			type: DETAILS_REQUEST,
 			id

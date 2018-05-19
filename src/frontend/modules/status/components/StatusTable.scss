@@ -11,6 +11,10 @@
             border-right: 20px solid #fff;
         }
 
+        .prjsHead {
+            min-width: 100px;
+        }
+
         .bordRight10 {
             border-right: 10px solid #fff;
         }
@@ -91,12 +95,13 @@
 
         tbody {
             tr {
-                border-bottom: 5px solid #fff;
+                border-bottom: 1px solid #fff;
 
                 td {
                     color: #333333;
                     vertical-align: middle;
                     border: 0px;
+                    border-right: 1px solid #fff;
 
                     .nameProj {
                         margin-bottom: 0px;
@@ -143,8 +148,18 @@
                         background: #ccfe9a;
                     }
 
+                    &.none {
+                        text-align: center;
+                        font-weight: bold;
+                        color: #ccc;
+                    }
+
                     &:hover {
                         background: #e4e4e4;
+                    }
+
+                    &.none:hover {
+                        background: #fff;
                     }
                 }
             }

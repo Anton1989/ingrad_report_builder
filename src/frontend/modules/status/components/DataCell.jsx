@@ -1,7 +1,7 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
-import styles from './DataCell.scss';
-import Modal from './Modal.jsx';
+//import styles from './DataCell.scss';
+//import Modal from './Modal.jsx';
 
 export default class dataCell extends React.Component {
 
@@ -20,9 +20,12 @@ export default class dataCell extends React.Component {
     }
 
     renderCell() {
-        const { step, loc_icon, project } = this.props;
+        const { step/*, loc_icon, project*/ } = this.props;
         let html = null;
 
+        html = <span>{step.percentComplete}</span>;
+
+        /*
         switch (step.type) {
             case 'quarter': {
                 let parts = step.value.split(' ');
@@ -81,12 +84,13 @@ export default class dataCell extends React.Component {
                 break;
             }
         }
+        */
         return html;
     }
 
     render() {
         // const { step } = this.props;
-        console.log('RENDER <DataCell>');
+        //console.log('RENDER <DataCell>');
 
         return this.renderCell();
     }
