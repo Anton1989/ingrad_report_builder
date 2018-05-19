@@ -6,6 +6,7 @@ import { get, dismissError, getDetails } from '../actions/statusActions';
 //Components
 // import ProjectsTable from '../components/ProjectsTable.jsx';
 import StatusTable from '../components/StatusTable.jsx';
+import Loading from '../../../common/components/Loading.jsx';
 //import styles from './ProjectsList.scss';
 
 class ProjectsList extends React.Component {
@@ -19,6 +20,7 @@ class ProjectsList extends React.Component {
         console.log('RENDER <ProjectsList>');
 
         return <div className='row'>
+            {projects.fetching && projects.data.length == 0 && <Loading />}
             <StatusTable projects={projects} detailStatus={detailStatus} status={status} getDetails={getDetails} dismissError={dismissError} />
         </div>
     }
