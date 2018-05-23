@@ -3,6 +3,7 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 import browserHistory from 'react-router/lib/browserHistory';
 import Link from 'react-router/lib/Link';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 //Actions
 import { getPlaces, delPlace, dismissError } from '../actions/placesActions';
 import { getStyles } from '../../styles/actions/stylesActions';
@@ -42,7 +43,7 @@ class Map extends React.Component {
                         <th>Название</th>
                         <th>Адрес</th>
                         <th>Домов</th>
-                        <th>Удалить</th>
+                        <th>Копировать/Удалить</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,6 +54,11 @@ class Map extends React.Component {
                             <td onClick={() => { this.editPlace(place._id) }}>{place.address}</td>
                             <td onClick={() => { this.editPlace(place._id) }}>{place.houses.length}</td>
                             <td>
+                                <button type='button' className='btn btn-info'>
+                                    <CopyToClipboard text={'https://' + ENV_HOST + '/' + place._id}>
+                                        <span className='glyphicon glyphicon-copy'></span>
+                                    </CopyToClipboard>
+                                </button>&nbsp;
                                 <button type='button' className='btn btn-danger' onClick={() => {this.handleDelete(place._id);}}><span className='glyphicon glyphicon-remove'></span></button>
                             </td>
                         </tr>
