@@ -11,6 +11,7 @@ export default (/* data */) => {
     return (
         <Route path='/' component={Layout}>
             <IndexRoute component={MapContainer} />
+            <Route path=':id' component={MapContainer} />
             <Route path='add' component={PlaceAdd} />
         </Route>
     );

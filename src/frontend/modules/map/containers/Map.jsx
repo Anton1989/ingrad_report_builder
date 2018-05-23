@@ -214,12 +214,17 @@ class Map extends React.Component {
     }
 
     render() {
-        const { places, type, activeTypes, placeId, openPlace, mapStyles } = this.props;
+        const { places, type, activeTypes, placeId, params: { id }, openPlace, mapStyles } = this.props;
         console.log('RENDER <Map>');
 
-        let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, type, placeId);
+        const ID = id ? id : placeId;
+        const placeObj = places.data.find(place => place._id == ID);
+        const TYPE = (id && placeObj) ? placeObj.location : type;
+        console.log('RENDER <Map>', ID, activeTypes, TYPE);
 
-        let detailStyle = placeId && places.data.length > 0 ? styles.detail : '';
+        let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, TYPE, ID);
+
+        let detailStyle = ID && places.data.length > 0 ? styles.detail : '';
         return <div className={styles.maps + ' ' + detailStyle}>
             <Maps
                 googleMapURL='https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyCK5pMR00_zxULM5AVzW5BNfiBpt6svVtk&signed_in=true'
@@ -230,11 +235,11 @@ class Map extends React.Component {
                 places={places}
                 selectedLayer={this.state.selectedLayer}
                 activeTypes={activeTypes}
-                placeId={placeId}
+                placeId={ID}
                 openPlace={openPlace}
                 defaultCoordinates={defaultCoordinates}
             />
-            {placeId && places.data.length > 0 && <PlaceDetails selectedLayer={this.state.selectedLayer} onSelectLayer={this.onSelectLayer} place={places.data.find(place => place._id == placeId)} />}
+            {ID && places.data.length > 0 && <PlaceDetails selectedLayer={this.state.selectedLayer} onSelectLayer={this.onSelectLayer} place={placeObj} />}
             {this.props.children}
         </div>;
     }
