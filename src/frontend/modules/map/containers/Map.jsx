@@ -220,7 +220,6 @@ class Map extends React.Component {
         const ID = id ? id : placeId;
         const placeObj = places.data.find(place => place._id == ID);
         const TYPE = (id && placeObj) ? placeObj.location : type;
-        console.log('RENDER <Map>', ID, activeTypes, TYPE);
 
         let defaultCoordinates = this.getDefaultCoordinates(places.data, activeTypes, TYPE, ID);
 
