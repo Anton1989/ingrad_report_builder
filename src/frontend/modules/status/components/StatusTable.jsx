@@ -49,26 +49,22 @@ export default class StatusTable extends React.Component {
         let head = {};
 
         projects.data.forEach(project => {
-            project.tasks.forEach(task => {
-                let name = (!task.kt || task.kt.replace(/\s/g, '') == '') ? task.name : task.kt;
-
-                if (!head[name]) {
-                    head[name] = { ...task };
-                    head[name].subTasks = {};
-                }
-
-                if (task.haveChildren) {
-                    task.subTasks.forEach(subTask => {
-                        let subName = (!subTask.kt || subTask.kt.replace(/\s/g, '') == '') ? subTask.name : subTask.kt;
-                        if (!head[name].subTasks[subName]) {
-                            head[name].subTasks[subName] = { ...subTask };
-                        }
-                    });
-                }
-            });
+            this.getKtTasks(head, project.tasks);
         });
 
         this.setState({ head });
+    }
+
+    getKtTasks(head, tasks) {
+        tasks.forEach(task => {
+            if (!head[task.kt] && task.kt.replace(/\s/g, '') !== '') {
+                head[task.kt] = { ...task };
+            }
+
+            if (task.haveChildren) {
+                this.getKtTasks(head, task.subTasks);
+            }
+        });
     }
 
     sortProjects(props = this.props) {
@@ -112,14 +108,28 @@ export default class StatusTable extends React.Component {
         this.setState({ showNames: !this.state.showNames });
     }
 
-    getStatus(procent) {
-        if (procent == 0) {
+    getStatus(task) {
+        if (task.actualStart == '0001-01-01T00:00:00' || !task.actualStart) {
             return 'IN PLAN';
-        } else if (procent < 100) {
+        } else if (task.actualFinish == '0001-01-01T00:00:00' || !task.actualFinish) {
             return 'IN PROGRESS';
         } else {
             return 'DONE';
         }
+    }
+
+    findTask(tasks, object) {
+        let taskTmp = null;
+        tasks.forEach(task => {
+            if (!taskTmp) {
+                if (task.kt == object.kt) {
+                    taskTmp = task;
+                } else if (task.haveChildren) {
+                    taskTmp = this.findTask(task.subTasks, object);
+                }
+            }
+        });
+        return taskTmp;
     }
 
     render() {
@@ -127,13 +137,6 @@ export default class StatusTable extends React.Component {
         console.log('RENDER <StatusTable>');
 
         let classIc = this.state.showNames ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right';
-
-        let bigProj = null;
-        projects.data.forEach(project => {
-            if (bigProj == null || project.tasks.length > bigProj.tasks.length) {
-                bigProj = project;
-            }
-        });
 
         return <div className={'col-sm-12 col-md-12 ' + styles.main}>
             {
@@ -144,7 +147,7 @@ export default class StatusTable extends React.Component {
                 </div>
             }
             <div className='table-responsive'>
-                {bigProj && <table className='table'>
+                {projects.data.length > 0 && <table className='table'>
                     <thead>
                         <tr className={styles.head1}>
                             <th className={styles.paddingRight} colSpan={this.state.showNames ? '3' : '2'}>
@@ -152,7 +155,7 @@ export default class StatusTable extends React.Component {
                                 Проекты&nbsp;<span className={'glyphicon ' + classIc + ' ' + styles.button + ' ' + styles.hideNameIco} onClick={this.showNames}></span>
                                 </p>
                             </th>
-                            <th className={styles.headStatus} colSpan={this.getStepsCount(bigProj.tasks) - 1}>
+                            <th className={styles.headStatus} colSpan={Object.entries(this.state.head).length - 1}>
                                 Статус
                             </th>
                             <th className={styles.closeStatus}>
@@ -160,36 +163,22 @@ export default class StatusTable extends React.Component {
                             </th>
                         </tr>
                         <tr>
-                            <th className={styles.headFade + ' ' + styles.borderBottom + ' ' + styles.bordRight10} rowSpan='2' colSpan='2'>
+                            <th className={styles.headFade + ' ' + styles.borderBottom + ' ' + styles.bordRight10} colSpan='2'>
                                 №
                             </th>
-                            {this.state.showNames && <th className={styles.headFade + ' ' + styles.borderBottom + ' ' + styles.paddingRight} rowSpan='2'>
+                            {this.state.showNames && <th className={styles.headFade + ' ' + styles.borderBottom + ' ' + styles.paddingRight}>
                                 Наименование
                             </th>}
                             {Object.entries(this.state.head).map(val => {
-                                return <th className={styles.mainSteps + ' ' + styles.leftBorder} key={val[0]} colSpan={val[1].subTasks ? Object.keys(val[1].subTasks).length : 1}>
-                                    {val[0]}
-                                </th>;
-                            })}
-                        </tr>
-                        <tr>
-                            {Object.entries(this.state.head).map((val, ind) => {
-                                if (val[1].haveChildren) {
-                                    return Object.entries(val[1].subTasks).map((subStep, i) => {
-                                        return <th className={styles.subSteps + ' ' + styles.leftBorder} key={val[1].name + subStep.name + i}>
-                                            {subStep[0]}
-                                        </th>;
-                                    })
-                                }
-                                return <th className={styles.subSteps + ' ' + styles.leftBorder} key={val[1]['name'] + ind + '_sub'}>
-                                    {val[0]}
+                                return <th title={val[1].name} className={styles.mainSteps + ' ' + styles.leftBorder} key={val[0]}>
+                                    {val[1].kt}
                                 </th>;
                             })}
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td colSpan={this.getStepsCount(bigProj.tasks) + 3}></td>
+                            <td colSpan={Object.entries(this.state.head).length + 3}></td>
                         </tr>
                         <tr>
                             <td></td>
@@ -233,30 +222,16 @@ export default class StatusTable extends React.Component {
                                             </td>}
 
                                             {Object.entries(this.state.head).map((head, i) => {
-                                                let task = project.tasks.find(task => task.kt == head[0] || task.name == head[0]);
+                                                let task = this.findTask(project.tasks, head[1]);
                                                 
                                                 if (!task) {
-                                                    return <td key={'NONE' + i} className={STATUSES['NONE']} colSpan={Object.entries(head[1].subTasks).length}>
+                                                    return <td key={'NONE' + i} className={STATUSES['NONE']}>
                                                         <span className='glyphicon glyphicon-ban-circle'></span>
                                                     </td>
                                                 } else {
-                                                    if (task.haveChildren) {
-                                                        return Object.entries(head[1].subTasks).map((subHead, j) => {
-                                                            let subTask = task.subTasks.find(task => task.kt == subHead[0] || task.name == subHead[0]);
-                                                            if (!subTask) {
-                                                                return <td key={'NONE' + j} className={STATUSES['NONE']}>
-                                                                    <span className='glyphicon glyphicon-ban-circle'></span>
-                                                                </td>
-                                                            }
-                                                            return <td key={'TD' + subHead[0]} title={subHead[0]} className={STATUSES[this.getStatus(subTask.percentComplete)]}>
-                                                                <DataCell step={subTask} uni={i + '-' + j} header={subTask.name} loc_icon={icon} project={project} />
-                                                            </td>
-                                                        });
-                                                    } else {
-                                                        return <td key={'TD' + head[0]} title={head[0]} className={STATUSES[this.getStatus(task.percentComplete)]}>
-                                                            <DataCell step={task} uni={i + '-' + '_sub'} header={task.name} loc_icon={icon} project={project} />
-                                                        </td>
-                                                    }
+                                                    return <td key={'TD' + head[1].kt} title={head[1].name} className={STATUSES[this.getStatus(task)]}>
+                                                        <DataCell step={task} uni={i + '-' + '_sub'} header={task.name} loc_icon={icon} project={project} />
+                                                    </td>
                                                 }
                                             })}
                                         </tr>

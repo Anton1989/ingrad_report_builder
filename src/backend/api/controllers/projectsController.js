@@ -40,6 +40,8 @@ export default class ProjectsController {
                     taskId: task.taskId,
                     position: task.position,
                     haveChildren: task.haveChildren,
+                    actualStart: task.actualStart,
+                    actualFinish: task.actualFinish,
                     percentComplete: task.percentComplete,
                     kt: task.kt,
                     to: task.to,
@@ -79,11 +81,12 @@ export default class ProjectsController {
 
                 project.tasks.forEach(main => {
                     if (main.haveChildren) {
-                        main.subTasks.forEach(sub => {
-                            if (sub.kt.replace(/\s/g,'') == '' && sub.haveChildren) {
-                                sub.kt = this.getKt(sub.subTasks);
-                            }
-                        });
+                        main.hasKt = main.kt.replace(/\s/g,'') !== '' ? true : false;
+                        
+                        let testkt = this.getKt(main.subTasks);
+                        if (testkt.replace(/\s/g,'') !== '') {
+                            main.hasKt = true;
+                        }
                     }
                     
                 });
@@ -95,9 +98,9 @@ export default class ProjectsController {
                     tasksAmount: project.tasksAmount,
                     location: project.location
                 });
-
-
                 
+
+
                 // let groupped_by_tasks = {};
                 // project.tasks.forEach(task => {
                 //     if (!groupped_by_tasks[task.kt]) {
@@ -110,6 +113,7 @@ export default class ProjectsController {
                 //     console.log(name + ' = ' + groupped_by_tasks[name].length);
 
                 // }
+                // return this._resp.formattedSuccessResponse(res, projectsArray, 200);
             });
             return this._resp.formattedSuccessResponse(res, projectsArray, 200);
         } catch (error) {
