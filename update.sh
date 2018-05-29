@@ -1,4 +1,5 @@
 #!/bin/sh
+pm2 stop ingrad-docs
 git pull
 npm run build
-pm2 restart ingrad-docs
+pm2 start ingrad-docs
