@@ -1,6 +1,5 @@
 node_modules
 src/backend/static/bundle
-src/backend/static/css
 src/backend/static/images
 src/backend/static/files
 webpack-assets.json
