@@ -1,11 +1,38 @@
 const config = {
     apiConfig: {
-        getProjectsUrl: '/v1/projects',
-        getPlacesUrl: '/v1/places',
-        getStylesUrl: '/v1/styles',
-        generatePdUrl: '/v1/pd',
-        getKpiUrl: '/v1/kpi'
-    },
+        getDocsUrl: '/v1/docs'
+	},
+	types: [
+		'РнС1',
+		'РнС2',
+		'РнС3'
+	],
+	projects: [
+		{
+			name: 'МИХАЙЛОВА 31',
+			objects: [
+				'МИХАЙЛОВА - Строение 1',
+				'МИХАЙЛОВА - Строение 2',
+				'МИХАЙЛОВА - Строение 3'
+			],
+		},
+		{
+			name: 'ЛЕСОПАРКОВАЯ',
+			objects: [
+				'ЛЕСОПАРКОВАЯ - Строение 1',
+				'ЛЕСОПАРКОВАЯ - Строение 2',
+				'ЛЕСОПАРКОВАЯ - Строение 3'
+			],
+		},
+		{
+			name: 'ВАВИЛОВА',
+			objects: [
+				'ВАВИЛОВА - Строение 1',
+				'ВАВИЛОВА - Строение 2',
+				'ВАВИЛОВА - Строение 3'
+			],
+		}
+	],
     defaultVars: {
         menu: [
 			{

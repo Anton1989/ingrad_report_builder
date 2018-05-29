@@ -1,5 +1,5 @@
 {
-  "name": "ingrad-status",
+  "name": "ingrad-docs",
   "version": "1.2.5",
   "description": "React Redux ingrad",
   "author": "AAA",
@@ -18,7 +18,7 @@
       "command": "pm2 start ./pm2_config.json",
       "env": {
         "SERVER": "138.68.182.94",
-        "SERVER_PORT": 8092,
+        "SERVER_PORT": 8093,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
         "NODE_ENV": "production"
@@ -48,7 +48,7 @@
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
         "SERVER": "138.68.182.94",
-        "SERVER_PORT": 8092,
+        "SERVER_PORT": 8093,
         "NODE_ENV": "production"
       }
     }
@@ -109,6 +109,7 @@
     "react": "^16.3.2",
     "react-bootstrap": "0.30.9",
     "react-color": "^2.13.8",
+    "react-datepicker": "^1.5.0",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.7",
     "react-google-maps": "^9.4.5",

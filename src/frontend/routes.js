@@ -4,12 +4,15 @@ import Route from 'react-router/lib/Route';
 //Layouts
 import Layout from './common/containers/Layout.jsx';
 //containers
-import ProjectsList from './modules/status/containers/ProjectsList.jsx';
+import Docs from './modules/docs/containers/Docs.jsx';
+import Add from './modules/docs/containers/Add.jsx';
 
 export default (/* data */) => {
     return (
         <Route path='/' component={Layout}>
-            <IndexRoute component={ProjectsList} />
+            <IndexRoute component={Docs} />
+            <Route path='/add' component={Add} />
+            <Route path='/edit/:id' component={Add} />
         </Route>
     )
 }

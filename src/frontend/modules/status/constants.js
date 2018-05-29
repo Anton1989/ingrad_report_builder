@@ -1,7 +1,0 @@
-export const PRJ_REQUEST = 'PRJ_REQUEST';
-export const PRJ_SUCCESS = 'PRJ_SUCCESS';
-export const PRJ_ERROR = 'PRJ_ERROR';
-export const DISMISS_PRJ_ERROR = 'DISMISS_PRJ_ERROR';
-export const STATUS_SUCCESS = 'STATUS_SUCCESS';
-export const DETAILS_REQUEST = 'DETAILS_REQUEST';
-export const DETAILS_SUCCESS = 'DETAILS_SUCCESS';
