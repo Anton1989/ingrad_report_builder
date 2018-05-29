@@ -1,6 +1,6 @@
 {
     "apps": [{
-        "name": "ingrad-status",
+        "name": "ingrad-docs",
         "script": "src/backend",
         "watch": false,
         "exec_interpreter": "babel-node",
