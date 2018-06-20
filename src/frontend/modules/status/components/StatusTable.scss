@@ -117,12 +117,16 @@
                         width: 35px;
                     }
 
+                    &.cursor {
+                        cursor: pointer;
+                    }
+
                     &.icon {
                         width: 58px;
                         background: #f3f3f2;
 
                         img {
-                            width: 36px;
+                            width: 35px;
                         }
                     }
 

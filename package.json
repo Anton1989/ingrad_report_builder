@@ -15,9 +15,9 @@
   },
   "betterScripts": {
     "start-prod": {
-      "command": "pm2 start ./pm2_config.json",
+      "command": "forever --id \"status\" start -c \"node -r babel-register\" ./src/backend/index.js",
       "env": {
-        "SERVER": "138.68.182.94",
+        "SERVER": "gis.ingrad.com",
         "SERVER_PORT": 8092,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
@@ -47,7 +47,7 @@
     "build": {
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
-        "SERVER": "138.68.182.94",
+        "SERVER": "gis.ingrad.com",
         "SERVER_PORT": 8092,
         "NODE_ENV": "production"
       }

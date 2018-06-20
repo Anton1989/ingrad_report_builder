@@ -3,6 +3,7 @@ import {
 } from 'express';
 import Response from '../models/responseDto';
 import Projects from '../models/Projects';
+import Objects from '../models/Objects';
 //import Floors from '../models/Floors';
 //import Sections from '../models/Sections';
 
@@ -69,52 +70,93 @@ export default class ProjectsController {
         return kt;
     }
 
+    prepareTree(objects, parent, tasks) {
+        const filtered = [];
+        objects.forEach(object => {
+            if (object.parent == parent) {
+                const item = object.toJSON();
+                if (parent == '00-000022') {
+                    // const tasksLoaded = tasks.find(task => {
+                    //     console.log(object.name, object.projectId, task.projectIntegrationId)
+                    //     return task.projectIntegrationId == object.projectId
+                    // });
+                    const tasksLoaded = tasks.find(task => task.projectIntegrationId == object.projectId);
+                    if (tasksLoaded) {
+                        item.location = tasksLoaded.location;
+                        item.childes = this.prepareTree(objects, object.code, tasksLoaded.tasks);
+                        item.statuses = tasksLoaded.tasks.filter(task => task.to == object.code && task.kt.trim() !== '').map(task => {
+                            return {
+                                name: task.name,
+                                taskId: task.taskId,
+                                position: task.position,
+                                haveChildren: task.haveChildren,
+                                actualStart: task.actualStart,
+                                actualFinish: task.actualFinish,
+                                percentComplete: task.percentComplete,
+                                kt: task.kt,
+                                to: task.to,
+                                subTasks: task.subTasks
+                            };
+                        });
+                    }
+                } else {
+                    item.childes = this.prepareTree(objects, object.code, tasks);
+                    item.statuses = tasks.filter(task => task.to == object.code && task.kt.trim() !== '').map(task => {
+                        return {
+                            name: task.name,
+                            taskId: task.taskId,
+                            position: task.position,
+                            haveChildren: task.haveChildren,
+                            actualStart: task.actualStart,
+                            actualFinish: task.actualFinish,
+                            percentComplete: task.percentComplete,
+                            kt: task.kt,
+                            to: task.to,
+                            subTasks: task.subTasks
+                        };
+                    });
+                }
+                
+                filtered.push(item);
+            }
+        });
+        return filtered;
+    }
+
     async all(req, res) {
         try {
+            let objects = await Objects.find({}).exec();
             const projects = await Projects.find({}).exec();
-            const projectsArray = [];
-            projects.forEach(entity => {
-                const project = entity.toJSON();
-                let parent = project.tasks.find(task => task.parentId == 0);
-                // console.log(parent.subTasks);
-                project.tasks = this.group([...project.tasks], parent.taskId);
+            objects = this.prepareTree(objects, '00-000022', projects);
+            return this._resp.formattedSuccessResponse(res, objects, 200);
+            
+            // const projectsArray = [];
+            // projects.forEach(entity => {
+            //     const project = entity.toJSON();
+            //     let parent = project.tasks.find(task => task.parentId == 0);
+            //     // console.log(parent.subTasks);
+            //     project.tasks = this.group([...project.tasks], parent.taskId);
 
-                project.tasks.forEach(main => {
-                    if (main.haveChildren) {
-                        main.hasKt = main.kt.replace(/\s/g,'') !== '' ? true : false;
+            //     project.tasks.forEach(main => {
+            //         if (main.haveChildren) {
+            //             main.hasKt = main.kt.replace(/\s/g,'') !== '' ? true : false;
                         
-                        let testkt = this.getKt(main.subTasks);
-                        if (testkt.replace(/\s/g,'') !== '') {
-                            main.hasKt = true;
-                        }
-                    }
+            //             let testkt = this.getKt(main.subTasks);
+            //             if (testkt.replace(/\s/g,'') !== '') {
+            //                 main.hasKt = true;
+            //             }
+            //         }
                     
-                });
+            //     });
 
-                projectsArray.push({
-                    _id: project._id,
-                    name: project.name,
-                    tasks: project.tasks,
-                    tasksAmount: project.tasksAmount,
-                    location: project.location
-                });
-                
-
-
-                // let groupped_by_tasks = {};
-                // project.tasks.forEach(task => {
-                //     if (!groupped_by_tasks[task.kt]) {
-                //         groupped_by_tasks[task.kt] = [];
-
-                //     }
-                //     groupped_by_tasks[task.kt].push(task);
-                // });
-                // for (var name in groupped_by_tasks) {
-                //     console.log(name + ' = ' + groupped_by_tasks[name].length);
-
-                // }
-                // return this._resp.formattedSuccessResponse(res, projectsArray, 200);
-            });
+            //     projectsArray.push({
+            //         _id: project._id,
+            //         name: project.name,
+            //         tasks: project.tasks,
+            //         tasksAmount: project.tasksAmount,
+            //         location: project.location
+            //     });
+            // });
             return this._resp.formattedSuccessResponse(res, projectsArray, 200);
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);

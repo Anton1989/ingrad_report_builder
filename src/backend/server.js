@@ -1,5 +1,7 @@
 import express from 'express';
 import db from 'mongoose';
+import https from 'https';
+import fs from 'fs';
 //Custome middlewares
 import ServerRenderingMiddleware from './middleware/serverSideRendering';
 import setBundleHeaders from './middleware/setBundleHeaders';
@@ -30,7 +32,19 @@ db.connection.on('connected', function () {
     console.log('==> ⛁ Connection with MongoDB (' + ENV_MONGO_HOST + '/' + ENV_MONGO_DB + ') established successfully.');
 });
 
-app.listen(ENV_PORT, ENV_HOST, function(error) {
+let server = null;
+
+if (NODE_ENV == 'development') {
+    server = app;
+} else {
+    const options = {
+        pfx: fs.readFileSync('./gis.ingrad.com.pfx'),
+        passphrase: '123456'
+    };
+    server = https.createServer(options, app);
+}
+
+server.listen(ENV_PORT, ENV_HOST, function(error) {
     if (error) {
         console.error('APP ERROR:', error);
     } else {

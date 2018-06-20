@@ -45,24 +45,28 @@ export default class StatusTable extends React.Component {
 
     generateHead(props = this.props) {
         const { projects } = props;
+        const head = {};
 
-        let head = {};
-
-        projects.data.forEach(project => {
-            this.getKtTasks(head, project.tasks);
-        });
+        this.getKtChildes(head, projects.data);
 
         this.setState({ head });
     }
 
-    getKtTasks(head, tasks) {
-        tasks.forEach(task => {
-            if (!head[task.kt] && task.kt.replace(/\s/g, '') !== '') {
-                head[task.kt] = { ...task };
+    getKtChildes(head, projects) {
+        projects.forEach(project => {
+            if (project.statuses && project.statuses.length > 0) {
+                this.getKtStatus(head, project.statuses);
             }
+            if (project.childes && project.childes.length > 0) {
+                this.getKtChildes(head, project.childes);
+            }
+        });
+    }
 
-            if (task.haveChildren) {
-                this.getKtTasks(head, task.subTasks);
+    getKtStatus(head, statuses) {
+        statuses.forEach(status => {
+            if (!head[status.kt] && status.kt.trim() !== '') {
+                head[status.kt] = { ...status };
             }
         });
     }
@@ -74,6 +78,7 @@ export default class StatusTable extends React.Component {
                 locations.push(project.location);
             }
         });
+        locations.sort();
         this.setState({ locations });
     }
 
@@ -109,31 +114,32 @@ export default class StatusTable extends React.Component {
     }
 
     getStatus(task) {
-        if (task.actualStart == '0001-01-01T00:00:00' || !task.actualStart) {
-            return 'IN PLAN';
-        } else if (task.actualFinish == '0001-01-01T00:00:00' || !task.actualFinish) {
-            return 'IN PROGRESS';
+        if (task.percentComplete > 0 && !task.actualStart) {
+            if (task.percentComplete < 100) {
+                return 'IN PROGRESS';
+            } else {
+                return 'DONE';
+            }
         } else {
-            return 'DONE';
+            if (task.actualStart == '0001-01-01T00:00:00' || !task.actualStart) {
+                return 'IN PLAN';
+            } else if (task.actualFinish == '0001-01-01T00:00:00' || !task.actualFinish) {
+                return 'IN PROGRESS';
+            } else {
+                return 'DONE';
+            }
         }
     }
 
-    findTask(tasks, object) {
-        let taskTmp = null;
-        tasks.forEach(task => {
-            if (!taskTmp) {
-                if (task.kt == object.kt) {
-                    taskTmp = task;
-                } else if (task.haveChildren) {
-                    taskTmp = this.findTask(task.subTasks, object);
-                }
-            }
-        });
-        return taskTmp;
+    findTask(statuses, object) {
+        if (statuses && statuses.length > 0) {
+            return statuses.find(status => status.kt == object.kt);
+        }
+        return null;
     }
 
     render() {
-        const { projects, detailStatus, getDetails } = this.props;
+        const { projects } = this.props;
         console.log('RENDER <StatusTable>');
 
         let classIc = this.state.showNames ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right';
@@ -189,6 +195,9 @@ export default class StatusTable extends React.Component {
                         </tr>
 
                         {this.state.locations.map(location => {
+                            if (!location) {
+                                return null;
+                            }
                             let icon = '/images/outmsk.png';
                             if (location == 'm') {
                                 icon = '/images/msk.png';
@@ -206,36 +215,35 @@ export default class StatusTable extends React.Component {
                                 filteredProjects.map((project, i) => {
                                     const ind = i + 1;
                                     let hasDetails = this.state.openProjects.includes(project._id);
-                                    let details = detailStatus.data.filter(detail => detail.project_id == project._id);
 
-                                    return <React.Fragment key={project._id}>
+                                    return <React.Fragment key={'ROW' + project._id}>
                                         <tr>
                                             <td className={styles.number}>
                                                 {ind < 10 ? '0' + ind : ind}
                                             </td>
-                                            <td className={styles.icon + ' ' + styles.bordRight10} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                            <td className={styles.icon + ' ' + styles.bordRight10 + ' ' + styles.cursor} onClick={() => { this.handleShowBuilds(project._id); }}>
                                                 <img src={project.logo ? project.logo : '/images/noimage.png'} />
                                             </td>
-                                            {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                            {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight + ' ' + styles.cursor} onClick={() => { this.handleShowBuilds(project._id); }}>
                                                 <p className={styles.nameProj}>{project.name}</p>
                                                 <p className={styles.addressProj}></p>
                                             </td>}
 
                                             {Object.entries(this.state.head).map((head, i) => {
-                                                let task = this.findTask(project.tasks, head[1]);
+                                                let status = this.findTask(project.statuses, head[1]);
                                                 
-                                                if (!task) {
+                                                if (!status) {
                                                     return <td key={'NONE' + i} className={STATUSES['NONE']}>
                                                         <span className='glyphicon glyphicon-ban-circle'></span>
                                                     </td>
                                                 } else {
-                                                    return <td key={'TD' + head[1].kt} title={head[1].name} className={STATUSES[this.getStatus(task)]}>
-                                                        <DataCell step={task} uni={i + '-' + '_sub'} header={task.name} loc_icon={icon} project={project} />
+                                                    return <td key={'TD' + head[1].kt} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
+                                                        <DataCell step={status} uni={i + '-' + '_sub'} header={status.name} loc_icon={icon} project={project} />
                                                     </td>
                                                 }
                                             })}
                                         </tr>
-                                        {hasDetails && <Details details={details} showNames={this.state.showNames} fetching={detailStatus.fetching} getDetails={getDetails} id={project._id} />}
+                                        {hasDetails && <Details projects={project.childes} heads={this.state.head} showNames={this.state.showNames} id={project._id} />}
                                     </React.Fragment>;
                                 })
                             ]

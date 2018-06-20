@@ -1,5 +1,4 @@
 table {
-    
     tbody {
         tr {
             border-bottom: 5px solid #fff;
@@ -52,6 +51,12 @@ table {
                 &.done {
                     text-align: center;
                     background: #ccfe9a;
+                }
+
+                &.none {
+                    text-align: center;
+                    font-weight: bold;
+                    color: #ccc !important;
                 }
 
                 &:hover {
