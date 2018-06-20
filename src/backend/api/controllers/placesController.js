@@ -74,6 +74,19 @@ export default class PlacesController {
                 }
                 placeEntity.layers = layers;
             }
+            if (images.panaram && images.panaram.length > 0) {
+                let i = 0;
+                console.log(placeEntity.panarams)
+                let panarams = [...placeEntity.panarams];
+                for (let index=0; index < panarams.length; index++) {
+                    if (panarams[index].src == 'TOSAVE') {
+                        this._deleteFile(panarams[index]._id, images.panaram[i]);
+                        panarams[index].src = await this._saveFile(panarams[index]._id, images.panaram[i]);
+                        i++;
+                    }
+                }
+                placeEntity.panarams = panarams;
+            }
             placeEntity.save();
         } catch (error) {
             console.error(error);

@@ -55,7 +55,7 @@ class Map extends React.Component {
                             <td onClick={() => { this.editPlace(place._id) }}>{place.houses.length}</td>
                             <td>
                                 <button type='button' className='btn btn-info'>
-                                    <CopyToClipboard text={'http://' + ENV_HOST + '/' + place._id}>
+                                    <CopyToClipboard text={'https://' + ENV_HOST + '/' + place._id}>
                                         <span className='glyphicon glyphicon-copy'></span>
                                     </CopyToClipboard>
                                 </button>&nbsp;

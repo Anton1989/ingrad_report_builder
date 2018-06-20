@@ -3,7 +3,7 @@
         "name": "ingrad-admin",
         "script": "src/backend",
         "watch": false,
-        "exec_interpreter": "babel-node",
+        "exec_interpreter": "babel-node.cmd",
         "exec_mode": "fork"
     }]
 }

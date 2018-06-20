@@ -34,6 +34,7 @@ export default class Form extends React.Component {
             site: '',
             camera: '',
             photo: '',
+            panarams: [],
             layers: [],
             houses: [],
             address: '',
@@ -55,6 +56,11 @@ export default class Form extends React.Component {
         this.onSave = this.onSave.bind(this);
         this.onAddHouse = this.onAddHouse.bind(this);
         this.onAddLayer = this.onAddLayer.bind(this);
+        this.onAdd360 = this.onAdd360.bind(this);
+        this.onDrop360 = this.onDrop360.bind(this);
+        this.onRemove360 = this.onRemove360.bind(this);
+        this.onRemove360Image = this.onRemove360Image.bind(this);
+        this.updateInputText360 = this.updateInputText360.bind(this);
         this.onRemoveHouse = this.onRemoveHouse.bind(this);
         this.onRemoveLayers = this.onRemoveLayer.bind(this);
         this.onAddPoint = this.onAddPoint.bind(this);
@@ -211,6 +217,38 @@ export default class Form extends React.Component {
         this.setState({ houses });
     }
 
+    updateInputText360(e, index) {
+        let panarams = [...this.state.panarams];
+        console.log(this.state.panarams, index)
+        if (e.target.id == 'coordinates-lat') {
+            panarams[index].coordinates.lat = parseFloat(e.target.value);
+        } else if (e.target.id == 'coordinates-lng') {
+            panarams[index].coordinates.lng = parseFloat(e.target.value);
+        }
+        this.setState({ panarams });
+    }
+
+    onDrop360(files, index) {
+        let panarams = [...this.state.panarams];
+        panarams[index].src = files[0];
+
+        this.setState({ panarams });
+    }
+
+    onRemove360Image(index) {
+        let panarams = [...this.state.panarams];
+        panarams[index].src = null;
+
+        this.setState({ panarams });
+    }
+
+    onRemove360(index) {
+        let panarams = [...this.state.panarams];
+
+        panarams.splice(index, 1);
+        this.setState({ panarams });
+    }
+
     onSave() {
         if (this.validate()) {
             if (this.props.place) {
@@ -285,6 +323,17 @@ export default class Form extends React.Component {
         layers.push(newLayer);
 
         this.setState({ layers });
+    }
+
+    onAdd360() {
+        let panarams = [...this.state.panarams];
+        let new360 = {
+            src: null,
+            coordinates: { lat: '', lng: '' }
+        };
+        panarams.push(new360);
+
+        this.setState({ panarams });
     }
 
     onRemoveLayer(layer_index) {
@@ -504,6 +553,66 @@ export default class Form extends React.Component {
                                         : 'Загрузите Фото объекта';
                                 }}
                             </Dropzone>
+                        </div>
+                        <div className='form-group'>
+                            <label htmlFor='layers'>Панорамы</label>
+                            {this.state.panarams.map((img360, i) => {
+                                let image = null;
+                                if (img360.src && typeof img360.src === 'object') {
+                                    image = <li>
+                                        {img360.src.name} - {img360.src.size} bytes&nbsp;
+                                        <span id='image' onClick={() => { this.onRemove360Image(i); }} className='glyphicon glyphicon-minus-sign'></span>
+                                    </li>;
+                                } else if (img360.src) {
+                                    image = <li>
+                                        <a href={img360.src} target='_blank'>{img360.src}</a>&nbsp;
+                                        <span id='image' onClick={() => { this.onRemove360Image(i); }} className='glyphicon glyphicon-minus-sign'></span>
+                                    </li>;
+                                }
+
+                                return <div className={'form-group row ' + styles.house} key={'house_' + i}>
+                                    <div className='form-group col-sm-6 col-md-6'>
+                                        <div className='row'>
+                                            <div className={'col-xs-12 ' + styles.layer_btns}>
+                                                <button type='button' className='btn btn-danger' onClick={() => { this.onRemove360(i) }}>Удалить панораму</button>
+                                            </div>
+                                            <br/><br/><br/>
+                                            <div className='col-xs-6'>
+                                                <label htmlFor='coordinates-lat'>Координаты*</label>
+                                                <input type='text' className='form-control' id='coordinates-lat' placeholder='Широта' value={img360.coordinates.lat} onChange={e => this.updateInputText360(e, i)} />
+                                            </div>
+                                            <div className='col-xs-6'>
+                                                <label htmlFor='coordinates-lat'>&nbsp;</label>
+                                                <input type='text' className='form-control' id='coordinates-lng' placeholder='Долгота' value={img360.coordinates.lng} onChange={e => this.updateInputText360(e, i)} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='form-group col-sm-6 col-md-6'>
+                                        <ul>
+                                            {image}
+                                        </ul>
+                                        <Dropzone
+                                            className={styles.dropzone}
+                                            onDrop={(files) => { this.onDrop360(files, i); }}
+                                            multiple={false}
+                                        >
+                                            {({ isDragActive, isDragReject, acceptedFiles, rejectedFiles }) => {
+                                                if (isDragActive) {
+                                                    return 'Данный тип файлов разрешен';
+                                                }
+                                                if (isDragReject) {
+                                                    return 'Данный тип файлов запрещен';
+                                                }
+                                                return acceptedFiles.length || rejectedFiles.length
+                                                    ? `Загружено ${acceptedFiles.length}, отклонено ${rejectedFiles.length} файлов`
+                                                    : 'Загрузите фото 360';
+                                            }}
+                                        </Dropzone>
+                                    </div>
+                                </div>
+                            })}
+                            <br />
+                            <button type='button' className='btn btn-info' onClick={this.onAdd360}>Добавить 360</button>
                         </div>
                         <div className='form-group'>
                             <label htmlFor='layers'>Слои</label>

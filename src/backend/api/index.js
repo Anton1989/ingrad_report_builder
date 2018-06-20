@@ -40,6 +40,7 @@ export default class ApiConfig {
             { name: 'image', maxCount: 1 },
             { name: 'logo', maxCount: 1 },
             { name: 'layer', maxCount: 100 },
+            { name: 'panaram', maxCount: 100 },
             { name: 'csv', maxCount: 1 },
             { name: 'csvDie', maxCount: 1 },
             { name: 'csvLive', maxCount: 1 },

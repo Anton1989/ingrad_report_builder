@@ -93,6 +93,15 @@ function putPlace(data) {
 			}
 		});
 	}
+	if (data.panarams && data.panarams.length > 0) {
+		data.panarams.forEach((panaram, index) => {
+			delete data.panarams[index].show;
+			if(panaram.src && typeof panaram.src === 'object') {
+				formData.append('panaram', panaram.src);
+				data.panarams[index].src = 'TOSAVE';
+			}
+		});
+	}
 	
 	formData.append('data', JSON.stringify(data));
 	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + data._id, {

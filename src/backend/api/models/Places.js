@@ -2,6 +2,7 @@ import mongoose, { Schema } from 'mongoose';
 import Coordinate from './schemas/Coordinate';
 import House from './schemas/House';
 import Layer from './schemas/Layer';
+import Panaram from './schemas/Panaram';
 
 const PlacesSchema = new Schema({
     name: String,
@@ -12,6 +13,7 @@ const PlacesSchema = new Schema({
     photo: String,
     address: String,
     coordinates: Coordinate,
+    panarams: [Panaram],
     houses: [House],
     layers: [Layer],
     location: String,
