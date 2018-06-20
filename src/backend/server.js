@@ -1,9 +1,12 @@
 import express from 'express';
 import db from 'mongoose';
+import https from 'https';
+import fs from 'fs';
 //Custome middlewares
 import ServerRenderingMiddleware from './middleware/serverSideRendering';
 import setBundleHeaders from './middleware/setBundleHeaders';
 import ApiConfig from './api/index';
+
 
 var app = new express();
 db.Promise = global.Promise;
@@ -30,10 +33,15 @@ db.connection.on('connected', function () {
     console.log('==> ⛁ Connection with MongoDB (' + ENV_MONGO_HOST + '/' + ENV_MONGO_DB + ') established successfully.');
 });
 
-app.listen(ENV_PORT, ENV_HOST, function(error) {
+const options = {
+    pfx: fs.readFileSync('./gis.ingrad.com.pfx'),
+    passphrase: '123456'
+};
+
+https.createServer(options, app).listen(ENV_PORT, ENV_HOST, function(error) {
     if (error) {
         console.error('APP ERROR:', error);
     } else {
-        console.info('==> 🌎 Web APP listening on port %s. Open up http://%s:%s/ in your browser.', ENV_PORT, ENV_HOST, ENV_PORT);
+        console.info('==> 🌎 Web APP listening on port %s. Open up https://%s:%s/ in your browser.', ENV_PORT, ENV_HOST, ENV_PORT);
     }
 });
