@@ -29,7 +29,7 @@ function* postStyles(action) {
 
 /* queries */
 function sendStyles(styles) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl, {
+	return fetch(config.apiConfig.getStylesUrl, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -47,7 +47,7 @@ function sendStyles(styles) {
 		.then(response => response.json())
 }
 function getStyles() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl, {
+	return fetch(config.apiConfig.getStylesUrl, {
 		method: 'get'
 	})
 		.then(response => {

@@ -38,7 +38,7 @@ function* updPlace(action) {
 
 /* queries */
 function getPlaces() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl, {
+	return fetch(config.apiConfig.getPlacesUrl, {
 		method: 'GET'
 	})
 		.then(response => {
@@ -63,7 +63,7 @@ function putPlace(data) {
 	}
 	
 	formData.append('data', JSON.stringify(data));
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + data._id, {
+	return fetch(config.apiConfig.getPlacesUrl + '/' + data._id, {
 		method: 'PUT',
 		body: formData
 	})
@@ -88,7 +88,7 @@ function postPlace(data) {
 	delete data.image;
 	delete data.logo;
 	formData.append('data', JSON.stringify(data));
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl, {
+	return fetch(config.apiConfig.getPlacesUrl, {
 		method: 'POST',
 		body: formData
 	})

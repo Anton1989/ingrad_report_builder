@@ -68,6 +68,7 @@ module.exports = {
       },
       ENV_HOST: JSON.stringify(host),
       ENV_PORT: JSON.stringify(port),
+      ENV_360_URL: JSON.stringify(process.env.REACT_360_URL),
       ENV_IS_SERVER: false,
       ENV_DEVELOPMENT: false
     }),

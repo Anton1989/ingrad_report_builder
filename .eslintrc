@@ -29,6 +29,7 @@
         "ENV_IS_SERVER": true,
         "ENV_DEVELOPMENT": true,
         "ENV_HOST": true,
+        "ENV_360_URL": true,
         "ENV_PORT": true,
         "socket": true,
         "google": true,

@@ -129,6 +129,7 @@ module.exports = {
         new webpack.IgnorePlugin(/webpack-stats\.json$/),
         new webpack.DefinePlugin({
             ENV_HOST: JSON.stringify(host),
+            ENV_360_URL: JSON.stringify(process.env.REACT_360_URL),
             ENV_PORT: JSON.stringify(api_port),
             ENV_IS_SERVER: false,
             ENV_DEVELOPMENT: true

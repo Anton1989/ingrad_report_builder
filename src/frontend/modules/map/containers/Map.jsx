@@ -43,7 +43,7 @@ const Maps = compose(
     withScriptjs,
     withGoogleMap
 )(props => {
-    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer } = props;
+    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer, open360 } = props;
     let options = {
         mapTypeControl: true,
         mapTypeControlOptions: {
@@ -68,45 +68,62 @@ const Maps = compose(
         {places.data && places.data.map(place => {
             if (activeTypes.indexOf(place.location) !== -1) {
                 let placeHtml = null;
-                if (placeId && place.houses.length > 0 && mapStyles.length > 0 && placeId == place._id) {
-                    placeHtml = place.houses.map(house => {
-                        let style = mapStyles.find(style => style._id == house.style);
-                        if (!style) {
-                            style = mapStyles[0];
-                        }
-                        let options = {
-                            strokeColor: style.strokColor,
-                            strokeOpacity: style.strokeOpacity,
-                            strokeWeight: style.width,
-                            fillColor: style.color,
-                            fillOpacity: style.fillOpacity
-                        };
-                        let stroke = null;
-                        if (style.lineStyle == 'dashed') {
-                            let optionsStroke = { ...options };
-                            optionsStroke.icons = [{
-                                icon: {
-                                    path: 'M 0,-1 0,1',
-                                    strokeOpacity: style.strokeOpacity,
-                                    scale: 4
-                                },
-                                offset: '0',
-                                repeat: '20px'
-                            }];
-                            let path = house.coordinates.filter(cd => cd.lat != '' && cd.lng != '');
-                            path.push(path[0]);
-                            stroke = <Polyline
-                                key={'stroke_' + house.name}
-                                path={path}
-                                options={optionsStroke}
-                            />
-                            options.strokeOpacity = 0;
-                        }
-                        if (house.type == 'house' || house.type == 'camera') {
-                            return [
-                                <Polygon
+                if (placeId && mapStyles.length > 0 && placeId == place._id && (place.panarams || place.houses.length > 0)) {
+                    placeHtml = [];
+                    if (place.houses.length > 0) {
+                        placeHtml = place.houses.map(house => {
+                            let style = mapStyles.find(style => style._id == house.style);
+                            if (!style) {
+                                style = mapStyles[0];
+                            }
+                            let options = {
+                                strokeColor: style.strokColor,
+                                strokeOpacity: style.strokeOpacity,
+                                strokeWeight: style.width,
+                                fillColor: style.color,
+                                fillOpacity: style.fillOpacity
+                            };
+                            let stroke = null;
+                            if (style.lineStyle == 'dashed') {
+                                let optionsStroke = { ...options };
+                                optionsStroke.icons = [{
+                                    icon: {
+                                        path: 'M 0,-1 0,1',
+                                        strokeOpacity: style.strokeOpacity,
+                                        scale: 4
+                                    },
+                                    offset: '0',
+                                    repeat: '20px'
+                                }];
+                                let path = house.coordinates.filter(cd => cd.lat != '' && cd.lng != '');
+                                path.push(path[0]);
+                                stroke = <Polyline
+                                    key={'stroke_' + house.name}
+                                    path={path}
+                                    options={optionsStroke}
+                                />
+                                options.strokeOpacity = 0;
+                            }
+                            if (house.type == 'house' || house.type == 'camera') {
+                                return [
+                                    <Polygon
+                                        key={house.name}
+                                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                        onClick={(event) => { props.onToggleOpen(event, house) }}
+                                        options={{
+                                            strokeColor: style.strokColor,
+                                            strokeOpacity: style.strokeOpacity,
+                                            strokeWeight: style.width,
+                                            fillColor: style.color,
+                                            fillOpacity: style.fillOpacity
+                                        }}
+                                    />,
+                                    stroke
+                                ];
+                            } else { //tube
+                                return <Polyline
                                     key={house.name}
-                                    paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                                    path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                                     onClick={(event) => { props.onToggleOpen(event, house) }}
                                     options={{
                                         strokeColor: style.strokColor,
@@ -115,24 +132,22 @@ const Maps = compose(
                                         fillColor: style.color,
                                         fillOpacity: style.fillOpacity
                                     }}
-                                />,
-                                stroke
-                            ];
-                        } else { //tube
-                            return <Polyline
-                                key={house.name}
-                                path={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
-                                onClick={(event) => { props.onToggleOpen(event, house) }}
-                                options={{
-                                    strokeColor: style.strokColor,
-                                    strokeOpacity: style.strokeOpacity,
-                                    strokeWeight: style.width,
-                                    fillColor: style.color,
-                                    fillOpacity: style.fillOpacity
-                                }}
-                            />
-                        }
-                    });
+                                />
+                            }
+                        });
+                    }
+                    
+                    if (place.panarams) {
+                        placeHtml.push(place.panarams.map(img360 => {
+                            if (img360.coordinates.lat && img360.coordinates.lng && img360.src) {
+                                return  <Marker
+                                    key={img360._id}
+                                    defaultIcon={{ url: '/images/360-icon.png', scaledSize: new google.maps.Size(30, 30) }}
+                                    position={{ ...img360.coordinates }}
+                                    onClick={() => { open360(img360) }} />;
+                            }
+                        }));
+                    }
                 } else if (!placeId || placeId == place._id) {
                     placeHtml = <Marker
                         key={place._id}
@@ -171,10 +186,12 @@ class Map extends React.Component {
         super();
 
         this.state = {
-            selectedLayer: null
+            selectedLayer: null,
+            img360: null
         }
 
         this.onSelectLayer = this.onSelectLayer.bind(this);
+        this.handleOpen360 = this.handleOpen360.bind(this);
     }
 
     componentDidMount() {
@@ -184,6 +201,10 @@ class Map extends React.Component {
         if (this.props.mapStyles.data.length == 0) {
             this.props.getStyles();
         }
+    }
+
+    handleOpen360(img360) {
+        this.setState({ img360 });
     }
 
     onSelectLayer(layer) {
@@ -236,9 +257,14 @@ class Map extends React.Component {
                 activeTypes={activeTypes}
                 placeId={ID}
                 openPlace={openPlace}
+                open360={this.handleOpen360}
                 defaultCoordinates={defaultCoordinates}
             />
             {ID && places.data.length > 0 && <PlaceDetails selectedLayer={this.state.selectedLayer} onSelectLayer={this.onSelectLayer} place={placeObj} />}
+            {this.state.img360 && <div className={styles.img360}>
+                <a href='#' onClick={e => { this.handleOpen360(null); e.preventDefault(); }}><span className='glyphicon glyphicon-chevron-left'></span> Назад к проекту</a>
+                <iframe src={ENV_360_URL + '?img=https://' + ENV_HOST + this.state.img360.src}></iframe>
+            </div>}
             {this.props.children}
         </div>;
     }
