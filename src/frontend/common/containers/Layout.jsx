@@ -102,7 +102,7 @@ class Layout extends React.Component {
 	}
 
 	render() {
-		const { isActive, places, children } = this.props;
+		const { isActive, places, children, params: { id } } = this.props;
 		console.log('RENDER <Layout>');
 		
 		let menu = this.generateMapMenu(places.data);
@@ -117,12 +117,12 @@ class Layout extends React.Component {
 		);
 
 		let placeObj = null;
-		if (this.state.place) {
-			placeObj = places.data.find(place => place._id == this.state.place);
+		if (this.state.place || id) {
+			placeObj = places.data.find(place => (place._id == this.state.place || place._id == id));
 		}
 
-		const showMenu = !this.state.place && !this.props.params.placeId;
-		let classMain = ' col-sm-12 col-sm-offset-0 col-md-12 col-md-offset-0';
+		const showMenu = !this.state.place && !this.props.params.placeId && !id;
+		let classMain = ' col-sm-12 col-sm-offset-0 col-md-9 col-md-offset-3';
 		if (showMenu) {
 			classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
 		}

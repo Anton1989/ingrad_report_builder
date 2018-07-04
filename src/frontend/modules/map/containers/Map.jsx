@@ -118,7 +118,11 @@ const Maps = compose(
                                             fillOpacity: style.fillOpacity
                                         }}
                                     />,
-                                    stroke
+                                    stroke,
+                                    house.type == 'house' ? <Marker
+                                        key={house._id + 'house_number'}
+                                        label={house.name}
+                                        position={{ ...house.coordinates[0] }} /> : null
                                 ];
                             } else { //tube
                                 return <Polyline

@@ -18,7 +18,7 @@
       "command": "forever --id \"maps\" start -c \"node -r babel-register\" ./src/backend/index.js",
       "env": {
         "SERVER": "gis.ingrad.com",
-        "SERVER_PORT": 443,
+        "SERVER_PORT": 8000,
         "SSL": true,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
@@ -50,7 +50,7 @@
       "command": "webpack --verbose --progress --colors --display-error-details --config webpack/prod.config.js",
       "env": {
         "SERVER": "gis.ingrad.com",
-        "SERVER_PORT": 443,
+        "SERVER_PORT": 8000,
         "SSL": true,
         "REACT_360_URL": "https://gis.ingrad.com:8081/index.html",
         "NODE_ENV": "production"
