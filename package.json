@@ -21,6 +21,7 @@
         "SERVER_PORT": 8090,
         "MONGO_HOST": "127.0.0.1",
         "MONGO_DB": "ingrad",
+        "CORE_URL": "/admin/",
         "NODE_ENV": "production"
       }
     },
@@ -30,7 +31,8 @@
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8008,
         "MONGO_HOST": "127.0.0.1",
-        "MONGO_DB": "ingrad",
+        "MONGO_DB": "ingrad-test",
+        "CORE_URL": "/",
         "NODE_ENV": "development"
       }
     },
@@ -41,6 +43,7 @@
         "NODE_PATH": "./src",
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8009,
+        "CORE_URL": "/",
         "API_PORT": 8008
       }
     },
@@ -49,6 +52,7 @@
       "env": {
         "SERVER": "gis.ingrad.com",
         "SERVER_PORT": 8090,
+        "CORE_URL": "/admin/",
         "NODE_ENV": "production"
       }
     }

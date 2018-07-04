@@ -30,6 +30,7 @@
         "ENV_DEVELOPMENT": true,
         "ENV_HOST": true,
         "ENV_PORT": true,
+        "CORE_URL": true,
         "socket": true,
         "google": true,
         "webpackIsomorphicTools": true

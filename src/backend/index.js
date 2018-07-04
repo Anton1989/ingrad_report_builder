@@ -6,6 +6,7 @@ var rootDir = path.resolve(__dirname, '../..');
 global.ENV_IS_SERVER = true;
 global.ENV_DEVELOPMENT = process.env.NODE_ENV !== 'production';
 global.ENV_HOST = process.env.SERVER;
+global.CORE_URL = process.env.CORE_URL;
 global.ENV_PORT = process.env.SERVER_PORT;
 global.ENV_MONGO_HOST = process.env.MONGO_HOST;
 global.ENV_MONGO_DB = process.env.MONGO_DB;

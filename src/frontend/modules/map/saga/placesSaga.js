@@ -45,9 +45,19 @@ function* delPlace(action) {
 	}
 }
 
+function getUrl(path) {
+	let url = null;
+	if (ENV_DEVELOPMENT) {
+		url = 'http://' + ENV_HOST + ':' + ENV_PORT + '/' + path;
+	} else {
+		url = 'https://' + ENV_HOST + CORE_URL + path;
+	}
+	return url;
+}
+
 /* queries */
 function getPlaces() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl, {
+	return fetch(getUrl(config.apiConfig.getPlacesUrl), {
 		method: 'GET'
 	})
 		.then(response => {
@@ -61,7 +71,7 @@ function getPlaces() {
 }
 
 function deletePlace(id) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + id, {
+	return fetch(getUrl(config.apiConfig.getPlacesUrl) + '/' + id, {
 		method: 'DELETE'
 	})
 		.then(response => {
@@ -104,7 +114,7 @@ function putPlace(data) {
 	}
 	
 	formData.append('data', JSON.stringify(data));
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl + '/' + data._id, {
+	return fetch(getUrl(config.apiConfig.getPlacesUrl + '/' + data._id), {
 		method: 'PUT',
 		body: formData
 	})
@@ -129,7 +139,7 @@ function postPlace(data) {
 	delete data.image;
 	delete data.logo;
 	formData.append('data', JSON.stringify(data));
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getPlacesUrl, {
+	return fetch(getUrl(config.apiConfig.getPlacesUrl), {
 		method: 'POST',
 		body: formData
 	})

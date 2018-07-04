@@ -38,7 +38,7 @@ function* save(action) {
 
 /* queries */
 function getRequest() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl, {
+	return fetch('https://' + ENV_HOST + CORE_URL + config.apiConfig.getKpiUrl, {
 		method: 'GET'
 	})
 		.then(response => {
@@ -51,7 +51,7 @@ function getRequest() {
 		.then(response => response.json())
 }
 function postRequest(name) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl, {
+	return fetch('https://' + ENV_HOST + CORE_URL + config.apiConfig.getKpiUrl, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -69,7 +69,7 @@ function postRequest(name) {
 		.then(response => response.json())
 }
 function putRequest(project) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getKpiUrl + '/' + project._id, {
+	return fetch('https://' + ENV_HOST + CORE_URL + config.apiConfig.getKpiUrl + '/' + project._id, {
 		method: 'PUT',
 		headers: {
 			'Accept': 'application/json',

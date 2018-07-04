@@ -21,11 +21,11 @@ export default class Row extends React.Component {
         // }
 
         return <tr>
-            <th><Link to={'/projects/' + project._id}>{project.comercialName}</Link></th>
-            <th><Link to={'/projects/' + project._id}>{project.agreementNo}</Link></th>
-            <td><Link to={'/projects/' + project._id}>{project.counterparty}</Link></td>
-            <td><Link to={'/projects/' + project._id}>{project.sections.length}</Link></td>
-            <td><Link to={'/projects/' + project._id}>{floors.min}-{floors.max}</Link></td>
+            <th><Link to={CORE_URL + 'projects/' + project._id}>{project.comercialName}</Link></th>
+            <th><Link to={CORE_URL + 'projects/' + project._id}>{project.agreementNo}</Link></th>
+            <td><Link to={CORE_URL + 'projects/' + project._id}>{project.counterparty}</Link></td>
+            <td><Link to={CORE_URL + 'projects/' + project._id}>{project.sections.length}</Link></td>
+            <td><Link to={CORE_URL + 'projects/' + project._id}>{floors.min}-{floors.max}</Link></td>
         </tr>;
     }
 }

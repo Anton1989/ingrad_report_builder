@@ -20,7 +20,7 @@ function* fetchProjects(/* action */) {
 
 /* queries */
 function getProjects() {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getProjectsUrl, {
+	return fetch('https://' + ENV_HOST + CORE_URL + config.apiConfig.getProjectsUrl, {
 		method: 'get'
 	})
 	.then(response => {

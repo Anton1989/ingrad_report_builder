@@ -14,7 +14,7 @@ import ProjectKpi from './modules/kpi/containers/ProjectKpi.jsx';
 
 export default (/* data */) => {
     return (
-        <Route path='/' component={Layout}>
+        <Route path={CORE_URL} component={Layout}>
             <IndexRoute component={MapContainer} />
             <Route path='add' component={PlaceAdd} />
             <Route path='edit/:placeId' component={PlaceAdd} />

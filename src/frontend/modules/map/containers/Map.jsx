@@ -20,7 +20,7 @@ class Map extends React.Component {
     }
 
     editPlace(id) {
-        browserHistory.push('/edit/' + id);
+        browserHistory.push(CORE_URL + 'edit/' + id);
     }
 
     handleDelete(id) {
@@ -34,7 +34,7 @@ class Map extends React.Component {
         let detailStyle = placeId && places.data.length > 0 ? styles.detail : '';
         return <div className={detailStyle}>
             <h1>Редактирование объектов на карте</h1>
-            <Link to={'/add'} className='btn btn-default'><span className='glyphicon glyphicon-plus-sign'></span> Добавить</Link>
+            <Link to={CORE_URL + 'add'} className='btn btn-default'><span className='glyphicon glyphicon-plus-sign'></span> Добавить</Link>
             <div className='table-responsive'>
             <table className='table'>
                 <thead>

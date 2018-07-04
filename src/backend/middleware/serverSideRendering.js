@@ -49,9 +49,9 @@ module.exports = function (request, response, next) {
 function renderPage(appHtml, store) {
     const assets = webpackIsomorphicTools.assets();
     const finalState = store.getState();
-    const jsBundle = assets.javascript.main;
+    const jsBundle = CORE_URL !== '/' ? CORE_URL + assets.javascript.main : assets.javascript.main;
+    const cssBundle = CORE_URL !== '/' ? CORE_URL + assets.styles.main : assets.styles.main;
     
-    const cssBundle = assets.styles.main;
     const cssTag = cssBundle ? `<link rel="stylesheet" href="${cssBundle}">` : '';
     return `<!DOCTYPE html>
         <html>

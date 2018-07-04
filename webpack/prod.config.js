@@ -68,6 +68,7 @@ module.exports = {
       },
       ENV_HOST: JSON.stringify(host),
       ENV_PORT: JSON.stringify(port),
+      CORE_URL: JSON.stringify(process.env.CORE_URL),
       ENV_IS_SERVER: false,
       ENV_DEVELOPMENT: false
     }),

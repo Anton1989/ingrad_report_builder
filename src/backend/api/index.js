@@ -48,10 +48,11 @@ export default class ApiConfig {
             { name: 'csvOtherCommonProperties', maxCount: 1 },
             { name: 'xmlTamplate', maxCount: 1 }
         ]);
-        this._network.use('/v1/projects', projectsController.getRouter());
-        this._network.use('/v1/styles', stylesController.getRouter());
-        this._network.use('/v1/places', cpUpload, placesController.getRouter());
-        this._network.use('/v1/pd', cpUpload, pdController.getRouter());
-        this._network.use('/v1/kpi', kpiController.getRouter());
+
+        this._network.use(CORE_URL + 'v1/projects', projectsController.getRouter());
+        this._network.use(CORE_URL + 'v1/styles', stylesController.getRouter());
+        this._network.use(CORE_URL + 'v1/places', cpUpload, placesController.getRouter());
+        this._network.use(CORE_URL + 'v1/pd', cpUpload, pdController.getRouter());
+        this._network.use(CORE_URL + 'v1/kpi', kpiController.getRouter());
     }
 }

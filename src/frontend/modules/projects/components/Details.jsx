@@ -27,7 +27,7 @@ export default class Details extends React.Component {
         console.log('RENDER <Details>');
 
         return <div className={styles.detailPage}>
-            <div className={layoutCss.bc}><Link to='/projects'>Проекты</Link> / {project ? project.comercialName : '...'}</div>
+            <div className={layoutCss.bc}><Link to={CORE_URL + 'projects'}>Проекты</Link> / {project ? project.comercialName : '...'}</div>
             {
                 projects.errors && <div className='col-xs-12'>
                     <Alert bsStyle='danger' onDismiss={this.handleAlertDismiss}>

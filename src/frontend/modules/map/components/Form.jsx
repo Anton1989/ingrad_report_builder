@@ -28,25 +28,26 @@ export default class Form extends React.Component {
         super();
 
         this.state = {
-            name: '',
-            description: '',
-            step: '',
-            site: '',
-            camera: '',
-            photo: '',
+            name: undefined,
+            description: undefined,
+            step: undefined,
+            site: undefined,
+            camera: undefined,
+            photo: undefined,
             panarams: [],
             layers: [],
             houses: [],
-            address: '',
+            address: undefined,
             coordinates: {
                 lat: '',
                 lng: ''
             },
             location: 'inner_msc',
-            logo: null,
-            image: null,
+            logo: undefined,
+            image: undefined,
             hidden: false,
-            errors: []
+            errors: [],
+            toUpdate: {}
         }
 
         this.onDropLogo = this.onDropLogo.bind(this);
@@ -118,42 +119,59 @@ export default class Form extends React.Component {
     onRemoveImage(e) {
         let upd = {};
         upd[e.target.id] = null;
-        this.setState(upd);
+        
+        const toUpdate = { ...this.state.toUpdate };
+        toUpdate[e.target.id] = null;
+
+        this.setState({ ...upd, toUpdate});
     }
 
     onDropLogo(files) {
+        const toUpdate = { ...this.state.toUpdate };
+        toUpdate.logo = files[0];
+        
         this.setState({
-            logo: files[0]
+            logo: files[0],
+            toUpdate
         });
     }
 
     onDropImage(files) {
+        const toUpdate = { ...this.state.toUpdate };
+        toUpdate.image = files[0];
+
         this.setState({
-            image: files[0]
+            image: files[0],
+            toUpdate
         });
     }
 
     onUpdateInputText(e) {
         let variable = {};
+        const toUpdate = { ...this.state.toUpdate };
+
         if (e.target.id == 'coordinates-lat') {
             variable.coordinates = {
                 lat: parseFloat(e.target.value),
                 lng: this.state.coordinates.lng,
             };
             this.props.setMarker(variable.coordinates);
+            toUpdate.coordinates = variable.coordinates;
+            this.setState({ toUpdate });
         } else if (e.target.id == 'coordinates-lng') {
             variable.coordinates = {
                 lat: this.state.coordinates.lat,
                 lng: parseFloat(e.target.value),
             };
             this.props.setMarker(variable.coordinates);
+            toUpdate.coordinates = variable.coordinates;
+            this.setState({ toUpdate });
         } else if (e.target.id == 'address') {
             clearTimeout(this.timeout);
             this.timeout = setTimeout((context, address) => {
                 let geocoder = new window.google.maps.Geocoder();
                 geocoder.geocode({ 'address': address }, function (results, status) {
                     if (status == 'OK') {
-                        console.log(results);
                         if (results.length > 0) {
                             let variable = {};
                             let cr = {
@@ -163,21 +181,25 @@ export default class Form extends React.Component {
                             variable.coordinates = cr;
                             context.setState(variable);
                             context.props.setMarker(cr);
+                            toUpdate.coordinates = variable.coordinates;
+                            context.setState({ toUpdate });
                         }
                     } else {
                         console.log('Geocode was not successful for the following reason: ' + status);
                     }
                 });
             }, 1500, this, e.target.value);
-            variable[e.target.id] = e.target.value;
+            // variable[e.target.id] = e.target.value;
         } else {
             variable[e.target.id] = e.target.value;
+            toUpdate[e.target.id] = e.target.value;
         }
-        this.setState(variable);
+        this.setState({ ...variable, toUpdate });
     }
 
     updateCoordinatesByString(e, house_index) {
         //55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673; 55,755831, 37,617673
+        const toUpdate = { ...this.state.toUpdate };
         let houses = [...this.state.houses];
         let coords = this.refs.coorStr.value;
         if (coords == '') {
@@ -197,56 +219,70 @@ export default class Form extends React.Component {
         houses = this.trimHouses(houses, false);
         this.props.setPolygons(houses);
         this.refs.coorStr.value = '';
-        this.setState({ houses });
+        toUpdate.houses = houses;
+        this.setState({ houses, toUpdate });
     }
 
     onUpdateInputTextPoint(e, house_index, point_index) {
         let houses = [...this.state.houses];
+        const toUpdate = { ...this.state.toUpdate };
         houses[house_index].coordinates[point_index][e.target.id] = parseFloat(e.target.value);
 
         this.props.setPolygons(houses);
+        toUpdate.houses = houses;
 
-        this.setState({ houses });
+        this.setState({ houses, toUpdate });
     }
 
     updateInputTextHouse(e, house_index) {
         let houses = [...this.state.houses];
+        const toUpdate = { ...this.state.toUpdate };
         houses[house_index][e.target.id] = e.target.value;
 
+        toUpdate.houses = houses;
         this.props.setPolygons(houses);
-        this.setState({ houses });
+        this.setState({ houses, toUpdate });
     }
 
     updateInputText360(e, index) {
         let panarams = [...this.state.panarams];
-        console.log(this.state.panarams, index)
+        const toUpdate = { ...this.state.toUpdate };
+
         if (e.target.id == 'coordinates-lat') {
             panarams[index].coordinates.lat = parseFloat(e.target.value);
         } else if (e.target.id == 'coordinates-lng') {
             panarams[index].coordinates.lng = parseFloat(e.target.value);
         }
-        this.setState({ panarams });
+        toUpdate.panarams = panarams;
+        this.setState({ panarams, toUpdate });
     }
 
     onDrop360(files, index) {
         let panarams = [...this.state.panarams];
+        const toUpdate = { ...this.state.toUpdate };
         panarams[index].src = files[0];
 
-        this.setState({ panarams });
+        toUpdate.panarams = panarams;
+
+        this.setState({ panarams, toUpdate });
     }
 
     onRemove360Image(index) {
         let panarams = [...this.state.panarams];
+        const toUpdate = { ...this.state.toUpdate };
         panarams[index].src = null;
 
-        this.setState({ panarams });
+        toUpdate.panarams = panarams;
+        this.setState({ panarams, toUpdate });
     }
 
     onRemove360(index) {
         let panarams = [...this.state.panarams];
+        const toUpdate = { ...this.state.toUpdate };
 
         panarams.splice(index, 1);
-        this.setState({ panarams });
+        toUpdate.panarams = panarams;
+        this.setState({ panarams, toUpdate });
     }
 
     onSave() {
@@ -276,13 +312,14 @@ export default class Form extends React.Component {
     }
 
     update() {
-        let data = { ...this.state };
-        delete data.errors;
+        let data = { ...this.state.toUpdate };
         data = this.prepareHouses(data);
+        data._id = this.state._id;
 
         console.log(data);
+
         this.props.updatePlace(data);
-        browserHistory.push('/');
+        browserHistory.push(CORE_URL + '/');
     }
 
     add() {
@@ -291,12 +328,14 @@ export default class Form extends React.Component {
         data = this.prepareHouses(data);
 
         this.props.addPlace(data);
-        browserHistory.push('/');
+        browserHistory.push(CORE_URL + '/');
     }
 
     prepareHouses(data) {
         let state = { ...data };
-        state.houses = this.trimHouses(state.houses, true);
+        if (state.houses && state.houses.length > 0) {
+            state.houses = this.trimHouses(state.houses, true);
+        }
         return state;
     }
 
@@ -338,41 +377,51 @@ export default class Form extends React.Component {
 
     onRemoveLayer(layer_index) {
         let layers = [...this.state.layers];
+        const toUpdate = { ...this.state.toUpdate };
 
         layers.splice(layer_index, 1);
-        this.setState({ layers });
+        toUpdate.layers = layers;
+        this.setState({ layers, toUpdate });
         this.props.setOverlays(layers);
     }
 
     showLayer(layer_index) {
         let layers = [...this.state.layers];
+        const toUpdate = { ...this.state.toUpdate };
 
         layers[layer_index].show = !layers[layer_index].show;
-        this.setState({ layers });
+        toUpdate.layers = layers;
+        this.setState({ layers, toUpdate });
         this.props.setOverlays(layers);
     }
 
     onUpdateInputTextLayer(e, layer_index) {
         let layers = [...this.state.layers];
+        const toUpdate = { ...this.state.toUpdate };
         layers[layer_index][e.target.id] = e.target.value;
 
+        toUpdate.layers = layers;
         this.props.setOverlays(layers);
-        this.setState({ layers });
+        this.setState({ layers, toUpdate });
     }
 
     onUpdateInputCooLayer(e, layer_index, coordinate_index) {
         let layers = [...this.state.layers];
+        const toUpdate = { ...this.state.toUpdate };
         layers[layer_index].coordinates[coordinate_index][e.target.id] = parseFloat(e.target.value);
 
         this.props.setOverlays(layers);
-        this.setState({ layers });
+        toUpdate.layers = layers;
+        this.setState({ layers, toUpdate });
     }
 
     onDropLayer(files, layer_index) {
+        const toUpdate = { ...this.state.toUpdate };
         let layers = [...this.state.layers];
         layers[layer_index].image = files[0];
 
-        this.setState({ layers });
+        toUpdate.layers = layers;
+        this.setState({ layers, toUpdate });
     }
 
     onAddHouse() {
@@ -391,9 +440,11 @@ export default class Form extends React.Component {
 
     onRemoveHouse(house_index) {
         let houses = [...this.state.houses];
+        const toUpdate = { ...this.state.toUpdate };
 
         houses.splice(house_index, 1);
-        this.setState({ houses });
+        toUpdate.houses = houses;
+        this.setState({ houses, toUpdate });
         this.props.setPolygons(houses);
     }
 
@@ -408,12 +459,14 @@ export default class Form extends React.Component {
 
     onRemovePoint(house_index) {
         let houses = [...this.state.houses];
+        const toUpdate = { ...this.state.toUpdate };
         let coordinates = [...houses[house_index].coordinates];
 
         coordinates.splice(coordinates.length - 1, 1);
         houses[house_index].coordinates = coordinates;
 
-        this.setState({ houses });
+        toUpdate.houses = houses;
+        this.setState({ houses, toUpdate });
         this.props.setPolygons(houses);
     }
 
@@ -753,7 +806,7 @@ export default class Form extends React.Component {
                         <ul className={styles.errors}>
                             {this.state.errors.map(error => <li>{error}</li>)}
                         </ul>
-                        <Link className='btn btn-default' to='/'>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
+                        <Link className='btn btn-default' to={CORE_URL + '/'}>Отмена</Link> <button type='button' className='btn btn-success' onClick={this.onSave}>Сохранить</button>
                     </form>
                 </div>
             </div>

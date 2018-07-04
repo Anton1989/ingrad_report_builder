@@ -1,10 +1,10 @@
 const config = {
     apiConfig: {
-        getProjectsUrl: '/v1/projects',
-        getPlacesUrl: '/v1/places',
-		getStylesUrl: '/v1/styles',
-        generatePdUrl: '/v1/pd',
-        getKpiUrl: '/v1/kpi'
+        getProjectsUrl: 'v1/projects',
+        getPlacesUrl: 'v1/places',
+		getStylesUrl: 'v1/styles',
+        generatePdUrl: 'v1/pd',
+        getKpiUrl: 'v1/kpi'
     },
     defaultVars: {
         menu: [

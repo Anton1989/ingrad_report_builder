@@ -35,9 +35,19 @@ function* postStyles(action) {
 	}
 }
 
+function getUrl(path) {
+	let url = null;
+	if (ENV_DEVELOPMENT) {
+		url = 'http://' + ENV_HOST + ':' + ENV_PORT + path;
+	} else {
+		url = 'https://' + ENV_HOST + CORE_URL + path;
+	}
+	return url;
+}
+
 /* queries */
 function sendStyles(styles, page) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
+	return fetch(getUrl(config.apiConfig.getStylesUrl + '/' + page), {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -55,7 +65,7 @@ function sendStyles(styles, page) {
 		.then(response => response.json())
 }
 function getStyles(page) {
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.getStylesUrl + '/' + page, {
+	return fetch(getUrl(config.apiConfig.getStylesUrl + '/' + page), {
 		method: 'get'
 	})
 		.then(response => {

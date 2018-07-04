@@ -28,7 +28,7 @@ function uploadCsv(csv) {
 	formData.append('csvOtherCommonProperties', csv.csvOtherCommonProperties);
 	formData.append('xmlTamplate', csv.xmlTamplate);
 
-	return fetch('http://' + ENV_HOST + ':' + ENV_PORT + config.apiConfig.generatePdUrl, {
+	return fetch('https://' + ENV_HOST + CORE_URL + config.apiConfig.generatePdUrl, {
 		method: 'POST',
 		body: formData
 	})

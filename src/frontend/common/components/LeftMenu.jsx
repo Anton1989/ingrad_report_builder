@@ -50,20 +50,13 @@ export default class LeftMenu extends React.Component {
             } else {
                 const active = item.url ? isActive(item.url, item.strict) ? styles.active : '' : '';
                 li = <li key={item.anchor} className={active}>
-                    <Link to={item.url ? item.url : null}>{item.anchor}</Link>
+                    <Link to={item.url ? (CORE_URL + item.url) : null}>{item.anchor}</Link>
                     {submenu ? <ul className={styles.navSidebar + ' ' + styles.submenu + ' nav submenu nav-sidebar'}>{submenu}</ul> : null}
                 </li>;
             }
 
             return li
         })
-    }
-
-    generateBackButton(name) {
-        return <li><div className='btn-back'>
-            <Link className='btn btn-default' to={process.env.CORE_URL + 'dashboard'}><img src={process.env.CORE_URL + 'images/back.png'} /></Link>
-            <div className='btn-note'>{name}</div>
-        </div></li>
     }
 
     render() {
