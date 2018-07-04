@@ -61,6 +61,7 @@ function renderPage(appHtml, store) {
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
         <!-- Optional theme -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="/css/react-datepicker.css">
         ${cssTag}
         <link rel="icon" href="/favicon.ico" type="image/x-icon" />
         <title>ЦУП | Разработка</title>

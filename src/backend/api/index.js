@@ -4,6 +4,7 @@ import PlacesController from './controllers/placesController';
 import StylesController from './controllers/stylesController';
 import PdController from './controllers/pdController';
 import KpiController from './controllers/kpiController';
+import DocsController from './controllers/docsController';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 
@@ -34,9 +35,11 @@ export default class ApiConfig {
         let stylesController = new StylesController(this._network);
         let kpiController = new KpiController(this._network);
         let pdController = new PdController(this._network);
+        let docsController = new DocsController(this._network);
 
         //Init endpoints for express.
         var cpUpload = upload.fields([
+            { name: 'file', maxCount: 1 },
             { name: 'image', maxCount: 1 },
             { name: 'logo', maxCount: 1 },
             { name: 'layer', maxCount: 100 },
@@ -52,5 +55,6 @@ export default class ApiConfig {
         this._network.use('/v1/places', cpUpload, placesController.getRouter());
         this._network.use('/v1/pd', cpUpload, pdController.getRouter());
         this._network.use('/v1/kpi', kpiController.getRouter());
+        this._network.use('/v1/docs', cpUpload, docsController.getRouter());
     }
 }

@@ -4,7 +4,8 @@ const config = {
         getPlacesUrl: '/v1/places',
         getStylesUrl: '/v1/styles',
         generatePdUrl: '/v1/pd',
-        getKpiUrl: '/v1/kpi'
+		getKpiUrl: '/v1/kpi',
+		getDocsUrl: '/v1/docs'
     },
     defaultVars: {
         menu: [
