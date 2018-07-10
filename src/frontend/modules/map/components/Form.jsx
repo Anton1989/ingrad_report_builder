@@ -10,6 +10,8 @@ const defaultHouse = {
     name: '',
     status: '',
     style: null,
+    lat: '', 
+    lng: '',
     type: 'house',
     coordinates: []
 };
@@ -91,7 +93,16 @@ export default class Form extends React.Component {
 
     componentWillReceiveProps(newProps) {
         if (newProps.marker) {
-            this.setState({ coordinates: newProps.marker });
+            const toUpdate = { coordinates: newProps.marker };
+            this.setState({ coordinates: newProps.marker, toUpdate });
+        }
+        if (newProps.updateHouse) {
+            const houses = [ ...this.state.houses ];
+            houses[newProps.updateHouse.index].lat = newProps.updateHouse.coordinates.lat;
+            houses[newProps.updateHouse.index].lng = newProps.updateHouse.coordinates.lng;
+            const toUpdate = { houses };
+            this.setState({ toUpdate });
+            // this.props.setPolygons(houses);
         }
         if (newProps.mapStyles.length > 0 && this.props.mapStyles.length == 0) {
             defaultHouse.style = newProps.mapStyles[0];
@@ -304,7 +315,7 @@ export default class Form extends React.Component {
             errors.push('Лого не может быть пустым');
         }
         if (!this.state.coordinates.lat || !this.state.coordinates.lng) {
-            errors.push('Координаты не можгут быть пустыми');
+            errors.push('Координаты не могут быть пустыми');
         }
 
         this.setState({ errors });
@@ -319,7 +330,7 @@ export default class Form extends React.Component {
         console.log(data);
 
         this.props.updatePlace(data);
-        browserHistory.push(CORE_URL + '/');
+        browserHistory.push(CORE_URL);
     }
 
     add() {
@@ -328,7 +339,7 @@ export default class Form extends React.Component {
         data = this.prepareHouses(data);
 
         this.props.addPlace(data);
-        browserHistory.push(CORE_URL + '/');
+        browserHistory.push(CORE_URL);
     }
 
     prepareHouses(data) {
@@ -782,6 +793,16 @@ export default class Form extends React.Component {
                                     <div className={'col-xs-4 ' + styles.apply_path_by_str}>
                                         <input type='text' ref='coorStr' className='form-control' id='status' placeholder='Добавить координаты строкой' />
                                         <button type='button' className='btn btn-info' onClick={e => this.updateCoordinatesByString(e, i)}><span className='glyphicon glyphicon-plus-sign'></span></button>
+                                    </div>
+                                    <div className='row'>
+                                        <div className='form-group col-xs-4 row'>
+                                            <div className='col-xs-6'>
+                                                <input type='text' className='form-control' id='lat' placeholder='Широта (центра)' value={house.lat} onChange={e => this.updateInputTextHouse(e, i)} />
+                                            </div>
+                                            <div className='col-xs-6'>
+                                                <input type='text' className='form-control' id='lng' placeholder='Долгота (центра)' value={house.lng} onChange={e => this.updateInputTextHouse(e, i)} />
+                                            </div>
+                                        </div>
                                     </div>
                                     {house.coordinates.map((latLong, j) => {
                                         return <div className='form-group' key={'house_' + i + '_' + j}>

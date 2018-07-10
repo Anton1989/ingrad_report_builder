@@ -136,11 +136,21 @@ export default class PlacesController {
     }
 
     _deleteFile(id, object) {
-        let extension = object.mimetype.split('/')[1];
-        let file = `${object.fieldname}.${extension}`;
-        let path = `./src/backend/static/images/${id}/${file}`;
-        if (fs.existsSync(path)) {
-            fs.unlinkSync(path);
+        console.log('TRY TO DELETE FILE', id, object);
+        try {
+            let directory = `./src/backend/static/images/${id}/`;
+            let files = fs.readdirSync(directory);  
+            for (const file of files) {
+                console.log('FILE', file);
+                if (object && file.indexOf(object.fieldname) !== -1) {
+                    if (fs.existsSync(directory + file)) {
+                        fs.unlinkSync(directory + file);
+                        console.log(`FILE ${file} was deleted`);
+                    }
+                }
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 

@@ -48,14 +48,25 @@ export default class EditableField extends React.Component {
         this.setState({ editable: false, value: '', style: null });
     }
 
+    prepareString(str) {
+        if (!str) return str;
+        
+        const arr = str.split(/\n/g);
+        return arr.map(item => [item, <br/>]);
+    }
+
     render() {
-        const { name, value, kpiStyles } = this.props;
+        const { name, value, kpiStyles, textarea } = this.props;
         console.log('RENDER <EditableField>');
 
-        let field = <span onClick={this.handleShow}>{value} <span className='glyphicon glyphicon-edit'></span></span>;
+        let field = <span onClick={this.handleShow}>{this.prepareString(value)} <span className='glyphicon glyphicon-edit'></span></span>;
         if (this.state.editable) {
+            let textedit = <input type='text' className='form-control' id={name} value={this.state.value} onChange={(e) => { this.handleTextChange(e); }} />;
+            if (textarea) {
+                textedit = <textarea className='form-control' id={name} onChange={(e) => { this.handleTextChange(e); }}>{this.state.value}</textarea>;
+            }
             field = <p className={styles.editableField}>
-                <input type='text' className='form-control' id={name} value={this.state.value} onChange={(e) => { this.handleTextChange(e); }} />
+                {textedit}
                 <select className='form-control' value={this.state.style} onChange={this.handleStyleChange}>
                     <option key='nostyle' value=''>--Без стиля--</option>
                     {kpiStyles.map(style => <option key={style._id} value={style._id}>{style.name}</option>)}

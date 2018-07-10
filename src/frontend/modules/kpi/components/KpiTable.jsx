@@ -140,7 +140,9 @@ export default class KpiTable extends React.Component {
                         </tr>
                         {project && project.planes && project.planes.map((plan, i) => {
                             return <tr key={plan._id}>
-                                <td>{i + 1}. {plan.name}</td>
+                                <td style={plan.nameStyle ? this.state.styles[plan.nameStyle] : {}} className={styles.editable}>{i + 1}. <EditableField kpiStyles={kpiStyles} name='name' value={plan.name} style={plan.kv1Style} save={(name, value, style) => {
+                                        this.handleChangePlane(i, name, value, style);
+                                }} /></td>
                                 <td style={plan.kv1Style ? this.state.styles[plan.kv1Style] : {}} className={styles.editable + ' ' + styles.center}>
                                     <EditableField kpiStyles={kpiStyles} name='kv1' value={plan.kv1} style={plan.kv1Style} save={(name, value, style) => {
                                         this.handleChangePlane(i, name, value, style);
@@ -171,8 +173,16 @@ export default class KpiTable extends React.Component {
                                         this.handleChangePlane(i, name, value, style);
                                     }} />
                                 </td>
-                                <td dangerouslySetInnerHTML={{ __html: plan.rate }}></td>
-                                <td dangerouslySetInnerHTML={{ __html: plan.info }}></td>
+                                <td style={plan.rateStyle ? this.state.styles[plan.rateStyle] : {}} className={styles.editable}>
+                                    <EditableField kpiStyles={kpiStyles} name='rate' value={plan.rate} textarea={true} style={plan.rateStyle} save={(name, value, style) => {
+                                        this.handleChangePlane(i, name, value, style);
+                                    }} />
+                                </td>
+                                <td style={plan.infoStyle ? this.state.styles[plan.infoStyle] : {}} className={styles.editable}>
+                                    <EditableField kpiStyles={kpiStyles} name='info' value={plan.info} textarea={true} style={plan.infoStyle} save={(name, value, style) => {
+                                        this.handleChangePlane(i, name, value, style);
+                                    }} />
+                                </td>
                             </tr>;
                         })}
                         <tr className={styles.head}>
@@ -224,16 +234,8 @@ export default class KpiTable extends React.Component {
                                         this.handleChangeEvent(i, name, value, style);
                                     }} />
                                 </td>
-                                {i == 0 && <td rowSpan={project.events.length}>
-                                    <b>Если в графе стоит - 0</b><br />
-                                    то срыв на 1 месяц обнуляет это событие<br />
-                                    <b>Если в графе стоит - 1</b><br />
-                                    - то срыв на 1 месяц дает 90% от этого события в общую сумму KPI<br />
-                                    - срыв на 2 месяца обнуляет это событие<br />
-                                    <b>Если в графе стоит - 2</b><br />
-                                    - то срыв на 1 месяц дает 90% от этого события в общую сумму KPI<br />
-                                    - то срыв на 2 месяц дает 80% от этого события в общую сумму KPI<br />
-                                    - срыв на 3 месяца обнуляет это событие<br />
+                                {i == 0 && <td rowSpan={project.events.length} style={project.cdescStyle ? this.state.styles[project.cdescStyle] : {}} className={styles.editable}>
+                                    <EditableField kpiStyles={kpiStyles} name='cdesc' value={project.cdesc} textarea={true} style={project.cdescStyle} save={this.handleChange} />
                                 </td>}
                             </tr>;
                         })}

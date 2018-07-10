@@ -17,5 +17,6 @@ export default new Schema({
     weightStyle: Schema.Types.ObjectId,
     rate: String,
     rateStyle: Schema.Types.ObjectId,
-    info: String
+    info: String,
+    infoStyle: Schema.Types.ObjectId
 });

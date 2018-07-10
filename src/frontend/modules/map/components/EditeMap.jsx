@@ -13,8 +13,8 @@ const defaultCoordinates = {
 };
 
 const Maps = compose(
-    withStateHandlers((props) => ({
-        zoom: (props.coordinates && props.coordinates.lng && props.coordinates.lat) ? 15 : 10,
+    withStateHandlers(() => ({
+        zoom: defaultCoordinates.coordinates.zoom,
         map: undefined
     }), {
             onMapMounted: () => ref => ({
@@ -24,26 +24,37 @@ const Maps = compose(
                 zoom: map.getZoom()
             }),
             onDragEnd: () => (e, props) => {
-                console.log('props.setMarker', {
-                    lat: e.latLng.lat(),
-                    lng: e.latLng.lng()
-                })
                 props.setMarker({
                     lat: e.latLng.lat(),
                     lng: e.latLng.lng()
                 });
+            },
+            onDragEndHouse: () => (e, props, houseInd) => {
+                props.setHouseMarker({
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng()
+                }, houseInd);
             }
         }),
     withScriptjs,
     withGoogleMap
 )((props) => {
     let center = null;
+    let zoom = defaultCoordinates.coordinates.zoom;
     if(props.coordinates && props.coordinates.lng && props.coordinates.lat) {
         center = props.coordinates;
+        zoom = 15;
     }
 
+    const image = {
+        url: '/images/blank.png',
+        size: new google.maps.Size(20, 32),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(0, 32)
+    };
+
     return <GoogleMap
-        zoom={props.zoom}
+        zoom={zoom}
         center={center ? center : defaultCoordinates.coordinates}
         ref={props.onMapMounted}
         onZoomChanged={props.onZoomChanged}
@@ -53,7 +64,7 @@ const Maps = compose(
             defaultDraggable={true}
             onDragEnd={(e) => { props.onDragEnd(e, props) }}
         />}
-        {props.houses && props.houses.length > 0 && props.mapStyles.length > 0 && props.houses.map(house => {
+        {props.houses && props.houses.length > 0 && props.mapStyles.length > 0 && props.houses.map((house, i) => {
             let style = props.mapStyles.find(style => style._id == house.style);
             if (!style) {
                 style = props.mapStyles[0];
@@ -87,13 +98,28 @@ const Maps = compose(
                 options.strokeOpacity = 0;
             }
             if (house.type == 'house' || house.type == 'camera') {
+                let label = null;
+                if (house.type == 'house') {
+                    label = <Marker
+                        key={house.name + 'house_number'}
+                        label={{
+                            text: house.name,
+                            color: 'black',
+                            fontWeight: 'bold'
+                        }}
+                        defaultDraggable={true}
+                        onDragEnd={(e) => { props.onDragEndHouse(e, props, i) }}
+                        icon={image}
+                        position={{ lat: parseFloat(house.lat), lng: parseFloat(house.lng) }} />
+                }
                 return [
                     <Polygon
                         key={house.name}
                         paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
                         options={options}
                     />,
-                    stroke
+                    stroke,
+                    label
                 ]
             } else { //tube
                 return <Polyline
@@ -123,7 +149,7 @@ const Maps = compose(
 export default class EditeMap extends React.Component {
 
     render() {
-        const { marker, layers, houses, setMarker, mapStyles } = this.props;
+        const { marker, layers, houses, setMarker, setHouseMarker, mapStyles } = this.props;
         console.log('RENDER <PlaceDetails>');
 
         return <div className={styles.maps}>
@@ -137,6 +163,7 @@ export default class EditeMap extends React.Component {
                 layers={layers}
                 mapStyles={mapStyles}
                 setMarker={setMarker}
+                setHouseMarker={setHouseMarker}
             />
         </div>
     }

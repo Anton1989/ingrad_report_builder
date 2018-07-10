@@ -38,7 +38,7 @@ function* postStyles(action) {
 function getUrl(path) {
 	let url = null;
 	if (ENV_DEVELOPMENT) {
-		url = 'http://' + ENV_HOST + ':' + ENV_PORT + path;
+		url = 'http://' + ENV_HOST + ':' + ENV_PORT + '/' + path;
 	} else {
 		url = 'https://' + ENV_HOST + CORE_URL + path;
 	}
