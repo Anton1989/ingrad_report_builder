@@ -91,21 +91,29 @@ export default class Form extends React.Component {
         }
     }
 
+    componentWillUpdate(props, state) {
+        if (state.houses != this.state.houses || (props.mapStyles.length > 0 && this.props.mapStyles.length == 0)) {
+            console.log('setPolygons on MAP');
+            this.props.setPolygons(this.state.houses);
+        }
+    }
+
     componentWillReceiveProps(newProps) {
+        const toUpdate = { ...this.state.toUpdate };
         if (newProps.marker) {
-            const toUpdate = { coordinates: newProps.marker };
-            this.setState({ coordinates: newProps.marker, toUpdate });
+            toUpdate.coordinates = newProps.marker;
+            this.setState({ coordinates: newProps.marker });
         }
         if (newProps.updateHouse) {
             const houses = [ ...this.state.houses ];
             houses[newProps.updateHouse.index].lat = newProps.updateHouse.coordinates.lat;
             houses[newProps.updateHouse.index].lng = newProps.updateHouse.coordinates.lng;
-            const toUpdate = { houses };
-            this.setState({ toUpdate });
-            // this.props.setPolygons(houses);
+            toUpdate.houses = houses;
         }
+        this.setState({ toUpdate });
         if (newProps.mapStyles.length > 0 && this.props.mapStyles.length == 0) {
             defaultHouse.style = newProps.mapStyles[0];
+            this.props.setPolygons(this.state.houses);
         }
         if (newProps.place && !this.props.place) {
             let place = { ...newProps.place };
@@ -113,7 +121,6 @@ export default class Form extends React.Component {
             place.houses = place.houses ? place.houses.map(house => Object.assign({}, { ...defaultHouse }, this.cleanObj(house))) : [];
 
             let obj = Object.assign({}, this.state, place);
-            this.props.setPolygons(obj.houses);
             this.setState({ ...obj });
         }
     }
@@ -228,7 +235,6 @@ export default class Form extends React.Component {
         });
 
         houses = this.trimHouses(houses, false);
-        this.props.setPolygons(houses);
         this.refs.coorStr.value = '';
         toUpdate.houses = houses;
         this.setState({ houses, toUpdate });
@@ -239,7 +245,6 @@ export default class Form extends React.Component {
         const toUpdate = { ...this.state.toUpdate };
         houses[house_index].coordinates[point_index][e.target.id] = parseFloat(e.target.value);
 
-        this.props.setPolygons(houses);
         toUpdate.houses = houses;
 
         this.setState({ houses, toUpdate });
@@ -251,7 +256,6 @@ export default class Form extends React.Component {
         houses[house_index][e.target.id] = e.target.value;
 
         toUpdate.houses = houses;
-        this.props.setPolygons(houses);
         this.setState({ houses, toUpdate });
     }
 
@@ -456,7 +460,6 @@ export default class Form extends React.Component {
         houses.splice(house_index, 1);
         toUpdate.houses = houses;
         this.setState({ houses, toUpdate });
-        this.props.setPolygons(houses);
     }
 
     onAddPoint(house_index) {
@@ -478,12 +481,11 @@ export default class Form extends React.Component {
 
         toUpdate.houses = houses;
         this.setState({ houses, toUpdate });
-        this.props.setPolygons(houses);
     }
 
     render() {
         const { place, mapStyles } = this.props;
-        console.log('RENDER <Form>');
+        console.log('RENDER <Form>', this.state.toUpdate);
 
         let title = 'Добавить новый проект';
         if (place) {
