@@ -22,7 +22,7 @@ export default class StatusTable extends React.Component {
         super(props, context);
 
         this.state = {
-            openProjects: [],
+            openProjects: [ '00-000022' ],
             locations: [],
             head: {},
             showNames: true
@@ -48,14 +48,14 @@ export default class StatusTable extends React.Component {
         const head = {};
 
         this.getKtChildes(head, projects.data);
-
         this.setState({ head });
     }
 
     getKtChildes(head, projects) {
-        projects.forEach(project => {
-            if (project.statuses && project.statuses.length > 0) {
-                this.getKtStatus(head, project.statuses);
+        const projectsFiltered = projects.filter(project => this.state.openProjects.includes(project.parent));
+        projectsFiltered.forEach(project => {
+            if (project.tasks && project.tasks.length > 0) {
+                this.getKtStatus(head, project.tasks);
             }
             if (project.childes && project.childes.length > 0) {
                 this.getKtChildes(head, project.childes);
@@ -98,15 +98,19 @@ export default class StatusTable extends React.Component {
         this.props.dismissError();
     }
 
-    handleShowBuilds(id) {
+    handleShowBuilds(projectId, code) {
         const openProjects = [...this.state.openProjects];
-        const index = openProjects.indexOf(id);
+        const index = openProjects.indexOf(code);
         if (index !== -1) {
             openProjects.splice(index, 1);
         } else {
-            openProjects.push(id);
+            openProjects.push(code);
         }
         this.setState({ openProjects });
+        const buildings = this.props.projects.data.filter(sub => code == sub.parent);
+        if (buildings.length == 0) {
+            this.props.getProjects(projectId, code);
+        }
     }
 
     showNames() {
@@ -140,7 +144,7 @@ export default class StatusTable extends React.Component {
 
     render() {
         const { projects } = this.props;
-        console.log('RENDER <StatusTable>');
+        console.log('RENDER <StatusTable>', this.state.openProjects);
 
         let classIc = this.state.showNames ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right';
 
@@ -214,23 +218,24 @@ export default class StatusTable extends React.Component {
                                 </tr>,
                                 filteredProjects.map((project, i) => {
                                     const ind = i + 1;
-                                    let hasDetails = this.state.openProjects.includes(project._id);
+                                    const hasDetails = this.state.openProjects.includes(project.code);
 
                                     return <React.Fragment key={'ROW' + project._id}>
                                         <tr>
                                             <td className={styles.number}>
                                                 {ind < 10 ? '0' + ind : ind}
                                             </td>
-                                            <td className={styles.icon + ' ' + styles.bordRight10 + ' ' + styles.cursor} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                            <td className={styles.icon + ' ' + styles.bordRight10 + ' ' + styles.cursor} onClick={() => { this.handleShowBuilds(project.projectIntegrationId, project.code); }}>
                                                 <img src={project.logo ? project.logo : '/images/noimage.png'} />
                                             </td>
-                                            {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight + ' ' + styles.cursor} onClick={() => { this.handleShowBuilds(project._id); }}>
+                                            {this.state.showNames && <td className={styles.selectedCell + ' ' + styles.paddingRight}>
+                                                <p className={styles.plus} onClick={() => { this.handleShowBuilds(project.projectIntegrationId, project.code); }}><span className={'glyphicon ' + (hasDetails ? 'glyphicon-minus' : 'glyphicon-plus')}></span></p>
                                                 <p className={styles.nameProj}>{project.name}</p>
                                                 <p className={styles.addressProj}></p>
                                             </td>}
 
                                             {Object.entries(this.state.head).map((head, i) => {
-                                                let status = this.findTask(project.statuses, head[1]);
+                                                let status = this.findTask(project.tasks, head[1]);
                                                 
                                                 if (!status) {
                                                     return <td key={'NONE' + i} className={STATUSES['NONE']}>
@@ -238,12 +243,12 @@ export default class StatusTable extends React.Component {
                                                     </td>
                                                 } else {
                                                     return <td key={'TD' + head[1].kt} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
-                                                        <DataCell step={status} uni={i + '-' + '_sub'} header={status.name} loc_icon={icon} project={project} />
+                                                        <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} header={status.name} loc_icon={icon} project={project} />
                                                     </td>
                                                 }
                                             })}
                                         </tr>
-                                        {hasDetails && <Details projects={project.childes} heads={this.state.head} showNames={this.state.showNames} id={project._id} />}
+                                        {hasDetails && <Details title={project.name} projects={projects.data} code={project.code} projectId={project.projectIntegrationId} handleShowBuilds={this.handleShowBuilds} openProjects={this.state.openProjects} heads={this.state.head} showNames={this.state.showNames} id={project._id} />}
                                     </React.Fragment>;
                                 })
                             ]

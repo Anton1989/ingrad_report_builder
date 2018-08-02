@@ -4,15 +4,15 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 
 /* subscribe on actions */
 function* sagaStatus() {
-	yield takeEvery(PRJ_REQUEST, get);
+	yield takeEvery(PRJ_REQUEST, getPrjs);
 	yield takeEvery(DETAILS_REQUEST, getDetails);
 }
 
 /* middlewares */
-function* get(/*action*/) {
+function* getPrjs(action) {
 	try {
-		const projects = yield call(getProjects);
-		yield put({ type: PRJ_SUCCESS, projects: projects.data });
+		const projects = yield call(getProjects, action.projectId, action.code);
+		yield put({ type: PRJ_SUCCESS, projects: projects.data, projectId: action.projectId, code: action.code });
 
 		/*
 		let parameters = [];
@@ -50,8 +50,12 @@ function getBuilds(project_id) {
 		})
 		.then(response => response.json())
 }
-function getProjects() {
-	return fetch('/v1/projects', {
+function getProjects(projectId, code) {
+	let URL = '/v1/projects';
+	if (projectId && code) {
+		URL = '/v1/projects?parent=' + code + '&projectId=' + projectId
+	}
+	return fetch(URL, {
 		method: 'GET'
 	})
 		.then(response => {

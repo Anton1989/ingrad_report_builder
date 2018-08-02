@@ -15,13 +15,21 @@ export default function projects(state = initialState, action) {
                 ...state,
                 fetching: true
             }
-        case PRJ_SUCCESS:
+        case PRJ_SUCCESS: {
+            let prjs = [];
+            if (action.projectId && action.code) {
+                prjs = [ ...state.data ];
+                prjs.push(...action.projects);
+            } else {
+                prjs = action.projects;
+            }
             return {
                 ...state,
-                data: action.projects,
+                data: [ ...prjs ],
                 fetching: false,
                 errors: null
             }
+        }
         case PRJ_ERROR:
             return {
                 ...state,

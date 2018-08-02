@@ -17,11 +17,11 @@ class ProjectsList extends React.Component {
 
     render() {
         const { projects, status, dismissError } = this.props;
-        console.log('RENDER <ProjectsList>');
+        console.log('RENDER <ProjectsList> ');
 
         return <div className='row'>
             {projects.fetching && projects.data.length == 0 && <Loading />}
-            <StatusTable projects={projects} status={status} dismissError={dismissError} />
+            <StatusTable getProjects={this.props.get} projects={projects} status={status} dismissError={dismissError} />
         </div>
     }
 }

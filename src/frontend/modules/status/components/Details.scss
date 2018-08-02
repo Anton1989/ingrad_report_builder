@@ -12,9 +12,22 @@ table {
                     margin-bottom: 0px;
                 }
 
+                .plus {
+                    float: left;
+                    margin-right: 3px;
+                    color: #949494;
+                    cursor: pointer;
+                    font-size: 12px;
+                    padding-top: 3px;
+                }
+
                 .addressProj {
                     color: rgb(204, 204, 204);
                     margin-bottom: 0px;
+                }
+
+                &.cursor {
+                    cursor: pointer;
                 }
 
                 &.number {

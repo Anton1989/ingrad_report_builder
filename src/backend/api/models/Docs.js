@@ -5,9 +5,15 @@ const DocsSchema = new Schema({
     project_id: String,
     step_id: String,
     comment: String,
-    assigned: String,
+    agent: String,
+    how: String,
+    point: String,
+    type: String,
+    version: Number,
+    tuTypes: [String],
+    number: Number,
     file: String,
-    recieved_at: { type: Date, default: Date.now },
+    dateDoc: { type: Date, default: Date.now },
     loaded_at: { type: Date, default: Date.now }
 })
 

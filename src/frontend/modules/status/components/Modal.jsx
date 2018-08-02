@@ -22,7 +22,7 @@ export default class Modal extends React.Component {
 
     render() {
         // const { step } = this.props;
-        console.log('RENDER <Modal>');
+        // console.log('RENDER <Modal>');
 
         return this.props.open ? (
             ReactDOM.createPortal(

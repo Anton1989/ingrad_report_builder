@@ -1,9 +1,10 @@
 import { PRJ_REQUEST, DISMISS_PRJ_ERROR, DETAILS_REQUEST } from '../constants';
 
-export function get() {
+export function get(projectId = null, code = null) {
 	return (dispatch) => {
 		dispatch({
-			type: PRJ_REQUEST
+			type: PRJ_REQUEST,
+			projectId, code
 		});
 	}
 }

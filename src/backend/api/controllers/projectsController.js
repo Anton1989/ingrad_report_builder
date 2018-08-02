@@ -70,98 +70,95 @@ export default class ProjectsController {
         return kt;
     }
 
-    prepareTree(objects, parent, tasks) {
-        const filtered = [];
-        objects.forEach(object => {
-            if (object.parent == parent) {
-                const item = object.toJSON();
-                if (parent == '00-000022') {
-                    // const tasksLoaded = tasks.find(task => {
-                    //     console.log(object.name, object.projectId, task.projectIntegrationId)
-                    //     return task.projectIntegrationId == object.projectId
-                    // });
-                    const tasksLoaded = tasks.find(task => task.projectIntegrationId == object.projectId);
-                    if (tasksLoaded) {
-                        item.location = tasksLoaded.location;
-                        item.childes = this.prepareTree(objects, object.code, tasksLoaded.tasks);
-                        item.statuses = tasksLoaded.tasks.filter(task => task.to == object.code && task.kt.trim() !== '').map(task => {
-                            return {
-                                name: task.name,
-                                taskId: task.taskId,
-                                position: task.position,
-                                haveChildren: task.haveChildren,
-                                actualStart: task.actualStart,
-                                actualFinish: task.actualFinish,
-                                percentComplete: task.percentComplete,
-                                kt: task.kt,
-                                to: task.to,
-                                subTasks: task.subTasks
-                            };
-                        });
-                    }
-                } else {
-                    item.childes = this.prepareTree(objects, object.code, tasks);
-                    item.statuses = tasks.filter(task => task.to == object.code && task.kt.trim() !== '').map(task => {
-                        return {
-                            name: task.name,
-                            taskId: task.taskId,
-                            position: task.position,
-                            haveChildren: task.haveChildren,
-                            actualStart: task.actualStart,
-                            actualFinish: task.actualFinish,
-                            percentComplete: task.percentComplete,
-                            kt: task.kt,
-                            to: task.to,
-                            subTasks: task.subTasks
-                        };
-                    });
-                }
-                
-                filtered.push(item);
-            }
+    _prepareTopLevelResponse(descriptions, objects, tasks) {
+        console.log(`objects ${objects.length} tasks ${tasks.length}`);
+        return objects.map(object => {
+            const description = descriptions.find(description => object.projectId == description.projectIntegrationId);
+            const task = tasks.find(task => object.projectId == task.projectIntegrationId);
+            return Object.assign({}, object, description, task);
         });
-        return filtered;
+    }
+
+    _prepareSubLevelResponse(objects, tasks) {
+        return objects.map(object => {
+            if (tasks[0] && tasks[0].tasks && tasks[0].tasks.length > 0) {
+                object.tasks = tasks[0].tasks.filter(status => object.code == status.to);
+            } else {
+                object.tasks = [];
+            }
+            return object;
+        });
     }
 
     async all(req, res) {
         try {
-            let objects = await Objects.find({}).exec();
-            const projects = await Projects.find({}).exec();
-            objects = this.prepareTree(objects, '00-000022', projects);
-            return this._resp.formattedSuccessResponse(res, objects, 200);
-            
-            // const projectsArray = [];
-            // projects.forEach(entity => {
-            //     const project = entity.toJSON();
-            //     let parent = project.tasks.find(task => task.parentId == 0);
-            //     // console.log(parent.subTasks);
-            //     project.tasks = this.group([...project.tasks], parent.taskId);
+            const parent = req.query.parent ? req.query.parent : '00-000022';
+            const projectId = req.query.projectId ? req.query.projectId : null;
 
-            //     project.tasks.forEach(main => {
-            //         if (main.haveChildren) {
-            //             main.hasKt = main.kt.replace(/\s/g,'') !== '' ? true : false;
-                        
-            //             let testkt = this.getKt(main.subTasks);
-            //             if (testkt.replace(/\s/g,'') !== '') {
-            //                 main.hasKt = true;
-            //             }
-            //         }
-                    
-            //     });
+            let start = Date.now();
+            let objects = await Objects.find({ parent }).lean().exec();
 
-            //     projectsArray.push({
-            //         _id: project._id,
-            //         name: project.name,
-            //         tasks: project.tasks,
-            //         tasksAmount: project.tasksAmount,
-            //         location: project.location
-            //     });
-            // });
-            return this._resp.formattedSuccessResponse(res, projectsArray, 200);
+            const projectIntegrationIds = [];
+            const codes = [];
+            let projects = [];
+            let response = null;
+            if (parent == '00-000022') {
+                objects.map(object => {
+                    projectIntegrationIds.push(object.projectId);
+                    codes.push(object.code);
+                });
+                projects = await Projects.aggregate([
+                    { $match: { projectIntegrationId: { $in: projectIntegrationIds } } },
+                    { $project : {
+                        'location': 1,
+                        'projectIntegrationId': 1,
+                        'tasks.name': 1,
+                        'tasks.taskId': 1,
+                        'tasks.position': 1,
+                        'tasks.haveChildren': 1,
+                        'tasks.actualStart': 1,
+                        'tasks.actualFinish': 1,
+                        'tasks.percentComplete': 1,
+                        'tasks.kt': 1,
+                        'tasks.to': 1
+                    } },
+                    { $unwind: '$tasks' },
+                    { $match: { 'tasks.to': { $in: codes }, 'tasks.kt': { $ne: '' }, 'tasks.kt': { $ne: ' ' } } },
+                    { $group: { '_id': '$_id', 'projectIntegrationId': { $first: '$projectIntegrationId' }, 'location': { $first: '$location' }, 'tasks': { $push: '$tasks' } } },
+                ]).exec();
+                const descriptions = await Projects.find({ projectIntegrationId: { $in: projectIntegrationIds }})
+                    .select({ projectIntegrationId: 1, location: 1 })
+                    .lean().exec();
+                response = this._prepareTopLevelResponse(descriptions, objects, projects);
+            } else {
+                projectIntegrationIds.push(projectId);
+                objects.map(object => {
+                    codes.push(object.code);
+                });
+                projects = await Projects.aggregate([
+                    { $match: { projectIntegrationId: { $in: projectIntegrationIds } } },
+                    { $project : {
+                        'tasks.name': 1,
+                        'tasks.taskId': 1,
+                        'tasks.position': 1,
+                        'tasks.haveChildren': 1,
+                        'tasks.actualStart': 1,
+                        'tasks.actualFinish': 1,
+                        'tasks.percentComplete': 1,
+                        'tasks.kt': 1,
+                        'tasks.to': 1
+                    } },
+                    { $unwind: '$tasks' },
+                    { $match: { 'tasks.to': { $in: codes }, 'tasks.kt': { $ne: '' }, 'tasks.kt': { $ne: ' ' } } },
+                    { $group: { '_id': '$_id', 'tasks': { $push: '$tasks' } } },
+                ]).exec();
+                response = this._prepareSubLevelResponse(objects, projects);
+            }
+            console.log(`Request was processed in ${Date.now() - start} ms`);
+            return this._resp.formattedSuccessResponse(res, response, 200);
         } catch (error) {
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
-
     }
 
     getById(req, res) {

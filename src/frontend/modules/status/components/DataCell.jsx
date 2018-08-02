@@ -28,7 +28,7 @@ export default class DataCell extends React.Component {
     }
 
     renderCell() {
-        const { step, loc_icon, project } = this.props;
+        const { step, loc_icon, project, title } = this.props;
 
         return <span className={styles.links}>
             <span className='glyphicon glyphicon-play' onClick={this.close}></span>
@@ -46,13 +46,13 @@ export default class DataCell extends React.Component {
                         </button>
                     </header>
                     <div className={styles.modalContent}>
-                        <p>
-                            <img src={loc_icon} />
-                            <img src={project.logo} /> 
-                            <p className={styles.nameProj}>{project.name}</p>
-                            <p className={styles.addressProj}>{project.address}</p>
-                        </p>
                         {this.state.docId === null && <React.Fragment>
+                            <p>
+                                <img src={loc_icon} />
+                                <img src={project.logo} /> 
+                                <p className={styles.nameProj}>{title}</p>
+                                <p className={styles.addressProj}>{project.address}</p>
+                            </p>
                             <p>
                                 Документы:
                             </p>
@@ -61,7 +61,7 @@ export default class DataCell extends React.Component {
                             </ul>
                         </React.Fragment>}
                         {this.state.docId !== null && <React.Fragment>
-                            <Add editeDoc={this.editeDoc} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
+                            <Add editeDoc={this.editeDoc} addDocs={this.props.header} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
                         </React.Fragment>}
                     </div>
                 </div>
@@ -71,7 +71,7 @@ export default class DataCell extends React.Component {
 
     render() {
         // const { step } = this.props;
-        console.log('RENDER <DataCell>');
+        // console.log('RENDER <DataCell>');
 
         return this.renderCell();
     }
