@@ -31,7 +31,7 @@
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8008,
         "MONGO_HOST": "127.0.0.1",
-        "MONGO_DB": "ingrad-test",
+        "MONGO_DB": "ingrad",
         "CORE_URL": "/",
         "NODE_ENV": "development"
       }

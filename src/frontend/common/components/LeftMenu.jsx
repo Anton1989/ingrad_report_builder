@@ -48,9 +48,9 @@ export default class LeftMenu extends React.Component {
                     <a className={styles.expandedMenu} onClick={() => { setPlace(parent.id, item.id) }}>{item.anchor}</a>
                 </li>;
             } else {
-                const active = item.url ? isActive(item.url, item.strict) ? styles.active : '' : '';
+                const active = isActive(CORE_URL + item.url, item.strict) ? styles.active : '';
                 li = <li key={item.anchor} className={active}>
-                    <Link to={item.url ? (CORE_URL + item.url) : null}>{item.anchor}</Link>
+                    <Link to={(CORE_URL + item.url)}>{item.anchor}</Link>
                     {submenu ? <ul className={styles.navSidebar + ' ' + styles.submenu + ' nav submenu nav-sidebar'}>{submenu}</ul> : null}
                 </li>;
             }
