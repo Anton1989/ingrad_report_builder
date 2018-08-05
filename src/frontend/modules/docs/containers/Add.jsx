@@ -6,6 +6,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import Dropzone from 'react-dropzone';
 import styles from './Add.scss';
+import config from '../../../config';
 //Actions
 import { get, add, save, dismissError } from '../actions/docsActions';
 //Components
@@ -42,7 +43,8 @@ class Add extends React.Component {
         ];
         this.state = {
             name: null,
-            point: this.props.addDocs,
+            status: this.props.addDocs,
+            point: null,
             number: null,
             type: this.TYPES[0],
             tuTypes: [],
@@ -143,7 +145,7 @@ class Add extends React.Component {
     }
 
     render() {
-        const { docs, id, editeDoc } = this.props;
+        const { docs, id, editeDoc, headerCode } = this.props;
         console.log('RENDER <Add>', this.state);
 
         let file = null;
@@ -157,7 +159,9 @@ class Add extends React.Component {
                 <a href={this.state.file} target='_blank'>{this.state.name}</a>&nbsp;
                 <span id='file' onClick={this.onRemoveFile} className='glyphicon glyphicon-minus-sign'></span>
             </React.Fragment>;
-        } 
+        }
+
+        const status2kt = [...config.defaultVars.kt[headerCode].kts];
 
         return <React.Fragment>
             {
@@ -169,17 +173,23 @@ class Add extends React.Component {
             }
             <form>
                 <div className='row'>
-                    <div className='form-group col-sm-4 col-md-4'>
+                    <div className='form-group col-sm-3 col-md-3'>
                         <label htmlFor='name'>Название</label>
                         <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={this.handleUpdateInputText} />
                     </div>
-                    <div className='form-group col-sm-4 col-md-4'>
-                        <label htmlFor='point'>Ключевая точка</label>
-                        <input type='text' className='form-control' id='point' placeholder='Ключевая точка' value={this.state.point} onChange={this.handleUpdateInputText} />
+                    <div className='form-group col-sm-2 col-md-2'>
+                        <label htmlFor='number'>№ документа</label>
+                        <input type='text' className='form-control' id='number' placeholder='Номер документа' value={this.state.number} onChange={this.handleUpdateInputText} />
+                    </div>
+                    <div className='form-group col-sm-4 col-md-3' title={this.state.status}>
+                        <label htmlFor='point'>Статус</label>
+                        <input type='text' className='form-control' id='status' placeholder='Статус' value={this.state.status} disabled />
                     </div>
                     <div className='form-group col-sm-4 col-md-4'>
-                        <label htmlFor='number'>Номер документа</label>
-                        <input type='text' className='form-control' id='number' placeholder='Номер документа' value={this.state.number} onChange={this.handleUpdateInputText} />
+                        <label htmlFor='point'>Ключевая точка</label>
+                        <select id='point' className='form-control' value={this.state.point} onChange={this.handleUpdateInputText}>
+                            {status2kt.map(kt => <option key={kt} value={config.defaultVars.ktNames[kt]}>{config.defaultVars.ktNames[kt]}</option>)}
+                        </select>
                     </div>
                 </div>
                 <div className='row'>

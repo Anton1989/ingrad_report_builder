@@ -3,6 +3,8 @@ import bindActionCreators from 'redux/lib/bindActionCreators';
 import connect from 'react-redux/lib/connect/connect';
 import Alert from 'react-bootstrap/lib/Alert';
 import moment from 'moment';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 //Actions
 import { get, del, dismissError } from '../actions/docsActions';
 //Components
@@ -51,6 +53,59 @@ class Docs extends React.Component {
         const { docs, editeDoc } = this.props;
         console.log('RENDER <Docs>');
 
+        const data = this.state.docs.map(doc => {
+            const date = moment(doc.dateDoc);
+
+            return {
+                point: doc.point,
+                name: <a className={styles.editable} onClick={() => { editeDoc(doc._id); }}>{doc.name}</a>,
+                date: date.format('DD/MM/YYYY'),
+                number: doc.number,
+                version: doc.version,
+                type: doc.type,
+                tools: <React.Fragment>
+                    <a href={doc.file} target='_blank' className='btn btn-success'><span className='glyphicon glyphicon-download-alt'></span></a>
+                    <button onClick={() => { this.handleDelete(doc._id); }} className='btn btn-danger'><span className='glyphicon glyphicon-remove-circle'></span></button>
+                </React.Fragment>
+
+            };
+        });
+        
+        const columns = [{
+            Header: 'Ключевая точка',
+            accessor: 'point',
+            sortable: true,
+            filterable: true
+        },{
+            Header: 'Название',
+            accessor: 'name',
+            sortable: true,
+            filterable: true
+        },{
+            Header: 'Дата документа',
+            accessor: 'date',
+            sortable: true,
+            filterable: true
+        },{
+            Header: 'Номер документа',
+            accessor: 'number',
+            sortable: true,
+            filterable: true
+        },{
+            Header: 'Номер версии',
+            accessor: 'version',
+            sortable: true,
+            filterable: true
+        },{
+            Header: 'Тип',
+            accessor: 'type',
+            sortable: true,
+            filterable: true
+        }, {
+            Header: '',
+            accessor: 'tools'
+        }];
+
         return <React.Fragment>
             {
                 docs.errors && <div className='col-xs-12'>
@@ -59,41 +114,18 @@ class Docs extends React.Component {
                     </Alert>
                 </div>
             }
-            <a className='btn btn-default' onClick={() => { editeDoc(0); }}>
+            <a className={'btn btn-default ' + styles.addDoc} onClick={() => { editeDoc(0); }}>
                 <span className='glyphicon glyphicon-plus-sign'></span> Добавить
             </a>
-            <br/><br/>
             <div className='table-responsive'>
                 {this.state.docs.length == 0 && <p>Нет прикрепленных документов</p>}
-                {this.state.docs.length > 0 && <table className={'table ' + styles.list}>
-                    <thead>
-                        <tr>
-                            <th>Название</th>
-                            <th>Получение</th>
-                            <th>Коментарий</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {this.state.docs.map(doc => {
-                            const date = moment(doc.recieved_at);
-
-                            return <tr key={doc._id}>
-                                <td>
-                                    <a className={styles.editable} onClick={() => { editeDoc(doc._id); }}>
-                                        {doc.name}
-                                    </a>
-                                </td>
-                                <td>{date.format('DD/MM/YYYY')}</td>
-                                <td>{doc.comment}</td>
-                                <td>
-                                    <a href={doc.file} target='_blank' className='btn btn-success'><span className='glyphicon glyphicon-download-alt'></span></a>
-                                    <button onClick={() => { this.handleDelete(doc._id); }} className='btn btn-danger'><span className='glyphicon glyphicon-remove-circle'></span></button>
-                                </td>
-                            </tr>
-                        })}
-                    </tbody>
-                </table>}
+                {this.state.docs.length > 0 && <ReactTable
+                    className={'table ' + styles.list}
+                    data={data}
+                    defaultSortDesc={true}
+                    defaultSorted={[{ id: 'date' }]}
+                    columns={columns}
+                />}
             </div>
         </React.Fragment>;
     }

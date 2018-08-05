@@ -16,9 +16,9 @@ export default class Details extends React.Component {
         super(props, context);
     }
 
-    findTask(statuses, object) {
+    findTask(statuses, kts) {
         if (statuses && statuses.length > 0) {
-            return statuses.find(status => status.kt == object.kt);
+            return statuses.find(status => kts.includes(status.kt));
         }
         return null;
     }
@@ -61,7 +61,7 @@ export default class Details extends React.Component {
                         </td>}
                         
                         {Object.entries(heads).map((head, i) => {
-                            let status = this.findTask(building.tasks, head[1]);
+                            let status = this.findTask(building.tasks, head[1].kts);
                             
                             if (!status) {
                                 return <td key={'SUBNONE' + i + building._id} className={STATUSES['NONE']}>

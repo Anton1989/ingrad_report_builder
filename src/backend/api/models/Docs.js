@@ -7,6 +7,7 @@ const DocsSchema = new Schema({
     comment: String,
     agent: String,
     how: String,
+    status: String,
     point: String,
     type: String,
     version: Number,

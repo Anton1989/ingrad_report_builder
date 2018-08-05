@@ -17,7 +17,7 @@ class ProjectsList extends React.Component {
 
     render() {
         const { projects, status, dismissError } = this.props;
-        console.log('RENDER <ProjectsList> ');
+        console.log('RENDER <ProjectsList>');
 
         return <div className='row'>
             {projects.fetching && projects.data.length == 0 && <Loading />}

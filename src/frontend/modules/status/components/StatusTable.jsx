@@ -4,6 +4,7 @@ import Alert from 'react-bootstrap/lib/Alert';
 import DataCell from './DataCell.jsx';
 import Details from './Details.jsx';
 import styles from './StatusTable.scss';
+import config from '../../../config';
 
 const STATUSES = {
     'IN PLAN': styles.inPlan,
@@ -66,7 +67,11 @@ export default class StatusTable extends React.Component {
     getKtStatus(head, statuses) {
         statuses.forEach(status => {
             if (!head[status.kt] && status.kt.trim() !== '') {
-                head[status.kt] = { ...status };
+                const status2kt = Object.entries(config.defaultVars.kt).find(item => item[1].kts.includes(status.kt.trim()));
+                if (status2kt) {
+                    head[status2kt[0]] = status2kt[1];
+                }
+                
             }
         });
     }
@@ -135,9 +140,9 @@ export default class StatusTable extends React.Component {
         }
     }
 
-    findTask(statuses, object) {
+    findTask(statuses, kts) {
         if (statuses && statuses.length > 0) {
-            return statuses.find(status => status.kt == object.kt);
+            return statuses.find(status => kts.includes(status.kt));
         }
         return null;
     }
@@ -181,7 +186,7 @@ export default class StatusTable extends React.Component {
                             </th>}
                             {Object.entries(this.state.head).map(val => {
                                 return <th title={val[1].name} className={styles.mainSteps + ' ' + styles.leftBorder} key={val[0]}>
-                                    {val[1].kt}
+                                    {val[0]}
                                 </th>;
                             })}
                         </tr>
@@ -235,15 +240,15 @@ export default class StatusTable extends React.Component {
                                             </td>}
 
                                             {Object.entries(this.state.head).map((head, i) => {
-                                                let status = this.findTask(project.tasks, head[1]);
+                                                let status = this.findTask(project.tasks, head[1].kts);
                                                 
                                                 if (!status) {
                                                     return <td key={'NONE' + i} className={STATUSES['NONE']}>
                                                         <span className='glyphicon glyphicon-ban-circle'></span>
                                                     </td>
                                                 } else {
-                                                    return <td key={'TD' + head[1].kt} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
-                                                        <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} header={status.name} loc_icon={icon} project={project} />
+                                                    return <td key={'TD' + head[1].name} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
+                                                        <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} headerName={head[1].name} headerCode={head[0]} loc_icon={icon} project={project} />
                                                     </td>
                                                 }
                                             })}

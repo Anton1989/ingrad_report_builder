@@ -20,7 +20,7 @@ export default class DataCell extends React.Component {
     }
 
     close() {
-        this.setState({ showModal: !this.state.showModal });
+        this.setState({ showModal: !this.state.showModal, docId: null });
     }
 
     editeDoc(docId) {
@@ -36,7 +36,7 @@ export default class DataCell extends React.Component {
                 <div className={styles.modalBackground} />
                 <div role='dialog' className={styles.modalDialog}>
                     <header>
-                        <img src='/images/folder.png' /> {this.props.header}
+                        <img src='/images/folder.png' /> {this.props.headerName}
                         <button
                             onClick={this.close}
                             type='button'
@@ -61,7 +61,7 @@ export default class DataCell extends React.Component {
                             </ul>
                         </React.Fragment>}
                         {this.state.docId !== null && <React.Fragment>
-                            <Add editeDoc={this.editeDoc} addDocs={this.props.header} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
+                            <Add editeDoc={this.editeDoc} addDocs={this.props.headerName} headerCode={this.props.headerCode} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
                         </React.Fragment>}
                     </div>
                 </div>
