@@ -1,3 +1,8 @@
+.addDoc {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+}
 .links {
     color: #949494;
     cursor: pointer;
@@ -41,6 +46,7 @@
     cursor: pointer;
 }
 .modalContent {
+    position: relative;
     overflow-y: auto;
     text-align: left;
     padding: 20px;

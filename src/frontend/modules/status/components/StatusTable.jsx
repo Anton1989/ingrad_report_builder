@@ -49,7 +49,14 @@ export default class StatusTable extends React.Component {
         const head = {};
 
         this.getKtChildes(head, projects.data);
-        this.setState({ head });
+        const sortedHead = {};
+        console.log(head);
+        Object.entries(config.defaultVars.kt).forEach(column => {
+            if (head[column[0]]) {
+                sortedHead[column[0]] = head[column[0]];
+            }
+        });
+        this.setState({ head: sortedHead });
     }
 
     getKtChildes(head, projects) {
@@ -149,7 +156,7 @@ export default class StatusTable extends React.Component {
 
     render() {
         const { projects } = this.props;
-        console.log('RENDER <StatusTable>', this.state.openProjects);
+        console.log('RENDER <StatusTable>', this.state.head);
 
         let classIc = this.state.showNames ? 'glyphicon-chevron-left' : 'glyphicon-chevron-right';
 
@@ -247,6 +254,7 @@ export default class StatusTable extends React.Component {
                                                         <span className='glyphicon glyphicon-ban-circle'></span>
                                                     </td>
                                                 } else {
+                                                    console.log('>>>',head)
                                                     return <td key={'TD' + head[1].name} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
                                                         <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} headerName={head[1].name} headerCode={head[0]} loc_icon={icon} project={project} />
                                                     </td>

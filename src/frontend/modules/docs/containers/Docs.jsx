@@ -114,9 +114,6 @@ class Docs extends React.Component {
                     </Alert>
                 </div>
             }
-            <a className={'btn btn-default ' + styles.addDoc} onClick={() => { editeDoc(0); }}>
-                <span className='glyphicon glyphicon-plus-sign'></span> Добавить
-            </a>
             <div className='table-responsive'>
                 {this.state.docs.length == 0 && <p>Нет прикрепленных документов</p>}
                 {this.state.docs.length > 0 && <ReactTable

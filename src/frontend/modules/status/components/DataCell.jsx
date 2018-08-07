@@ -56,9 +56,10 @@ export default class DataCell extends React.Component {
                             <p>
                                 Документы:
                             </p>
-                            <ul>
-                                <Docs editeDoc={this.editeDoc} step_id={step.taskId} project_id={project._id} />
-                            </ul>
+                            <a className={'btn btn-default ' + styles.addDoc} onClick={() => { this.editeDoc(0); }}>
+                                <span className='glyphicon glyphicon-plus-sign'></span> Добавить
+                            </a>
+                            <Docs editeDoc={this.editeDoc} step_id={step.taskId} project_id={project._id} />
                         </React.Fragment>}
                         {this.state.docId !== null && <React.Fragment>
                             <Add editeDoc={this.editeDoc} addDocs={this.props.headerName} headerCode={this.props.headerCode} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
