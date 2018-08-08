@@ -164,7 +164,7 @@
                         background: #ccfe9a;
                     }
 
-                    &.none {
+                    &.none, &.none span {
                         text-align: center;
                         font-weight: bold;
                         color: #ccc;

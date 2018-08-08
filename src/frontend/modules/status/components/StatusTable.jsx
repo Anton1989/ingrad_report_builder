@@ -130,7 +130,9 @@ export default class StatusTable extends React.Component {
     }
 
     getStatus(task) {
-        if (task.percentComplete > 0 && !task.actualStart) {
+        if (task == null) {
+            return 'NONE';
+        } else if (task.percentComplete > 0 && !task.actualStart) {
             if (task.percentComplete < 100) {
                 return 'IN PROGRESS';
             } else {
@@ -250,11 +252,13 @@ export default class StatusTable extends React.Component {
                                                 let status = this.findTask(project.tasks, head[1].kts);
                                                 
                                                 if (!status) {
-                                                    return <td key={'NONE' + i} className={STATUSES['NONE']}>
-                                                        <span className='glyphicon glyphicon-ban-circle'></span>
+                                                    return <td key={'TD' + head[1].name} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
+                                                        <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} headerName={head[1].name} headerCode={head[0]} loc_icon={icon} project={project} />
                                                     </td>
+                                                    // return <td key={'NONE' + i} className={STATUSES['NONE']}>
+                                                    //     <span className='glyphicon glyphicon-ban-circle'></span>
+                                                    // </td>
                                                 } else {
-                                                    console.log('>>>',head)
                                                     return <td key={'TD' + head[1].name} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
                                                         <DataCell title={project.name} step={status} uni={i + '-' + '_sub'} headerName={head[1].name} headerCode={head[0]} loc_icon={icon} project={project} />
                                                     </td>

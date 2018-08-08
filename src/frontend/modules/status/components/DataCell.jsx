@@ -28,10 +28,15 @@ export default class DataCell extends React.Component {
     }
 
     renderCell() {
-        const { step, loc_icon, project, title } = this.props;
+        const { step, loc_icon, project, title, headerCode } = this.props;
+
+        let iconClass = 'glyphicon-play';
+        if (step == null) {
+            iconClass = 'glyphicon-ban-circle';
+        }
 
         return <span className={styles.links}>
-            <span className='glyphicon glyphicon-play' onClick={this.close}></span>
+            <span className={'glyphicon ' + iconClass} onClick={this.close}></span>
             <Modal open={this.state.showModal}>
                 <div className={styles.modalBackground} />
                 <div role='dialog' className={styles.modalDialog}>
@@ -59,10 +64,10 @@ export default class DataCell extends React.Component {
                             <a className={'btn btn-default ' + styles.addDoc} onClick={() => { this.editeDoc(0); }}>
                                 <span className='glyphicon glyphicon-plus-sign'></span> Добавить
                             </a>
-                            <Docs editeDoc={this.editeDoc} step_id={step.taskId} project_id={project._id} />
+                            <Docs editeDoc={this.editeDoc} step_id={headerCode} project_id={project._id} />
                         </React.Fragment>}
                         {this.state.docId !== null && <React.Fragment>
-                            <Add editeDoc={this.editeDoc} addDocs={this.props.headerName} headerCode={this.props.headerCode} id={this.state.docId} step_id={step.taskId} project_id={project._id} />
+                            <Add editeDoc={this.editeDoc} addDocs={this.props.headerName} headerCode={this.props.headerCode} id={this.state.docId} step_id={headerCode} project_id={project._id} />
                         </React.Fragment>}
                     </div>
                 </div>
