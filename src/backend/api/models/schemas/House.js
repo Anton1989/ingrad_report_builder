@@ -5,6 +5,7 @@ export default new Schema({
     name: String,
     status: String,
     style: { type: Schema.Types.ObjectId, ref: 'styles' },
+    ugol: String,
     camera: String,
     lat: String, 
     lng: String,

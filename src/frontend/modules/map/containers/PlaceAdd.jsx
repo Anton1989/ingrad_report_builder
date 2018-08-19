@@ -22,6 +22,7 @@ class PlaceAdd extends React.Component {
 
         this.setMarker = this.setMarker.bind(this);
         this.setHouseMarker = this.setHouseMarker.bind(this);
+        this.setCameraMarker = this.setCameraMarker.bind(this);
         this.setPolygons = this.setPolygons.bind(this);
         this.setOverlays = this.setOverlays.bind(this);
     }
@@ -43,6 +44,12 @@ class PlaceAdd extends React.Component {
             let place = newProps.places.data.find(place => place._id == newProps.params.placeId);
             this.setState({ marker: place.coordinates });
         }
+    }
+
+    setCameraMarker(coordinates, index) {
+        const houses = [ ...this.state.houses ];
+        houses[index].coordinates[0] = coordinates;
+        this.setState({ updateHouse: { index, coordinates }, houses });
     }
 
     setHouseMarker(coordinates, index) {
@@ -75,7 +82,7 @@ class PlaceAdd extends React.Component {
         }
 
         return <div>
-            <EditeMap layers={this.state.layers} setHouseMarker={this.setHouseMarker} marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
+            <EditeMap layers={this.state.layers} setCameraMarker={this.setCameraMarker} setHouseMarker={this.setHouseMarker} marker={this.state.marker} mapStyles={styles.data} setMarker={this.setMarker} houses={this.state.houses} />
             <Form setOverlays={this.setOverlays} place={place} mapStyles={styles.data} updateHouse={this.state.updateHouse} marker={this.state.marker} addPlace={addPlace} updatePlace={updatePlace} setMarker={this.setMarker} setPolygons={this.setPolygons} />
         </div>;
     }

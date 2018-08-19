@@ -34,6 +34,12 @@ const Maps = compose(
                     lat: e.latLng.lat(),
                     lng: e.latLng.lng()
                 }, houseInd);
+            },
+            onDragEndCamera: () => (e, props, houseInd) => {
+                props.setCameraMarker({
+                    lat: e.latLng.lat(),
+                    lng: e.latLng.lng()
+                }, houseInd);
             }
         }),
     withScriptjs,
@@ -52,7 +58,6 @@ const Maps = compose(
         origin: new google.maps.Point(0, 0),
         anchor: new google.maps.Point(10, 10)
     };
-
     return <GoogleMap
         zoom={zoom}
         center={center ? center : defaultCoordinates.coordinates}
@@ -97,10 +102,15 @@ const Maps = compose(
                 />
                 options.strokeOpacity = 0;
             }
-            if (house.type == 'house' || house.type == 'camera') {
-                let label = null;
-                if (house.type == 'house') {
-                    label = <Marker
+            if (house.type == 'house') {
+                return [
+                    <Polygon
+                        key={house.name}
+                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
+                        options={options}
+                    />,
+                    stroke,
+                    <Marker
                         key={house.name + 'house_number'}
                         label={{
                             text: house.name,
@@ -110,17 +120,24 @@ const Maps = compose(
                         defaultDraggable={true}
                         onDragEnd={(e) => { props.onDragEndHouse(e, props, i) }}
                         icon={image}
-                        position={{ lat: parseFloat(house.lat), lng: parseFloat(house.lng) }} />
-                }
-                return [
-                    <Polygon
-                        key={house.name}
-                        paths={house.coordinates.filter(cd => cd.lat != '' && cd.lng != '')}
-                        options={options}
-                    />,
-                    stroke,
-                    label
+                        position={{ lat: parseFloat(house.lat), lng: parseFloat(house.lng) }}
+                    />
                 ]
+            } else if(house.type == 'camera') {
+                const icon = {
+                    url: `/images/camera/${house.ugol}.png`,
+                    size: new google.maps.Size(20, 20),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(10, 10),
+                    scaledSize: new google.maps.Size(20, 20)
+                };
+                return <Marker
+                    key={house.name + 'camera_number'}
+                    defaultDraggable={true}
+                    onDragEnd={(e) => { props.onDragEndCamera(e, props, i) }}
+                    icon={icon}
+                    position={{ lat: parseFloat(house.coordinates[0].lat), lng: parseFloat(house.coordinates[0].lng) }}
+                />
             } else { //tube
                 return <Polyline
                     key={house.name}
@@ -149,8 +166,8 @@ const Maps = compose(
 export default class EditeMap extends React.Component {
 
     render() {
-        const { marker, layers, houses, setMarker, setHouseMarker, mapStyles } = this.props;
-        console.log('RENDER <PlaceDetails>');
+        const { marker, layers, houses, setMarker, setHouseMarker, setCameraMarker, mapStyles } = this.props;
+        console.log('RENDER <EditeMap>');
 
         return <div className={styles.maps}>
             <Maps
@@ -163,6 +180,7 @@ export default class EditeMap extends React.Component {
                 layers={layers}
                 mapStyles={mapStyles}
                 setMarker={setMarker}
+                setCameraMarker={setCameraMarker}
                 setHouseMarker={setHouseMarker}
             />
         </div>
