@@ -11,7 +11,6 @@ const PlacesSchema = new Schema({
     photo: String,
     address: String,
     coordinates: Coordinate,
-    houses: [House],
     location: String,
     logo: String,
     image: String

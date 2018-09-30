@@ -6,6 +6,8 @@ export default new Schema({
     status: String,
     style: { type: Schema.Types.ObjectId, ref: 'styles' },
     camera: String,
+    lat: String, 
+    lng: String,
     type: String,
     coordinates: [Coordinate]
 });

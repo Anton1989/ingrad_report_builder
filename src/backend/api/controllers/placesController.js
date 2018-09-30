@@ -2,6 +2,9 @@ import { Router } from 'express';
 import fs from 'fs';
 import Response from '../models/responseDto';
 import Places from '../models/Places';
+import Build from '../models/Build';
+import Layer from '../models/Layer';
+import Panaram from '../models/Panaram';
 
 export default class PlacesController {
 
@@ -30,8 +33,17 @@ export default class PlacesController {
             const places = await Places.find({}).sort({name: 1}).populate([{
                 path: 'styles'
             }]).exec();
-            return this._resp.formattedSuccessResponse(res, places, 200);
+            const response = [];
+            for (let i=0; i<places.length; i++) {
+                const place = places[i].toObject();
+                place.houses = await Build.find({ placeId: place._id });
+                place.panarams = await Panaram.find({ placeId: place._id });
+                place.layers = await Layer.find({ placeId: place._id });
+                response.push(place)
+            }
+            return this._resp.formattedSuccessResponse(res, response, 200);
         } catch (error) {
+            console.log(error)
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
 

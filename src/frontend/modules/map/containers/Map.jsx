@@ -22,7 +22,8 @@ const defaultCoordinates = {
 const Maps = compose(
     withStateHandlers(
         () => ({
-            infoWindow: null
+            infoWindow: null,
+            map: null
         }),
         {
             onToggleOpen: () => (event, house) => {
@@ -37,13 +38,24 @@ const Maps = compose(
                 return ({
                     infoWindow: null
                 })
-            }
+            },
+            handleMapLoad: () => (map) => {
+                return ({
+                    map
+                })
+            },
+            handleZoomChanged: () => (map) => {
+                return ({
+                    zoom: map.getZoom()
+                })
+            },
+            // (map) { this._mapComponent = map; if (map) { console.log(map.getZoom()); } }
         }
     ),
     withScriptjs,
     withGoogleMap
 )(props => {
-    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer, open360 } = props;
+    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer, open360, map, zoom } = props;
     let options = {
         mapTypeControl: true,
         mapTypeControlOptions: {
@@ -61,10 +73,13 @@ const Maps = compose(
         }
     }
     return <GoogleMap
+        ref={props.handleMapLoad}
         zoom={defaultCoordinates.zoom}
         center={defaultCoordinates.coordinates}
         defaultOptions={options}
-    >
+        onZoomChanged={() => {
+            props.handleZoomChanged(map);
+        }}>
         {places.data && places.data.map(place => {
             if (activeTypes.indexOf(place.location) !== -1) {
                 let placeHtml = null;
@@ -104,7 +119,13 @@ const Maps = compose(
                                 />
                                 options.strokeOpacity = 0;
                             }
-                            if (house.type == 'house' || house.type == 'camera') {
+                            if (house.type == 'house') {
+                                const image = {
+                                    url: '/images/blank.png',
+                                    size: new google.maps.Size(20, 20),
+                                    origin: new google.maps.Point(0, 0),
+                                    anchor: new google.maps.Point(10, 10)
+                                };
                                 return [
                                     <Polygon
                                         key={house.name}
@@ -119,11 +140,30 @@ const Maps = compose(
                                         }}
                                     />,
                                     stroke,
-                                    house.type == 'house' ? <Marker
+                                    (map && zoom > 17) ? <Marker
                                         key={house._id + 'house_number'}
-                                        label={house.name}
-                                        position={{ ...house.coordinates[0] }} /> : null
+                                        label={{
+                                            text: house.name,
+                                            color: 'black',
+                                            fontWeight: 'bold'
+                                        }}
+                                        icon={image}
+                                        position={(house.lat && house.lng) ? { lat: parseFloat(house.lat), lng: parseFloat(house.lng) } : { ...house.coordinates[0] }} /> : null
                                 ];
+                            } else if(house.type == 'camera') {
+                                const icon = {
+                                    url: `/images/camera/${house.ugol}.png`,
+                                    size: new google.maps.Size(20, 20),
+                                    origin: new google.maps.Point(0, 0),
+                                    anchor: new google.maps.Point(10, 10),
+                                    scaledSize: new google.maps.Size(20, 20)
+                                };
+                                return <Marker
+                                    key={house.name + 'camera_number'}
+                                    onClick={(event) => { props.onToggleOpen(event, house) }}
+                                    icon={icon}
+                                    position={{ lat: parseFloat(house.coordinates[0].lat), lng: parseFloat(house.coordinates[0].lng) }}
+                                />
                             } else { //tube
                                 return <Polyline
                                     key={house.name}
