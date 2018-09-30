@@ -1,7 +1,10 @@
 const config = {
     apiConfig: {
         getProjectsUrl: 'v1/projects',
-        getPlacesUrl: 'v1/places',
+		getPlacesUrl: 'v1/places',
+		getPanaramUrl: 'v1/panarams',
+		getLayerUrl: 'v1/layer',
+		getBuildUrl: 'v1/build',
 		getStylesUrl: 'v1/styles',
         generatePdUrl: 'v1/pd',
         getKpiUrl: 'v1/kpi'

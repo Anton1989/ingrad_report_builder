@@ -1,0 +1,66 @@
+h5.title {
+    background: #cccccc;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.hidden {
+    .toHide {
+        display: none;
+    }
+}
+
+.dropzone {
+    height: 100px;
+    background: #e9e8e8;
+    border: 1px dashed;
+    border-radius: 3px;
+    text-align: center;
+    padding-top: 25px;
+}
+
+.modalBackground {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(33, 33, 33, 0.85);
+    z-index: 1000;
+}
+.modalDialog {
+    position: fixed;
+    top: 20%;
+    left: 20%;
+    right: 20%;
+    max-height: 60%;
+    text-align: center;
+    background-color: rgba(250, 250, 250, 1);
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.75);
+    z-index: 1001;
+}
+.modalDialog>header {
+    background: #217cba;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2rem;
+    padding: 0 2rem;
+    min-height: 50px;
+}
+.modalDialog>header>button {
+    border: none;
+    padding: 0;
+    font-size: 1.2rem;
+    background: inherit;
+    color: white;
+    cursor: pointer;
+}
+.modalContent {
+    position: relative;
+    overflow-y: auto;
+    text-align: left;
+    padding: 20px;
+    height: calc(40vw - 50px);
+}

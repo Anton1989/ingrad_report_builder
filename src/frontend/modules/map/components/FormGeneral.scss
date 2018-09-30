@@ -1,0 +1,28 @@
+.dropzone {
+    height: 100px;
+    background: #e9e8e8;
+    border: 1px dashed;
+    border-radius: 3px;
+    text-align: center;
+    padding-top: 25px;
+}
+
+h5.title {
+    background: #cccccc;
+    cursor: pointer;
+    padding: 5px 10px;
+}
+
+.show {
+
+}
+
+.hidden {
+    .toHide {
+        display: none;
+    }
+}
+
+.errors {
+    color: red;
+}

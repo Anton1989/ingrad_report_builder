@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import styles from './Map.scss';
 import { compose, withStateHandlers } from 'recompose';
 import { withScriptjs, withGoogleMap, Marker, Polygon, Polyline, GoogleMap, GroundOverlay } from 'react-google-maps';
@@ -24,7 +23,7 @@ const Maps = compose(
                 zoom: map.getZoom()
             }),
             onDragEnd: () => (e, props) => {
-                props.setMarker({
+                props.setPlaceCenter(props.place._id, {
                     lat: e.latLng.lat(),
                     lng: e.latLng.lng()
                 });
@@ -146,8 +145,8 @@ const Maps = compose(
                 />
             }
         })}
-        {props.layers.map(layer => {
-            if (layer.show && layer.coordinates[0].lat && layer.coordinates[0].lng && 
+        {props.layers && props.layers.map(layer => {
+            if (props.toShowLayers.includes(layer._id) && layer.coordinates[0].lat && layer.coordinates[0].lng && 
                 layer.coordinates[1].lat && layer.coordinates[1].lng && layer.image) {
                 return <GroundOverlay
                     key={JSON.stringify(layer)}
@@ -166,7 +165,7 @@ const Maps = compose(
 export default class EditeMap extends React.Component {
 
     render() {
-        const { marker, layers, houses, setMarker, setHouseMarker, setCameraMarker, mapStyles } = this.props;
+        const { marker, layers, houses, toShowLayers, setPlaceCenter, setHouseMarker, setCameraMarker, mapStyles, place } = this.props;
         console.log('RENDER <EditeMap>');
 
         return <div className={styles.maps}>
@@ -176,18 +175,15 @@ export default class EditeMap extends React.Component {
                 containerElement={<div className={styles.containerElement} />}
                 mapElement={<div style={{ height: '100%' }} />}
                 coordinates={marker}
+                toShowLayers={toShowLayers}
                 houses={houses}
                 layers={layers}
+                place={place}
                 mapStyles={mapStyles}
-                setMarker={setMarker}
+                setPlaceCenter={setPlaceCenter}
                 setCameraMarker={setCameraMarker}
                 setHouseMarker={setHouseMarker}
             />
         </div>
     }
-}
-
-EditeMap.propTypes = {
-    marker: PropTypes.object,
-    setMarker: PropTypes.func.isRequired,
 }

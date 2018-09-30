@@ -4,6 +4,9 @@ import PlacesController from './controllers/placesController';
 import StylesController from './controllers/stylesController';
 import PdController from './controllers/pdController';
 import KpiController from './controllers/kpiController';
+import PanaramsController from './controllers/panaramsController';
+import LayersController from './controllers/layersController';
+import BuildController from './controllers/buildController';
 import bodyParser from 'body-parser';
 import multer from 'multer';
 
@@ -34,13 +37,15 @@ export default class ApiConfig {
         let stylesController = new StylesController(this._network);
         let kpiController = new KpiController(this._network);
         let pdController = new PdController(this._network);
+        let panaramsController = new PanaramsController(this._network);
+        let layersController = new LayersController(this._network);
+        let buildController = new BuildController(this._network);
 
         //Init endpoints for express.
         var cpUpload = upload.fields([
             { name: 'image', maxCount: 1 },
             { name: 'logo', maxCount: 1 },
             { name: 'layer', maxCount: 100 },
-            { name: 'panaram', maxCount: 100 },
             { name: 'csv', maxCount: 1 },
             { name: 'csvDie', maxCount: 1 },
             { name: 'csvLive', maxCount: 1 },
@@ -49,10 +54,20 @@ export default class ApiConfig {
             { name: 'xmlTamplate', maxCount: 1 }
         ]);
 
+        var panaramsUpload = upload.fields([
+            { name: 'src', maxCount: 1 }
+        ]);
+        var layerUpload = upload.fields([
+            { name: 'image', maxCount: 1 }
+        ]);
+
         this._network.use(CORE_URL + 'v1/projects', projectsController.getRouter());
         this._network.use(CORE_URL + 'v1/styles', stylesController.getRouter());
         this._network.use(CORE_URL + 'v1/places', cpUpload, placesController.getRouter());
         this._network.use(CORE_URL + 'v1/pd', cpUpload, pdController.getRouter());
         this._network.use(CORE_URL + 'v1/kpi', kpiController.getRouter());
+        this._network.use(CORE_URL + 'v1/panarams', panaramsUpload, panaramsController.getRouter());
+        this._network.use(CORE_URL + 'v1/layer', layerUpload, layersController.getRouter());
+        this._network.use(CORE_URL + 'v1/build', buildController.getRouter());
     }
 }

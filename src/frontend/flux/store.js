@@ -8,6 +8,9 @@ import placesSaga from '../modules/map/saga/placesSaga';
 import stylesSaga from '../modules/styles/saga/stylesSaga';
 import pdSaga from '../modules/pd/saga/pdSaga';
 import kpiSaga from '../modules/kpi/saga/kpiSaga';
+import panoramSaga from '../modules/map/saga/panoramSaga';
+import layerSaga from '../modules/map/saga/layerSaga';
+import buildLayer from '../modules/map/saga/buildSaga';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -27,5 +30,8 @@ export default function configureStore(initialState) {
     sagaMiddleware.run(stylesSaga);
     sagaMiddleware.run(pdSaga);
     sagaMiddleware.run(kpiSaga);
+    sagaMiddleware.run(panoramSaga);
+    sagaMiddleware.run(layerSaga);
+    sagaMiddleware.run(buildLayer);
     return store
 }

@@ -1,4 +1,4 @@
-import { ADD_PLACES_REQUEST, DEL_PLACES_REQUEST, DEL_PLACES_SUCCESS, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
+import { ADD_PLACES_REQUEST, DEL_PLACES_REQUEST, GET_BUILDS_SUCCESS, GET_LAYERS_SUCCESS, GET_PANARAMS_SUCCESS, GET_DETAILS_REQUEST, DEL_PLACES_SUCCESS, ADD_PLACES_SUCCESS, UPD_PLACES_REQUEST, UPD_PLACES_SUCCESS, GET_PLACES_REQUEST, GET_PLACES_SUCCESS, GET_PLACES_ERROR } from '../constants';
 import fetch from 'isomorphic-fetch';
 import config from '../../../config';
 import { call, put, takeEvery } from 'redux-saga/effects';
@@ -6,12 +6,27 @@ import { call, put, takeEvery } from 'redux-saga/effects';
 /* subscribe on actions */
 function* sagaPlaces() {
 	yield takeEvery(GET_PLACES_REQUEST, fetchPlaces);
+	yield takeEvery(GET_DETAILS_REQUEST, fetchDetails);
 	yield takeEvery(ADD_PLACES_REQUEST, addPlace);
 	yield takeEvery(UPD_PLACES_REQUEST, updPlace);
 	yield takeEvery(DEL_PLACES_REQUEST, delPlace);
 }
 
 /* middlewares */
+function* fetchDetails(action) {
+	try {
+		const panarams = yield call(getPanarams, action.id);
+		yield put({ type: GET_PANARAMS_SUCCESS, id: action.id, panarams: panarams.data });
+
+		const layers = yield call(getLayers, action.id);
+		yield put({ type: GET_LAYERS_SUCCESS, id: action.id, layers: layers.data });
+
+		const builds = yield call(getBuilds, action.id);
+		yield put({ type: GET_BUILDS_SUCCESS, id: action.id, builds: builds.data });
+	} catch (e) {
+		yield put({ type: GET_PLACES_ERROR, message: e.message });
+	}
+}
 function* fetchPlaces(/* action */) {
 	try {
 		const places = yield call(getPlaces);
@@ -56,6 +71,45 @@ function getUrl(path) {
 }
 
 /* queries */
+function getBuilds(id) {
+	return fetch(getUrl(config.apiConfig.getBuildUrl + '?placeId=' + id), {
+		method: 'GET'
+	})
+		.then(response => {
+			if (200 == response.status) {
+				return response
+			} else {
+				throw new Error('Cannot load data from server. Response status ' + response.status)
+			}
+		})
+		.then(response => response.json())
+}
+function getLayers(id) {
+	return fetch(getUrl(config.apiConfig.getLayerUrl + '?placeId=' + id), {
+		method: 'GET'
+	})
+		.then(response => {
+			if (200 == response.status) {
+				return response
+			} else {
+				throw new Error('Cannot load data from server. Response status ' + response.status)
+			}
+		})
+		.then(response => response.json())
+}
+function getPanarams(id) {
+	return fetch(getUrl(config.apiConfig.getPanaramUrl + '?placeId=' + id), {
+		method: 'GET'
+	})
+		.then(response => {
+			if (200 == response.status) {
+				return response
+			} else {
+				throw new Error('Cannot load data from server. Response status ' + response.status)
+			}
+		})
+		.then(response => response.json())
+}
 function getPlaces() {
 	return fetch(getUrl(config.apiConfig.getPlacesUrl), {
 		method: 'GET'
