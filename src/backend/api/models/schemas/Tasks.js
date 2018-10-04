@@ -7,6 +7,7 @@ export default new Schema({
     parentId: String,
     percentComplete: Number,
     kt: String,
+    statusReport: String,
     to: String,
     baselineDuration: String
 });

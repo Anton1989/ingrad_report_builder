@@ -18,27 +18,16 @@ export default class Details extends React.Component {
 
     findTask(statuses, kts) {
         if (statuses && statuses.length > 0) {
-            return statuses.find(status => kts.includes(status.kt));
+            return statuses.filter(status => kts.includes(status.statusReport));
         }
         return null;
     }
 
-    getStatus(task) {
-        if (task.percentComplete > 0 && !task.actualStart) {
-            if (task.percentComplete < 100) {
-                return 'IN PROGRESS';
-            } else {
-                return 'DONE';
-            }
-        } else {
-            if (task.actualStart == '0001-01-01T00:00:00' || !task.actualStart) {
-                return 'IN PLAN';
-            } else if (task.actualFinish == '0001-01-01T00:00:00' || !task.actualFinish) {
-                return 'IN PROGRESS';
-            } else {
-                return 'DONE';
-            }
+    findKts(statuses, kts) {
+        if (statuses && statuses.length > 0) {
+            return statuses.filter(status => kts.includes(status.kt));
         }
+        return null;
     }
 
     renderTree(heads, projects, showNames, offset, projectId, handleShowBuilds, code, title, openProjects) {
@@ -46,10 +35,9 @@ export default class Details extends React.Component {
         if (buildings && buildings.length > 0) {
             return buildings.map(building => {
                 const hasDetails = openProjects && openProjects.includes(building.code);
-                console.log(building, hasDetails)
                 const curTitle = title + ' - ' + building.name;
                 // let projectStatuse = status.data.find(item => item.project_id == building._id);
-                return <React.Fragment>
+                return <React.Fragment key={'CONTENT_' + building._id}>
                     <tr key={'SUBROW' + building._id}>
                         <td className={styles.number}>
                         </td>
@@ -61,15 +49,20 @@ export default class Details extends React.Component {
                         </td>}
                         
                         {Object.entries(heads).map((head, i) => {
-                            let status = this.findTask(building.tasks, head[1].kts);
+                            let tasks = this.findTask(building.tasks, head[1].kts);
+                            let kts = this.findKts(building.tasks, head[1].kts);
                             
-                            if (!status) {
-                                return <td key={'SUBNONE' + i + building._id} className={STATUSES['NONE']}>
+                            if (!tasks || tasks.length == 0) {
+                                return <td key={'SUBNONE' + i + building._id} title={head[1].name} className={STATUSES['NONE']}>
                                     <span className='glyphicon glyphicon-ban-circle'></span>
                                 </td>
+                            } else if (tasks[0].isInner) {
+                                return <td key={'SUBNONE' + i + building._id} title={head[1].name} className={STATUSES[tasks[0].status] + ' ' + styles.down}>
+                                    <span className='glyphicon glyphicon-arrow-down'></span>
+                                </td>
                             } else {
-                                return <td key={'SUB_TD' + head[1].kt + building._id} title={head[1].name} className={STATUSES[this.getStatus(status)]}>
-                                    <DataCell title={curTitle} step={status} uni={i + '-' + '_sub'} header={status.name} loc_icon={null} project={building} />
+                                return <td key={'SUB_TD' + head[0] + building._id} title={head[1].name} className={STATUSES[tasks[0].status]}>
+                                    <DataCell title={curTitle} tasks={kts} step={tasks[0]} uni={i + '-' + '_sub'} headerName={tasks[0].name} headerCode={tasks[0].statusReport} loc_icon={null} project={building} />
                                 </td>
                             }
                         })}

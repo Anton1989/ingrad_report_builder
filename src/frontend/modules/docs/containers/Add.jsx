@@ -178,17 +178,17 @@ class Add extends React.Component {
                         <input type='text' className='form-control' id='name' placeholder='Название' value={this.state.name} onChange={this.handleUpdateInputText} />
                     </div>
                     <div className='form-group col-sm-2 col-md-2'>
-                        <label htmlFor='number'>№ документа</label>
+                        <label htmlFor='number'>№документа</label>
                         <input type='text' className='form-control' id='number' placeholder='Номер документа' value={this.state.number} onChange={this.handleUpdateInputText} />
                     </div>
                     <div className='form-group col-sm-4 col-md-3' title={this.state.status}>
-                        <label htmlFor='point'>Статус</label>
+                        <label htmlFor='status'>Статус</label>
                         <input type='text' className='form-control' id='status' placeholder='Статус' value={this.state.status} disabled />
                     </div>
                     <div className='form-group col-sm-4 col-md-4'>
                         <label htmlFor='point'>Ключевая точка</label>
                         <select id='point' className='form-control' value={this.state.point} onChange={this.handleUpdateInputText}>
-                            {status2kt.map(kt => <option key={kt} value={config.defaultVars.ktNames[kt]}>{config.defaultVars.ktNames[kt]}</option>)}
+                            {status2kt.map(kt => <option key={kt} value={kt}>{config.defaultVars.ktNames[kt]}</option>)}
                         </select>
                     </div>
                 </div>

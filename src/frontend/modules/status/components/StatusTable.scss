@@ -1,7 +1,26 @@
 .main {
-    padding: 20px;
+    margin: 0px;
+    padding: 0px;
+
+    .tableResponsitive {
+        max-height: 100vh;
+        position: relative;
+    }
+
+    .fakeTable {
+        position: absolute;
+        top: 0px;
+        left: 0;
+        width: calc(100% - 0px);
+        background: white;
+        z-index: 100;
+        overflow: hidden;
+        height: 90px;
+    }
 
     table {
+        position: relative;
+        margin: 0px;
 
         tr td, tr th {
             color: #333333;
@@ -21,6 +40,9 @@
         }
 
         thead {
+            &.headHidden {
+                opacity: 0;
+            }
             
             tr {
 
@@ -42,6 +64,7 @@
                     color: #333333;
                     border-bottom: 0px;
                     border-top: 0px;
+                    min-width: 44px;
 
                     .hideNameIco {
                         float: right;
@@ -105,9 +128,14 @@
                     border: 0px;
                     border-right: 1px solid #fff;
 
+                    &.empty:hover {
+                        background: white;
+                    }
+
                     .nameProj {
                         margin-bottom: 0px;
                         padding-left: 18px;
+                        max-width: 300px;
                     }
 
                     .plus {
@@ -122,6 +150,10 @@
                     .addressProj {
                         color: rgb(204, 204, 204);
                         margin-bottom: 0px;
+                    }
+
+                    &.down {
+                        color: #ccc;
                     }
 
                     &.number {
@@ -156,12 +188,12 @@
 
                     &.inProgress {
                         text-align: center;
-                        background: #f3f3f2;
+                        background: #ccfe9a;
                     }
 
                     &.done {
                         text-align: center;
-                        background: #ccfe9a;
+                        background: #f3f3f2;
                     }
 
                     &.none, &.none span {
@@ -185,7 +217,7 @@
 }
 @media (min-width: 768px) {
     .main {
-        padding-right: 40px;
-        padding-left: 40px;
+        // padding-right: 40px;
+        // padding-left: 40px;
     }
 }

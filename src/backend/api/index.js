@@ -12,9 +12,10 @@ var upload = multer({ dest: 'uploads/' });
 
 export default class ApiConfig {
 
-    constructor(express) {
+    constructor(express, dbPWA) {
         console.log('Start init api configuration');
         this._network = express;
+        this._db = dbPWA;
         // this._config = config;
         this._initNetworksConfig();
         this._initEndpoints();
@@ -30,12 +31,12 @@ export default class ApiConfig {
 
     _initEndpoints() {
         //Init class controllers with methods
-        let projectsController = new ProjectsController(this._network);
+        let projectsController = new ProjectsController(this._network, this._db);
         let placesController = new PlacesController(this._network);
         let stylesController = new StylesController(this._network);
         let kpiController = new KpiController(this._network);
         let pdController = new PdController(this._network);
-        let docsController = new DocsController(this._network);
+        let docsController = new DocsController(this._network, this._db);
 
         //Init endpoints for express.
         var cpUpload = upload.fields([

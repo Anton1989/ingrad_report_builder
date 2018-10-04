@@ -11,6 +11,7 @@ function* sagaProjects() {
 	yield takeEvery(DEL_DOCS_REQUEST, delDoc);
 }
 
+
 /* middlewares */
 function* fetchDocs(action) {
 	try {

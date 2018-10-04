@@ -10,6 +10,7 @@ table {
 
                 .nameProj {
                     margin-bottom: 0px;
+                    max-width: 250px;
                 }
 
                 .plus {
@@ -24,6 +25,10 @@ table {
                 .addressProj {
                     color: rgb(204, 204, 204);
                     margin-bottom: 0px;
+                }
+
+                &.down {
+                    color: #ccc !important;
                 }
 
                 &.cursor {
@@ -58,12 +63,12 @@ table {
 
                 &.inProgress {
                     text-align: center;
-                    background: #f3f3f2;
+                    background: #ccfe9a;
                 }
 
                 &.done {
                     text-align: center;
-                    background: #ccfe9a;
+                    background: #f3f3f2;
                 }
 
                 &.none {

@@ -10,6 +10,8 @@ global.ENV_PORT = process.env.SERVER_PORT;
 global.NODE_ENV = process.env.NODE_ENV;
 global.ENV_MONGO_HOST = process.env.MONGO_HOST;
 global.ENV_MONGO_DB = process.env.MONGO_DB;
+global.ENV_MONGO_HOST_PRJ = process.env.MONGO_HOST_PRJ;
+global.ENV_MONGO_DB_PRJ = process.env.MONGO_DB_PRJ;
 
 if (ENV_DEVELOPMENT) {
     if (!require('piping')({

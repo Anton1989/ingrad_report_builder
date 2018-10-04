@@ -20,7 +20,9 @@
         "SERVER": "gis.ingrad.com",
         "SERVER_PORT": 8092,
         "MONGO_HOST": "127.0.0.1",
+        "MONGO_HOST_PRJ": "pm.ingrad.com",
         "MONGO_DB": "ingrad",
+        "MONGO_DB_PRJ": "pwa",
         "NODE_ENV": "production"
       }
     },
@@ -30,7 +32,9 @@
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8009,
         "MONGO_HOST": "127.0.0.1",
+        "MONGO_HOST_PRJ": "pm.ingrad.com",
         "MONGO_DB": "ingrad",
+        "MONGO_DB_PRJ": "pwa",
         "NODE_ENV": "development"
       }
     },

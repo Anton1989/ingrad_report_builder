@@ -6,10 +6,12 @@ import fs from 'fs';
 import ServerRenderingMiddleware from './middleware/serverSideRendering';
 import setBundleHeaders from './middleware/setBundleHeaders';
 import ApiConfig from './api/index';
+import mongoose from 'mongoose';
 
 var app = new express();
 db.Promise = global.Promise;
 db.connect('mongodb://' + ENV_MONGO_HOST + '/' + ENV_MONGO_DB);
+const dbPWA = mongoose.createConnection('mongodb://' + ENV_MONGO_HOST_PRJ + '/' + ENV_MONGO_DB_PRJ);
 
 if (!ENV_HOST || !ENV_PORT) {
     throw new Error('Web APP failed on start, incorrect host (' + ENV_HOST + ') or port (' + ENV_PORT + ') were setted in envirement.');
@@ -26,7 +28,7 @@ app.use('/js', express.static(__dirname + '/static/bundle'));
 app.use('/favicon.ico', express.static(__dirname + '/static/images/favicon.ico'));
 app.use(ServerRenderingMiddleware);
 
-let api = new ApiConfig(app);
+let api = new ApiConfig(app, dbPWA);
 
 db.connection.on('connected', function () {
     console.log('==> ⛁ Connection with MongoDB (' + ENV_MONGO_HOST + '/' + ENV_MONGO_DB + ') established successfully.');

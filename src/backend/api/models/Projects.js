@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import Tasks from './schemas/Tasks';
 
 const ProjectSchema = new Schema({
@@ -12,6 +12,6 @@ const ProjectSchema = new Schema({
     published: Date
 })
 
-let projects = mongoose.model('projects', ProjectSchema);
+// let projects = mongoose.model('projects', ProjectSchema);
 
-export default projects;
+export default ProjectSchema;

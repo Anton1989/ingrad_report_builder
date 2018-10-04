@@ -2,13 +2,18 @@ import { Router } from 'express';
 import fs from 'fs';
 import Response from '../models/responseDto';
 import Docs from '../models/Docs';
+import ProjectSchema from '../models/Projects';
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
+import config from '../../../frontend/config';
 
 export default class DocsController {
 
-    constructor(netConfig) {
+    constructor(netConfig, db) {
         console.log('Start init places controller');
         this._resp = new Response();
         this._netConfig = netConfig;
+        this._db = db;
 
         this._router = Router();
         if (this._router) {
@@ -26,14 +31,71 @@ export default class DocsController {
         return this._router;
     }
 
+    _getStatus(task) {
+        if (task == null) {
+            return 'NONE';
+        } else if (task.percentComplete > 0 && !task.actualStart) {
+            if (task.percentComplete < 100) {
+                return 'IN PROGRESS';
+            } else {
+                return 'DONE';
+            }
+        } else {
+            if (task.actualStart == '0001-01-01T00:00:00' || !task.actualStart) {
+                return 'IN PLAN';
+            } else if (task.actualFinish == '0001-01-01T00:00:00' || !task.actualFinish) {
+                return 'IN PROGRESS';
+            } else {
+                return 'DONE';
+            }
+        }
+    }
+
     async all(req, res) {
         try {
             const filter = {};
             filter.project_id = req.query.project_id;
             filter.step_id = req.query.step_id;
             const docs = await Docs.find(filter).exec();
-            return this._resp.formattedSuccessResponse(res, docs, 200);
+
+           const Projects = this._db.model('projects', ProjectSchema);
+
+            const projects = await Projects.aggregate([
+                // { $match: { '_id': ObjectId(filter.project_id) } },
+                { $project : {
+                    'tasks.name': 1,
+                    'tasks.taskId': 1,
+                    'tasks.statusReport': 1,
+                    'tasks.position': 1,
+                    'tasks.haveChildren': 1,
+                    'tasks.actualStart': 1,
+                    'tasks.actualFinish': 1,
+                    'tasks.percentComplete': 1,
+                    'tasks.kt': 1,
+                    'tasks.to': 1
+                } },
+                { $unwind: '$tasks' },
+                { $match: { 'tasks.kt': { $in: config.defaultVars.kt[filter.step_id].kts }, 'tasks.to': filter.project_id } },
+                { $group: { '_id': '$_id', 'tasks': { $push: '$tasks' } } },
+            ]).exec();
+
+            
+
+            let out = [];
+            if (projects[0]) {
+                out = docs.map(doc => {
+                    const task = projects[0].tasks.find(task => task.kt == doc.point)
+                    doc.status = this._getStatus(task);
+                    return doc;
+                })
+            } else {
+                out = docs;
+            }
+            
+
+            return this._resp.formattedSuccessResponse(res, out, 200);
         } catch (error) {
+            console.log(error)
             return this._resp.formattedErrorResponse(res, req, error.message, 500);
         }
 
