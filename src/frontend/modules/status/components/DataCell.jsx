@@ -32,6 +32,7 @@ export default class DataCell extends React.Component {
 
     renderCell() {
         const { step, loc_icon, project, title, headerCode } = this.props;
+        console.log(project)
 
         let iconClass = 'glyphicon-play';
         if (step == null) {
@@ -41,7 +42,7 @@ export default class DataCell extends React.Component {
         }
 
         return <span className={styles.links}>
-            <span className={'glyphicon ' + iconClass} onClick={this.close}></span>
+            <span className={'glyphicon ' + iconClass} onClick={this.close}>{step.docCounter > 0 ? <span className={styles.docCounter}>{step.docCounter}</span> : null}</span>
             <Modal open={this.state.showModal}>
                 <div className={styles.modalBackground} />
                 <div role='dialog' className={styles.modalDialog}>

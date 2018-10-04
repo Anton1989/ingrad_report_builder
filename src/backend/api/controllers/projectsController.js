@@ -92,11 +92,12 @@ export default class ProjectsController {
         }
     }
 
-    _prepareTopLevelResponse(descriptions, objects, tasks, current_codes) {
+    _prepareTopLevelResponse(descriptions, objects, tasks, current_codes, docs) {
         // console.log(`objects ${objects.length} tasks ${tasks.length}`);
         const projects = [];
         objects.forEach(object => {
             const isInner = !current_codes.includes(object.code);
+            const oDocs = docs.filter(doc => doc.project_id == object.code);
             if (!isInner) {
                 const project = tasks.find(prj => object.projectId == prj.projectIntegrationId);
                 const description = descriptions.find(description => object.projectId == description.projectIntegrationId);
@@ -105,6 +106,7 @@ export default class ProjectsController {
                         project.tasks = project.tasks.map(task => {
                             const isInner = !current_codes.includes(task.to);
                             const status = this._getStatus(task);
+                            task.docCounter = oDocs.filter(doc => doc.step_id == task.statusReport).length;
                             if (isInner) {
                                 return { isInner, status, statusReport: task.statusReport };
                             }
@@ -138,15 +140,17 @@ export default class ProjectsController {
         return filtered;
     }
 
-    _prepareSubLevelResponse(objects, projects, current_codes) {
+    _prepareSubLevelResponse(objects, projects, current_codes, docs) {
         const subProjects = [];
 
         objects.forEach(object => {
             const isInner = !current_codes.includes(object.code);
+            const oDocs = docs.filter(doc => doc.project_id == object.code);
             if (!isInner) {
                 object.tasks = [];
                 if (projects[0] && projects[0].tasks && projects[0].tasks.length > 0) {
                     projects[0].tasks.forEach(task => {
+                        task.docCounter = oDocs.filter(doc => doc.step_id == task.statusReport).length;
                         if (object.code == task.to) {
                             const status = this._getStatus(task);
                             object.tasks.push(Object.assign({ isInner: false, status }, task));
@@ -191,8 +195,7 @@ export default class ProjectsController {
             const projectIntegrationIds = [];
             let objects = this._filterFromParent(objectEnts, parent, all_codes, current_codes, projectIntegrationIds);
 
-            // const docs = await Docs.find({ 'project_id': { $in: current_codes } }).exec();
-            // console.log('>>>>>>', docs.length)
+            const docs = await Docs.find({ 'project_id': { $in: current_codes } }).exec();
             // docs.forEach(doc => console.log(doc.step_id + ' - ' + objectEnts.find(o => o.code == doc.project_id).name))
 
             let projects = [];
@@ -227,7 +230,7 @@ export default class ProjectsController {
                 const descriptions = await Projects.find({ projectIntegrationId: { $in: projectIntegrationIds }})
                     .select({ projectIntegrationId: 1, location: 1 })
                     .lean().exec();
-                response = this._prepareTopLevelResponse(descriptions, objects, projects, current_codes);
+                response = this._prepareTopLevelResponse(descriptions, objects, projects, current_codes, docs);
             } else {
                 projectIntegrationIds.push(projectId);
                 projects = await Projects.aggregate([
@@ -248,7 +251,7 @@ export default class ProjectsController {
                     { $match: { 'tasks.to': { $in: all_codes }, 'tasks.statusReport': { $ne: '' }, 'tasks.statusReport': { $ne: ' ' } } },
                     { $group: { '_id': '$_id', 'tasks': { $push: '$tasks' } } },
                 ]).exec();
-                response = this._prepareSubLevelResponse(objects, projects, current_codes);
+                response = this._prepareSubLevelResponse(objects, projects, current_codes, docs);
             }
             console.log(`Request was processed in ${Date.now() - start} ms`);
             return this._resp.formattedSuccessResponse(res, response, 200);
