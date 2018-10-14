@@ -1,16 +1,16 @@
-import cors from 'cors';
-import ProjectsController from './controllers/projectsController';
-import PlacesController from './controllers/placesController';
-import StylesController from './controllers/stylesController';
-import PdController from './controllers/pdController';
-import KpiController from './controllers/kpiController';
-import DocsController from './controllers/docsController';
-import bodyParser from 'body-parser';
-import multer from 'multer';
+const cors = require('cors');
+const ProjectsController = require('./controllers/projectsController');
+const StylesController = require('./controllers/stylesController');
+// const PdController = require('./controllers/pdController');
+const DocsController = require('./controllers/docsController');
+const bodyParser = require('body-parser');
+const multer = require('multer');
+// import PlacesController from './controllers/ placesController';
+// import KpiController from './controllers/kpiController';
 
 var upload = multer({ dest: 'uploads/' });
 
-export default class ApiConfig {
+module.exports = class ApiConfig {
 
     constructor(express, dbPWA) {
         console.log('Start init api configuration');
@@ -32,10 +32,10 @@ export default class ApiConfig {
     _initEndpoints() {
         //Init class controllers with methods
         let projectsController = new ProjectsController(this._network, this._db);
-        let placesController = new PlacesController(this._network);
+        // let placesController = new PlacesController(this._network);
         let stylesController = new StylesController(this._network);
-        let kpiController = new KpiController(this._network);
-        let pdController = new PdController(this._network);
+        // let kpiController = new KpiController(this._network);
+        // let pdController = new PdController(this._network);
         let docsController = new DocsController(this._network, this._db);
 
         //Init endpoints for express.
@@ -53,9 +53,9 @@ export default class ApiConfig {
         ]);
         this._network.use('/v1/projects', projectsController.getRouter());
         this._network.use('/v1/styles', stylesController.getRouter());
-        this._network.use('/v1/places', cpUpload, placesController.getRouter());
-        this._network.use('/v1/pd', cpUpload, pdController.getRouter());
-        this._network.use('/v1/kpi', kpiController.getRouter());
+        // this._network.use('/v1/places', cpUpload, placesController.getRouter());
+        // this._network.use('/v1/pd', cpUpload, pdController.getRouter());
+        // this._network.use('/v1/kpi', kpiController.getRouter());
         this._network.use('/v1/docs', cpUpload, docsController.getRouter());
     }
 }

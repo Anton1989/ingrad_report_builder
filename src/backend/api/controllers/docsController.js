@@ -1,13 +1,14 @@
-import { Router } from 'express';
-import fs from 'fs';
-import Response from '../models/responseDto';
-import Docs from '../models/Docs';
-import ProjectSchema from '../models/Projects';
-import mongoose from 'mongoose';
+const express = require('express');
+const Router = express.Router;
+const fs = require('fs');
+const Response = require('../models/responseDto');
+const Docs = require('../models/Docs');
+const ProjectSchema = require('../models/Projects');
+const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
-import config from '../../../frontend/config';
+const config = require('../../../frontend/config');
 
-export default class DocsController {
+module.exports = class DocsController {
 
     constructor(netConfig, db) {
         console.log('Start init places controller');

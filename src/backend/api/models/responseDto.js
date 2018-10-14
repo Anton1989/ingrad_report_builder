@@ -1,6 +1,6 @@
-import moment from 'moment';
+const moment = require('moment');
 
-export default class Response {
+module.exports = class Response {
 
     formattedSuccessResponse(res, data, status) {
         res.contentType('application/json');

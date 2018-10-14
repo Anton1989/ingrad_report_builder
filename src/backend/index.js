@@ -1,6 +1,6 @@
-import WebpackIsomorphicTools from 'webpack-isomorphic-tools';
-import path from 'path';
-import webpackConfig from '../../webpack/webpack-isomorphic-tools';
+const WebpackIsomorphicTools = require('webpack-isomorphic-tools');
+const path = require('path');
+const webpackConfig = require('../../webpack/webpack-isomorphic-tools');
 
 var rootDir = path.resolve(__dirname, '../..');
 global.ENV_IS_SERVER = true;

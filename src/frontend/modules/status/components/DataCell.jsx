@@ -32,7 +32,6 @@ export default class DataCell extends React.Component {
 
     renderCell() {
         const { step, loc_icon, project, title, headerCode } = this.props;
-        console.log(project)
 
         let iconClass = 'glyphicon-play';
         if (step == null) {

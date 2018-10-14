@@ -1,14 +1,13 @@
-import {
-    Router
-} from 'express';
-import Response from '../models/responseDto';
-import ProjectSchema from '../models/Projects';
-import Objects from '../models/Objects';
+const express = require('express');
+const Router = express.Router;
+const Response = require('../models/responseDto');
+const ProjectSchema = require('../models/Projects');
+const Objects = require('../models/Objects');
+const Docs = require('../models/Docs');
 //import Floors from '../models/Floors';
 //import Sections from '../models/Sections';
-import Docs from '../models/Docs';
 
-export default class ProjectsController {
+module.exports = class ProjectsController {
 
     constructor(netConfig, db) {
         console.log('Start init projects controller');

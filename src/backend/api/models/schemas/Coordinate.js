@@ -1,6 +1,7 @@
-import { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-export default new Schema({
+module.exports = new Schema({
     lat: Number,
     lng: Number
 });

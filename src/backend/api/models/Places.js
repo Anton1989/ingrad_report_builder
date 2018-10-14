@@ -1,7 +1,8 @@
-import mongoose, { Schema } from 'mongoose';
-import Coordinate from './schemas/Coordinate';
-import House from './schemas/House';
-import Layer from './schemas/Layer';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const Coordinate = require('./schemas/Coordinate');
+const House = require('./schemas/House');
+const Layer = require('./schemas/Layer');
 
 const PlacesSchema = new Schema({
     name: String,
@@ -21,4 +22,4 @@ const PlacesSchema = new Schema({
 
 let places = mongoose.model('places', PlacesSchema);
 
-export default places;
+module.exports = places;

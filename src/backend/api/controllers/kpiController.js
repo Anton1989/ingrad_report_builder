@@ -1,13 +1,12 @@
-import {
-    Router
-} from 'express';
-import Response from '../models/responseDto';
-import Kpi from '../models/Kpi';
-import KpiStyles from '../models/KpiStyles';
-import xl from 'excel4node';
+const express = require('express');
+const Router = express.Router;
+const Response = require('../models/responseDto');
+const Kpi = require('../models/Kpi');
+const KpiStyles = require('../models/KpiStyles');
+const xl = require('excel4node');
 // import fs from 'fs';
 
-export default class KpiController {
+module.exports = class KpiController {
 
     constructor(netConfig) {
         console.log('Start init kpi controller');

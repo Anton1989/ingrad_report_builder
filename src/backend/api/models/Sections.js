@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const SectionSchema = new Schema({
     name: String,
@@ -12,4 +13,4 @@ const SectionSchema = new Schema({
 
 let sections = mongoose.model('sections', SectionSchema);
 
-export default sections;
+module.exports = sections;

@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const FloorSchema = new Schema({
     number: String,
@@ -7,4 +8,4 @@ const FloorSchema = new Schema({
 
 let floors = mongoose.model('floors', FloorSchema);
 
-export default floors;
+module.exports = floors;

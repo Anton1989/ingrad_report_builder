@@ -7,7 +7,7 @@ const fs = require('fs');
 const xml2js = require('xml2js');
 const uuidV4 = require('uuid/v4');
 
-export default class StylesController {
+module.exports = class StylesController {
 
     constructor(netConfig) {
         console.log('Start init styles controller');

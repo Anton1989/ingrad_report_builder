@@ -1,5 +1,6 @@
-import { Schema } from 'mongoose';
-import Tasks from './schemas/Tasks';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const Tasks = require('./schemas/Tasks');
 
 const ProjectSchema = new Schema({
     guid: String,
@@ -14,4 +15,4 @@ const ProjectSchema = new Schema({
 
 // let projects = mongoose.model('projects', ProjectSchema);
 
-export default ProjectSchema;
+module.exports = ProjectSchema;

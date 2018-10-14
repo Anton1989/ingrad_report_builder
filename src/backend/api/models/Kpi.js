@@ -1,6 +1,7 @@
-import mongoose, { Schema } from 'mongoose';
-import KpiPlans from './schemas/KpiPlans';
-import KpiEvents from './schemas/KpiEvents';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const KpiPlans = require('./schemas/KpiPlans');
+const KpiEvents = require('./schemas/KpiEvents');
 
 const KpiSchema = new Schema({
     name: String,
@@ -14,4 +15,4 @@ const KpiSchema = new Schema({
 
 let kpi = mongoose.model('kpi', KpiSchema);
 
-export default kpi;
+module.exports = kpi;

@@ -3,7 +3,7 @@ import fs from 'fs';
 import Response from '../models/responseDto';
 import Places from '../models/Places';
 
-export default class PlacesController {
+module.exports = class PlacesController {
 
     constructor(netConfig) {
         console.log('Start init places controller');

@@ -27,7 +27,7 @@
       }
     },
     "start-dev": {
-      "command": "babel-node --presets es2015 src/backend/index.js",
+      "command": "nodemon src/backend/index.js",
       "env": {
         "SERVER": "127.0.0.1",
         "SERVER_PORT": 8009,

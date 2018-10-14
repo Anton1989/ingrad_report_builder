@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const ObjectsSchema = new Schema({
     name: String,
@@ -10,4 +11,4 @@ const ObjectsSchema = new Schema({
 
 let objects = mongoose.model('objects', ObjectsSchema);
 
-export default objects;
+module.exports = objects;

@@ -12,6 +12,7 @@ const STATUSES = {
     'DONE': styles.done,
     'NONE': styles.none
 }
+
 const LOCATION = {
     'm': 'Москва',
     'mo': 'Московская область'
@@ -44,11 +45,9 @@ export default class StatusTable extends React.Component {
         // this.fixDatePickerTopOffset();
         // this.fixTableBodyTopOffset();
 
-        console.log(this.tableContainer)
         if (this.tableContainer) {
             this.tableContainer.addEventListener('scroll', () => {
                 // this.fixDatePickerLeftOffset();
-                console.log(this.tableContainer.scrollTop)
                 this.refs.tableHead.style.top = '' + this.tableContainer.scrollTop + 'px';
             });
         }

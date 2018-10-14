@@ -1,9 +1,10 @@
-import { Router } from 'express';
-import Response from '../models/responseDto';
-import Styles from '../models/Styles';
-import KpiStyles from '../models/KpiStyles';
+const express = require('express');
+const Router = express.Router;
+const Response = require('../models/responseDto');
+const Styles = require('../models/Styles');
+const KpiStyles = require('../models/KpiStyles');
 
-export default class StylesController {
+module.exports = class StylesController {
 
     constructor(netConfig) {
         console.log('Start init styles controller');

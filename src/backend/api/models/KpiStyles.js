@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
 const StylesSchema = new Schema({
     name: String,
@@ -9,4 +10,4 @@ const StylesSchema = new Schema({
 
 let styles = mongoose.model('kpiStyles', StylesSchema);
 
-export default styles;
+module.exports = styles;

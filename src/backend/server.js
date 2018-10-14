@@ -1,12 +1,12 @@
-import express from 'express';
-import db from 'mongoose';
-import https from 'https';
-import fs from 'fs';
+const express = require('express');
+const db = require('mongoose');
+const https = require('https');
+const fs = require('fs');
 //Custome middlewares
-import ServerRenderingMiddleware from './middleware/serverSideRendering';
-import setBundleHeaders from './middleware/setBundleHeaders';
-import ApiConfig from './api/index';
-import mongoose from 'mongoose';
+const ServerRenderingMiddleware = require('./middleware/serverSideRendering');
+const setBundleHeaders = require('./middleware/setBundleHeaders');
+const ApiConfig = require('./api/index');
+const mongoose = require('mongoose');
 
 var app = new express();
 db.Promise = global.Promise;
@@ -26,9 +26,10 @@ app.use('/images', express.static(__dirname + '/static/images'));
 app.use('/files', express.static(__dirname + '/static/files'));
 app.use('/js', express.static(__dirname + '/static/bundle'));
 app.use('/favicon.ico', express.static(__dirname + '/static/images/favicon.ico'));
-app.use(ServerRenderingMiddleware);
 
 let api = new ApiConfig(app, dbPWA);
+
+app.use(ServerRenderingMiddleware);
 
 db.connection.on('connected', function () {
     console.log('==> ⛁ Connection with MongoDB (' + ENV_MONGO_HOST + '/' + ENV_MONGO_DB + ') established successfully.');

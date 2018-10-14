@@ -1,7 +1,8 @@
-import { Schema } from 'mongoose';
-import Coordinate from './Coordinate';
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+const Coordinate = require('./Coordinate');
 
-export default new Schema({
+module.exports = new Schema({
     name: String,
     status: String,
     style: { type: Schema.Types.ObjectId, ref: 'styles' },
