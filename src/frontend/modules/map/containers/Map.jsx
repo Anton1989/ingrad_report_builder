@@ -11,6 +11,8 @@ import { getStyles } from '../../styles/actions/stylesActions';
 import PlaceDetails from '../components/PlaceDetails.jsx';
 import styles from '../components/Map.scss';
 
+import config from '../../../config';
+
 const defaultCoordinates = {
     coordinates: {
         lat: 55.752139,
@@ -55,7 +57,7 @@ const Maps = compose(
     withScriptjs,
     withGoogleMap
 )(props => {
-    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer, open360, map, zoom } = props;
+    const { mapStyles, places, activeTypes, placeId, openPlace, defaultCoordinates, selectedLayer, open360, map/*, zoom*/ } = props;
     let options = {
         mapTypeControl: true,
         mapTypeControlOptions: {
@@ -70,7 +72,8 @@ const Maps = compose(
         streetViewControl: true,
         streetViewControlOptions: {
             position: google.maps.ControlPosition.RIGHT_CENTER
-        }
+        },
+        styles: config.mapStyle
     }
     return <GoogleMap
         ref={props.handleMapLoad}
@@ -140,7 +143,8 @@ const Maps = compose(
                                         }}
                                     />,
                                     stroke,
-                                    (map && zoom > 17) ? <Marker
+                                    // (map && zoom > 17) ? <Marker
+                                    (map) ? <Marker
                                         key={house._id + 'house_number'}
                                         label={{
                                             text: house.name,
