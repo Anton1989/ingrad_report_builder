@@ -1,6 +1,15 @@
 .mobile {
-	.mobileMenu a {
-		color: #ffffff;
+	.mobileMenu {
+		a {
+			color: #ffffff;
+		}
+	}
+
+	.toggle {
+		display: block;
+		float: left;
+		margin-left: 20px;
+		margin-right: 10px;
 	}
 
 	.logo {

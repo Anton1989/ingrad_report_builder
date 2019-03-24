@@ -44,7 +44,7 @@ export default class Navigation extends React.Component {
     }
 
     render() {
-        const { placeObj } = this.props;
+        const { placeObj, handleShowMenu } = this.props;
         console.log('RENDER <Navbar>');
 
         let title = <Link to='/' className='navbar-brand'>ЦУП - карта</Link>;
@@ -56,10 +56,10 @@ export default class Navigation extends React.Component {
 
         return <Navbar collapseOnSelect fixedTop fluid className={styles.mobile}>
             <Navbar.Header>
+                <Navbar.Toggle onClick={() => { handleShowMenu() }} className={styles.toggle} />
                 <Navbar.Brand>
                     {title}
                 </Navbar.Brand>
-                <Navbar.Toggle />
             </Navbar.Header>
             <Navbar.Collapse>
                 <Nav pullRight className={styles.mobileMenu}>

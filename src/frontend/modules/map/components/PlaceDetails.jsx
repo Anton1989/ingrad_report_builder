@@ -78,7 +78,7 @@ export default class PlaceDetails extends React.Component {
             <div className={styles.legends + ' ' + styles.topLegends}>
                 <h5>Условные обозначения</h5>
                 <p><img src='/images/360-icon.png' />Панорамы 360</p>
-                <p><img src='/images/camera/270.png' />Кмеры</p>
+                <p><img src='/images/camera/0.png' />Камеры</p>
             </div>
             <div className={styles.legends + ' ' + styles.bottomLegends}>
                 <h5>Статус</h5>

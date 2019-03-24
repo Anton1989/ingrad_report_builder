@@ -55,11 +55,13 @@ class Layout extends React.Component {
 				'office'
 			],
 			place: null,
-			type: null
+			type: null,
+			showMenu: false
 		};
 
 		this.handleSetMapType = this.handleSetMapType.bind(this);
 		this.handleSetPlace = this.handleSetPlace.bind(this);
+		this.handleShowMenu = this.handleShowMenu.bind(this);
 	}
 
 	generateMapMenu(places) {
@@ -101,6 +103,10 @@ class Layout extends React.Component {
 		this.setState({ place: id, type });
 	}
 
+	handleShowMenu() {
+		this.setState({ showMenu: !this.state.showMenu });
+	}
+
 	render() {
 		const { isActive, places, children, params: { id } } = this.props;
 		console.log('RENDER <Layout>');
@@ -121,15 +127,16 @@ class Layout extends React.Component {
 			placeObj = places.data.find(place => (place._id == this.state.place || place._id == id));
 		}
 
-		const showMenu = !this.state.place && !this.props.params.placeId && !id;
-		let classMain = ' col-sm-12 col-sm-offset-0 col-md-9 col-md-offset-3';
-		if (showMenu) {
-			classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
-		}
+		const showMenu = !this.state.place && !this.props.params.placeId && !id && this.state.showMenu;
+		let classMain = ' col-sm-12 col-sm-offset-0';
+		// if (showMenu) {
+		// 	classMain = ' col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2';
+		// }
 		return <div className='container-fluid'>
 			<Navbar
 				placeObj={placeObj}
 				menu={menu}
+				handleShowMenu={this.handleShowMenu}
 				setMapType={this.handleSetMapType}
 				setPlace={this.handleSetPlace} />
 			{showMenu && <LeftMenu
