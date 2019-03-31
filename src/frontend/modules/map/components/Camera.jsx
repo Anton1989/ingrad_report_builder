@@ -6,9 +6,10 @@ export default class Camera extends React.Component {
     render() {
         const { house, i, mapStyles, updateInputTextHouse, onUpdateInputTextPoint } = this.props;
 
-        const icons = [
-            '0', '15', '30', '45', '60', '75', '90', '105', '120', '135', '150', '165', '180', '195', '210', '240', '255', '270', '285'
-        ];
+        const icons = [];
+        for (let i=0; i<360; i++) {
+            icons.push(i);
+        }
         
         return <div className={'form-group row ' + styles.house} key={'house_' + i}>
             <div className='form-group col-sm-12 col-md-12'>
